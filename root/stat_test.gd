@@ -9,8 +9,7 @@ func _ready():
 # func _on_autoload_initialized():
 	stats_test = Stats.new()
 
-	var new_effect:= Stats.Status_Effect_Store.new()
-
+	var new_effect := Stats.StatusEffectStore.new()
 	new_effect.id = "SE_1"
 	new_effect.turns_left = 3
 
@@ -22,5 +21,3 @@ func _ready():
 
 	print(stats_test.combat_stats.physical.attack)
 	print(str(stats_test.status_effects))
-
-

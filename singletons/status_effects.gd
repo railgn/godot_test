@@ -3,7 +3,7 @@ extends Node
 class StatusEffect:
 	var id:= "SE_O"
 	var hidden:= false
-	var sprite_ID = {
+	var sprite_id = {
 		'menu' : 0,
 		'battle' : 0,
 	}
