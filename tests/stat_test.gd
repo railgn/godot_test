@@ -18,5 +18,4 @@ func _ready():
 	stats_test.add_status_effect(new_effect)
 	stats_test.add_status_effect(new_effect)
 
-	print(stats_test.combat_stats.physical.attack)
-	print(str(stats_test.status_effects))
+	print("Physical Attack = 1.5: ", (stats_test.combat_stats.physical.attack == 1.5))

@@ -33,7 +33,7 @@ func get_effect(id: String) -> StatusEffect:
 func _ready():
 	add_effect("SE_0", "default")
 
-	add_effect("SE_1", "attack_buff")
+	add_effect("SE_1", "test_attack_buff")
 	DICTIONARY.SE_1.stat_multiplier_function = func(base_stats: Stats.BaseStats) -> Stats.BaseStats:
 		var res:= base_stats
 		res.physical.attack *= 1.5
