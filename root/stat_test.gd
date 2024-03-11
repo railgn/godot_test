@@ -14,6 +14,9 @@ func _ready():
 	new_effect.turns_left = 3
 
 	stats_test.add_status_effect(new_effect)
+	stats_test.add_status_effect(new_effect)
+	stats_test.add_status_effect(new_effect)
+	stats_test.add_status_effect(new_effect)
 
 	print(stats_test.combat_stats.physical.attack)
 	print(str(stats_test.status_effects))

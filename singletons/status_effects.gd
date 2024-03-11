@@ -23,7 +23,10 @@ class StatusEffect:
 func add_effect(init_id: String, init_name: String):
 	DICTIONARY[init_id] = StatusEffect.new(init_id, init_name)
 
-# func edit_effect(int_id: int, property, value):
+func get_effect(id: String) -> StatusEffect:
+	return DICTIONARY[id]
+
+# func edit_effect(id, property, value):
 
 # signal initialized
 

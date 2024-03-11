@@ -1,5 +1,5 @@
 class_name Stats
-
+# extends Resource
 
 class MappingStats:
 	var strength: int = 1
@@ -31,11 +31,9 @@ class BaseStats:
 	var critical_avoid := 1.0
 	var ailment_infliction_chance := 1.0
 
-
 class StatusEffectStore:
 	var id: String
 	var turns_left: int
-
 
 var alive := true
 var player := true
@@ -48,7 +46,7 @@ var combat_stats := BaseStats.new()
 
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
-		var res_combat_stats = self.base_stats
+		var res_combat_stats = DeepCopy.copy_base_stats(self.base_stats)
 		res_combat_stats = multiply_stats(res_combat_stats, new_base_stats_multiplier)
 
 		base_stats_multiplier = new_base_stats_multiplier
@@ -65,25 +63,20 @@ var status_effects := {}:
 			if new_status_effects[status_effect_id].turns_left <= 0:
 				new_status_effects.erase(status_effect_id)
 			else:
-				print(status_effect_id)
-				res_base_stats_multiplier = (
-					StatusEffects
-					. DICTIONARY[status_effect_id]
-					. stat_multiplier_function
-					. call(res_base_stats_multiplier)
-				)
+				var effect = StatusEffects.get_effect(status_effect_id)
 
-				if StatusEffects.DICTIONARY[status_effect_id].prevent_action:
+				res_base_stats_multiplier = effect.stat_multiplier_function.call(res_base_stats_multiplier)
+
+				if effect.prevent_action:
 					res_can_act = false
 
 		status_effects = new_status_effects
 		self.base_stats_multiplier = res_base_stats_multiplier
 		self.can_act = res_can_act
 
-
 # used to calculate combat stats in multiplier setter
 func multiply_stats(base: BaseStats, multiplier: BaseStats) -> BaseStats:
-	var res := base
+	var res := DeepCopy.copy_base_stats(base)
 
 	res.hp.current *= multiplier.hp.current
 	res.hp.maximum *= multiplier.hp.maximum
@@ -103,9 +96,8 @@ func multiply_stats(base: BaseStats, multiplier: BaseStats) -> BaseStats:
 
 	return res
 
-
 #creates new copy of status effect dictionary for assignment to trigger setter
 func add_status_effect(new_effect: StatusEffectStore):
-	var res_status_effects = self.status_effects
+	var res_status_effects = DeepCopy.copy_status_effects(self.status_effects)
 	res_status_effects[new_effect.id] = new_effect
 	self.status_effects = res_status_effects
