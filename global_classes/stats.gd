@@ -15,14 +15,15 @@ class BaseStats:
 		var current := 1.0
 		var maximum := 1.0
 
-	class DamangeType:
+	class DamageType:
 		var attack := 1.0
 		var defense := 1.0
 
 	var hp := StatResource.new()
 	var mp := StatResource.new()
-	var physical = DamangeType.new()
-	var magical = DamangeType.new()
+	var energy := StatResource.new()
+	var physical = DamageType.new()
+	var magical = DamageType.new()
 	var turn_speed := 1.0
 	var healing_power := 1.0
 	var hit_rate := 1.0
@@ -47,15 +48,26 @@ var combat_stats := BaseStats.new()
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
 		var res_combat_stats = DeepCopy.copy_base_stats(self.base_stats)
-		res_combat_stats = multiply_stats(res_combat_stats, new_base_stats_multiplier)
+		res_combat_stats = multiply_stats(add_stats(res_combat_stats, self.base_stats_adder), new_base_stats_multiplier)
 
 		base_stats_multiplier = new_base_stats_multiplier
 		self.combat_stats = res_combat_stats
+
+var base_stats_adder := BaseStats.new():
+	set(new_base_stats_adder):
+		var res_combat_stats = DeepCopy.copy_base_stats(self.base_stats)
+		res_combat_stats = multiply_stats(add_stats(res_combat_stats, new_base_stats_adder), self.base_stats_multiplier)
+
+		base_stats_adder = new_base_stats_adder
+		self.combat_stats = res_combat_stats
+
+
 
 ##need to type this dictionary's values as "StatusEffectStore"
 ##keep as setter vs. call manual (so only calls once at end of turn?)
 var status_effects := {}:
 	set(new_status_effects):
+		var res_base_stats_adder := BaseStats.new()
 		var res_base_stats_multiplier := BaseStats.new()
 		var res_can_act := true
 
@@ -65,6 +77,7 @@ var status_effects := {}:
 			else:
 				var effect = StatusEffects.get_effect(status_effect_id)
 
+				res_base_stats_adder = effect.stat_adder_function.call(res_base_stats_adder)
 				res_base_stats_multiplier = effect.stat_multiplier_function.call(res_base_stats_multiplier)
 
 				if effect.prevent_action:
@@ -72,6 +85,7 @@ var status_effects := {}:
 
 		status_effects = new_status_effects
 		self.base_stats_multiplier = res_base_stats_multiplier
+		self.base_stats_adder = res_base_stats_adder
 		self.can_act = res_can_act
 
 # used to calculate combat stats in multiplier setter
@@ -82,6 +96,8 @@ func multiply_stats(base: BaseStats, multiplier: BaseStats) -> BaseStats:
 	res.hp.maximum *= multiplier.hp.maximum
 	res.mp.maximum *= multiplier.mp.maximum
 	res.mp.current *= multiplier.mp.current
+	res.energy.maximum *= multiplier.energy.maximum
+	res.energy.current *= multiplier.energy.current
 	res.physical.attack *= multiplier.physical.attack
 	res.physical.defense *= multiplier.physical.defense
 	res.magical.attack *= multiplier.magical.attack
@@ -96,8 +112,31 @@ func multiply_stats(base: BaseStats, multiplier: BaseStats) -> BaseStats:
 
 	return res
 
+func add_stats(base: BaseStats, adder: BaseStats) -> BaseStats:
+	var res := DeepCopy.copy_base_stats(base)
+
+	res.hp.current += (adder.hp.current - 1)
+	res.hp.maximum += (adder.hp.maximum -1)
+	res.mp.maximum += (adder.mp.maximum -1)
+	res.mp.current += (adder.mp.current -1)
+	res.energy.maximum += (adder.energy.maximum -1)
+	res.energy.current += (adder.energy.current -1)
+	res.physical.attack += (adder.physical.attack -1)
+	res.physical.defense += (adder.physical.defense -1)
+	res.magical.attack += (adder.magical.attack -1)
+	res.magical.defense += (adder.magical.defense -1)
+	res.turn_speed += (adder.turn_speed -1)
+	res.healing_power += (adder.healing_power -1)
+	res.hit_rate += (adder.hit_rate -1)
+	res.avoid += (adder.avoid -1)
+	res.critical_chance += (adder.critical_chance -1)
+	res.critical_avoid += (adder.critical_avoid -1)
+	res.ailment_infliction_chance += (adder.ailment_infliction_chance -1)
+
+	return res
+
 #creates new copy of status effect dictionary for assignment to trigger setter
 func add_status_effect(new_effect: StatusEffectStore):
-	var res_status_effects = DeepCopy.copy_status_effects(self.status_effects)
+	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects)
 	res_status_effects[new_effect.id] = new_effect
 	self.status_effects = res_status_effects

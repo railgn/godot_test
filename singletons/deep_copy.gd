@@ -7,6 +7,8 @@ func copy_base_stats(original: Stats.BaseStats) -> Stats.BaseStats:
 	res.hp.maximum = original.hp.maximum
 	res.mp.current = original.mp.current
 	res.mp.maximum = original.mp.maximum
+	res.energy.current = original.energy.current
+	res.energy.maximum = original.energy.maximum
 	res.physical.attack = original.physical.attack
 	res.physical.defense = original.physical.defense
 	res.magical.attack = original.magical.attack
@@ -21,7 +23,7 @@ func copy_base_stats(original: Stats.BaseStats) -> Stats.BaseStats:
 
 	return res
 
-func copy_status_effects(original: Dictionary):
+func copy_stats_status_effects(original: Dictionary):
 	var res = {}
 
 	for se_id in original:
