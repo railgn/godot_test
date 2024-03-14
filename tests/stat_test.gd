@@ -8,7 +8,7 @@ func _ready():
 # func _on_autoload_initialized():
 	stats_test = Stats.new()
 
-
+	##proxy for getting a status effect from a skill
 	var new_effect_1 := Stats.StatusEffectStore.new()
 	new_effect_1.id = "SE_1"
 	new_effect_1.turns_left = 3

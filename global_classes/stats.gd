@@ -35,6 +35,8 @@ class BaseStats:
 class StatusEffectStore:
 	var id: String
 	var turns_left: int
+	var does_not_expire: bool
+	var permanent_persists_outside_battle: bool
 
 var alive := true
 var player := true

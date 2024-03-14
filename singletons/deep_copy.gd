@@ -30,5 +30,7 @@ func copy_stats_status_effects(original: Dictionary):
 		res[se_id] = Stats.StatusEffectStore.new()
 		res[se_id].id = original[se_id].id
 		res[se_id].turns_left = original[se_id].turns_left
+		res[se_id].does_not_expire = original[se_id].does_not_expire
+		res[se_id].permanent_persists_outside_battle = original[se_id].permanent_persists_outside_battle
 
 	return res
