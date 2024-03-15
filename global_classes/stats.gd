@@ -35,8 +35,20 @@ class BaseStats:
 class StatusEffectStore:
 	var id: String
 	var turns_left: int
+	var level: int
 	var does_not_expire: bool
 	var permanent_persists_outside_battle: bool
+
+	func _init(init_id: String, 
+			init_turns_left: int, 
+			init_level:= 1, 
+			init_does_not_expire:= false, 
+			init_permanent_persists_outside_battle:= false):
+		self.id = init_id
+		self.turns_left = init_turns_left
+		self.level = init_level
+		self.does_not_expire = init_does_not_expire
+		self.permanent_persists_outside_battle = init_permanent_persists_outside_battle
 
 var alive := true
 var player := true
@@ -67,25 +79,31 @@ var base_stats_adder := BaseStats.new():
 
 ##need to type this dictionary's values as "StatusEffectStore"
 ##keep as setter vs. call manual (so only calls once at end of turn?)
-var status_effects := {}:
-	set(new_status_effects):
+var status_effects_store := {}:
+	set(new_status_effects_store):
 		var res_base_stats_adder := BaseStats.new()
 		var res_base_stats_multiplier := BaseStats.new()
 		var res_can_act := true
 
-		for status_effect_id in new_status_effects:
-			if new_status_effects[status_effect_id].turns_left <= 0:
-				new_status_effects.erase(status_effect_id)
+		for status_effect_id in new_status_effects_store:
+			if new_status_effects_store[status_effect_id].turns_left <= 0:
+				new_status_effects_store.erase(status_effect_id)
 			else:
 				var effect = StatusEffects.get_effect(status_effect_id)
 
-				res_base_stats_adder = effect.stat_adder_function.call(res_base_stats_adder)
-				res_base_stats_multiplier = effect.stat_multiplier_function.call(res_base_stats_multiplier)
+				res_base_stats_adder = effect.stat_adder_function.call(
+					res_base_stats_adder, 
+					new_status_effects_store[status_effect_id].level,
+					)
+				res_base_stats_multiplier = effect.stat_multiplier_function.call(
+					res_base_stats_multiplier, 
+					new_status_effects_store[status_effect_id].level,
+					)
 
 				if effect.prevent_action:
 					res_can_act = false
 
-		status_effects = new_status_effects
+		status_effects_store = new_status_effects_store
 		self.base_stats_multiplier = res_base_stats_multiplier
 		self.base_stats_adder = res_base_stats_adder
 		self.can_act = res_can_act
@@ -139,6 +157,6 @@ func add_stats(base: BaseStats, adder: BaseStats) -> BaseStats:
 
 #creates new copy of status effect dictionary for assignment to trigger setter
 func add_status_effect(new_effect: StatusEffectStore):
-	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects)
+	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects_store)
 	res_status_effects[new_effect.id] = new_effect
-	self.status_effects = res_status_effects
+	self.status_effects_store = res_status_effects

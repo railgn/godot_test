@@ -1,15 +1,9 @@
 Now:
-
-    passive skills 
-        does this need anything other than the one property?
     go back to party
-
-    targetting functions
 
     equipment
 
 Later:
-
     add deep copy of skills? is this needed?
             would be useful when creating similar skills
         same for status effects
@@ -40,4 +34,5 @@ Later:
                 5: 2.0
         etc.
 
+    targetting functions
     
