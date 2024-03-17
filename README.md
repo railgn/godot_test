@@ -1,9 +1,13 @@
 Now:
     go back to party
 
-    stats code break alert
+    change deepcopy and change stats to global classes (not singletons)
+
+    add setter to skills_store (on party (member?)) to update status effect store based on new passive skills
 
     equipment
+        could affect mapping stats if setter finds the change between old and new objects.
+        then, adds/or subtracts based on change
 
 Later:
     add deep copy of skills? is this needed?

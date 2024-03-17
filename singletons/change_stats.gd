@@ -46,3 +46,9 @@ func add_base_stats(base: Stats.BaseStats, adder: Stats.BaseStats) -> Stats.Base
 	res.ailment_infliction_chance += (adder.ailment_infliction_chance -1)
 
 	return res
+
+func update_combat_stats(base_stats:Stats.BaseStats, base_stats_adder:Stats.BaseStats, base_stats_multiplier:Stats.BaseStats) -> Stats.BaseStats:
+	var res_combat_stats:= DeepCopy.copy_base_stats(base_stats)
+	res_combat_stats = multiply_base_stats(add_base_stats(res_combat_stats, base_stats_adder), base_stats_multiplier)
+
+	return res_combat_stats

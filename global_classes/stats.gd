@@ -58,53 +58,48 @@ var mirror := false
 var can_act := true
 var mapping_stats := MappingStats.new():
 	set(new_mapping_stats):
+		var res_base_stats:= BaseStats.new()
 		##strength
-		base_stats.physical.attack = new_mapping_stats.strength
+		res_base_stats.physical.attack = new_mapping_stats.strength
 		##intelligence
-		base_stats.magical.attack = new_mapping_stats.intelligence
+		res_base_stats.magical.attack = new_mapping_stats.intelligence
 		##agility
-		base_stats.turn_speed = new_mapping_stats.agility
+		res_base_stats.turn_speed = new_mapping_stats.agility
 		##dexterity
-		base_stats.hit_rate = 1 + new_mapping_stats.dexterity*.02
+		res_base_stats.hit_rate = 1 + new_mapping_stats.dexterity*.02
 		##vitality
-		base_stats.hp.maximum = new_mapping_stats.vitality
-		base_stats.physical.defense = new_mapping_stats.vitality
+		res_base_stats.hp.maximum = new_mapping_stats.vitality
+		res_base_stats.physical.defense = new_mapping_stats.vitality
 		##wisdom
-		base_stats.magical.defense = new_mapping_stats.wisdom
-		base_stats.healing_power = new_mapping_stats.wisdom
+		res_base_stats.magical.defense = new_mapping_stats.wisdom
+		res_base_stats.healing_power = new_mapping_stats.wisdom
 		##luck
-		base_stats.critical_avoid = 1 + new_mapping_stats.luck*.01
-		base_stats.ailment_infliction_chance = 1 + new_mapping_stats.luck*.02
+		res_base_stats.critical_avoid = 1 + new_mapping_stats.luck*.01
+		res_base_stats.ailment_infliction_chance = 1 + new_mapping_stats.luck*.02
 		##agi + luck
-		base_stats.avoid = 1 + new_mapping_stats.agility*.02 + new_mapping_stats.luck*.01
+		res_base_stats.avoid = 1 + new_mapping_stats.agility*.02 + new_mapping_stats.luck*.01
 		##dex + luck
-		base_stats.critical_chance = 1 + new_mapping_stats.dexterity*.02 + new_mapping_stats.luck*.01
+		res_base_stats.critical_chance = 1 + new_mapping_stats.dexterity*.02 + new_mapping_stats.luck*.01
 		##int + wis
-		base_stats.mp.maximum = (new_mapping_stats.intelligence + new_mapping_stats.wisdom)
+		res_base_stats.mp.maximum = (new_mapping_stats.intelligence + new_mapping_stats.wisdom)
 		
+		base_stats = res_base_stats
 		mapping_stats = new_mapping_stats
-var base_stats := BaseStats.new()
-## add setter for this that builds combat stats
-##abstract the combat stats builder used in base_stat_multiplier and adder?
+var base_stats := BaseStats.new():
+	set(new_base_stats):
+		combat_stats = ChangeStats.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
+		base_stats = new_base_stats
 var combat_stats := BaseStats.new()
 
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
-		var res_combat_stats = DeepCopy.copy_base_stats(base_stats)
-		res_combat_stats = ChangeStats.multiply_base_stats(ChangeStats.add_base_stats(res_combat_stats, base_stats_adder), new_base_stats_multiplier)
-
+		combat_stats = ChangeStats.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
 		base_stats_multiplier = new_base_stats_multiplier
-		combat_stats = res_combat_stats
 
 var base_stats_adder := BaseStats.new():
 	set(new_base_stats_adder):
-		var res_combat_stats = DeepCopy.copy_base_stats(base_stats)
-		res_combat_stats = ChangeStats.multiply_base_stats(ChangeStats.add_base_stats(res_combat_stats, new_base_stats_adder), base_stats_multiplier)
-
+		combat_stats = ChangeStats.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
 		base_stats_adder = new_base_stats_adder
-		combat_stats = res_combat_stats
-
-
 
 ##need to type this dictionary's values as "StatusEffectStore"
 ##keep as setter vs. call manual (so only calls once at end of turn?)
