@@ -5,7 +5,7 @@ var PARTY:= {}
 class PartyMemberStore:
     var id: String
     var party_position: int
-    var level: int
+    var level: int ##setter that utilizes mapping stat test from
     var stats: Stats
     var skills_store: Skills_Store
     var class_store:= Class_Store.new()

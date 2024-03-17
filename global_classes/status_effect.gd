@@ -11,8 +11,8 @@ var sprite_id = {
 var cure_on_battle_end:= true
 var prevent_action:= false
 
-var stat_adder_function: Callable = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats: return base_stats
-var stat_multiplier_function: Callable = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats: return base_stats
+var base_stat_adder_function: Callable = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats: return base_stats
+var base_stat_multiplier_function: Callable = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats: return base_stats
 
 var count_down_on_turn:= true
 var effect_on_count_down: Callable = func(stats: Stats, _level) -> Stats: return stats

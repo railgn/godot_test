@@ -23,6 +23,19 @@ func copy_base_stats(original: Stats.BaseStats) -> Stats.BaseStats:
 
 	return res
 
+func copy_mapping_stats(original: Stats.MappingStats) -> Stats.MappingStats:
+	var res = Stats.MappingStats.new()
+
+	res.strength = original.strength
+	res.intelligence = original.intelligence
+	res.agility = original.agility
+	res.dexterity = original.dexterity
+	res.vitality = original.vitality
+	res.wisdom = original.wisdom
+	res.luck = original.luck
+
+	return res
+
 func copy_stats_status_effects(original: Dictionary):
 	var res = {}
 

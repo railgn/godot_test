@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.2", "Forward Plus")
 StatusEffects="*res://singletons/status_effects.gd"
 DeepCopy="*res://singletons/deep_copy.gd"
 Skills="*res://singletons/skills.gd"
+ChangeStats="*res://singletons/change_stats.gd"
 
 [editor]
 

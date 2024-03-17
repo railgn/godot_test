@@ -1,6 +1,8 @@
 Now:
     go back to party
 
+    stats code break alert
+
     equipment
 
 Later:

@@ -31,3 +31,12 @@ func _ready():
 	print("Stat Test Addition --- Combat Physical Defebse = 21: ", (stats_test.combat_stats.physical.defense == 21))
 	print("Stat Test Multiply + Addition --- Combat Magic Attack = 31.5: ", (stats_test.combat_stats.magical.attack == 31.5))
 	print("Stat Test Delete Exipired Keys --- SE_0 Deleted: ", ("SE_0" not in stats_test.status_effects_store.keys()))
+
+
+	var new_mapping_stats:= DeepCopy.copy_mapping_stats(stats_test.mapping_stats)
+	new_mapping_stats.strength = 2
+
+	stats_test.mapping_stats = new_mapping_stats
+
+	print(stats_test.base_stats.physical.attack)
+	print(stats_test.combat_stats.physical.attack)
