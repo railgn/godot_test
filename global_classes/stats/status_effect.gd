@@ -19,7 +19,6 @@ var effect_on_count_down: Callable = func(stats: Stats, _level) -> Stats: return
 var effect_on_damage_taken: Callable = func(stats: Stats, _level) -> Stats: return stats
 var effect_on_side_switch: Callable = func(stats: Stats, _level) -> Stats: return stats
 ## useful for passive skills that trigger an in battle status effect
-    ##
 var effect_on_battle_start: Callable = func(stats: Stats, _level) -> Stats: return stats
 
 var action_on_cure:= {

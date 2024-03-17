@@ -11,11 +11,6 @@ Now:
 
 		Character_class Code alert (mapping stats)
 
-
-	dictionaries should be classes not singletons? Can add a folder for them?
-		seems unnecessary
-		gotta instance them anyways
-
 Later:
 	add deep copy of skills? is this needed?
 			would be useful when creating similar skills
