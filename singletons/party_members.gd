@@ -4,8 +4,6 @@ var DICTIONARY = {}
 
 
 
-
-
 # var characters = {
 #     P0: {
 #         id: "P0",

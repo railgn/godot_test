@@ -1,11 +1,16 @@
 Now:
-	go back to party
+	party member class -> party members dictionary -> party singleton 
 
 	add setter to skills_store (on party (member?)) to update status effect store based on new passive skills
 
 	equipment
 		could affect mapping stats if setter finds the change between old and new objects.
 		then, adds/or subtracts based on change
+
+
+	dictionaries should be classes not singletons? Can add a folder for them?
+		seems unnecessary
+		gotta instance them anyways
 
 Later:
 	add deep copy of skills? is this needed?
