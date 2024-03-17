@@ -9,6 +9,8 @@ Now:
 		could affect mapping stats if setter finds the change between old and new objects.
 		then, adds/or subtracts based on change
 
+		Character_class Code alert (mapping stats)
+
 
 	dictionaries should be classes not singletons? Can add a folder for them?
 		seems unnecessary
