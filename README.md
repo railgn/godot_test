@@ -1,8 +1,6 @@
 Now:
     go back to party
 
-    change deepcopy and change stats to global classes (not singletons)
-
     add setter to skills_store (on party (member?)) to update status effect store based on new passive skills
 
     equipment

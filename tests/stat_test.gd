@@ -1,6 +1,7 @@
 extends Node
 
 var stats_test: Stats
+var DEEP_COPY = DeepCopy.new()
 
 func _ready():
 	# StatusEffects.initialized.connect(_on_autoload_initialized)
@@ -32,7 +33,7 @@ func _ready():
 	print("Stat Test Multiply + Addition --- Combat Magic Attack = 31.5: ", (stats_test.combat_stats.magical.attack == 31.5))
 	print("Stat Test Delete Exipired Keys --- SE_0 Deleted: ", ("SE_0" not in stats_test.status_effects_store.keys()))
 	
-	var new_mapping_stats:= DeepCopy.copy_mapping_stats(stats_test.mapping_stats)
+	var new_mapping_stats:= DEEP_COPY.copy_mapping_stats(stats_test.mapping_stats)
 	new_mapping_stats.strength = 2
 	stats_test.mapping_stats = new_mapping_stats
 	

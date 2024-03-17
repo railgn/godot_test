@@ -1,7 +1,9 @@
 class_name Stats
 # extends Resource
 
-##setters on these to change base stats?
+var UPDATE_STATS = UpdateStats.new()
+var DEEP_COPY = DeepCopy.new()
+
 class MappingStats:
 	var strength: int = 1
 	var intelligence: int = 1
@@ -87,18 +89,18 @@ var mapping_stats := MappingStats.new():
 		mapping_stats = new_mapping_stats
 var base_stats := BaseStats.new():
 	set(new_base_stats):
-		combat_stats = ChangeStats.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
+		combat_stats = UPDATE_STATS.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
 		base_stats = new_base_stats
 var combat_stats := BaseStats.new()
 
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
-		combat_stats = ChangeStats.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
+		combat_stats = UPDATE_STATS.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
 		base_stats_multiplier = new_base_stats_multiplier
 
 var base_stats_adder := BaseStats.new():
 	set(new_base_stats_adder):
-		combat_stats = ChangeStats.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
+		combat_stats = UPDATE_STATS.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
 		base_stats_adder = new_base_stats_adder
 
 ##need to type this dictionary's values as "StatusEffectStore"
@@ -134,6 +136,6 @@ var status_effects_store := {}:
 
 #creates new copy of status effect dictionary for assignment to trigger setter
 func add_status_effect(new_effect: Stats.StatusEffectStore):
-	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects_store)
+	var res_status_effects = DEEP_COPY.copy_stats_status_effects(self.status_effects_store)
 	res_status_effects[new_effect.id] = new_effect
 	self.status_effects_store = res_status_effects

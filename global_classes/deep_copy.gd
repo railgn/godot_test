@@ -1,3 +1,4 @@
+class_name DeepCopy
 extends Node
 
 func copy_base_stats(original: Stats.BaseStats) -> Stats.BaseStats:

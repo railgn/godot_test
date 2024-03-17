@@ -1,8 +1,11 @@
+class_name UpdateStats	
 extends Node
+
+var DEEP_COPY = DeepCopy.new()
 
 # used to calculate combat stats in multiplier setter
 func multiply_base_stats(base: Stats.BaseStats, multiplier: Stats.BaseStats) -> Stats.BaseStats:
-	var res := DeepCopy.copy_base_stats(base)
+	var res := DEEP_COPY.copy_base_stats(base)
 
 	res.hp.current *= multiplier.hp.current
 	res.hp.maximum *= multiplier.hp.maximum
@@ -25,7 +28,7 @@ func multiply_base_stats(base: Stats.BaseStats, multiplier: Stats.BaseStats) -> 
 	return res
 
 func add_base_stats(base: Stats.BaseStats, adder: Stats.BaseStats) -> Stats.BaseStats:
-	var res := DeepCopy.copy_base_stats(base)
+	var res := DEEP_COPY.copy_base_stats(base)
 
 	res.hp.current += (adder.hp.current - 1)
 	res.hp.maximum += (adder.hp.maximum -1)
@@ -48,7 +51,7 @@ func add_base_stats(base: Stats.BaseStats, adder: Stats.BaseStats) -> Stats.Base
 	return res
 
 func update_combat_stats(base_stats:Stats.BaseStats, base_stats_adder:Stats.BaseStats, base_stats_multiplier:Stats.BaseStats) -> Stats.BaseStats:
-	var res_combat_stats:= DeepCopy.copy_base_stats(base_stats)
+	var res_combat_stats:= DEEP_COPY.copy_base_stats(base_stats)
 	res_combat_stats = multiply_base_stats(add_base_stats(res_combat_stats, base_stats_adder), base_stats_multiplier)
 
 	return res_combat_stats
