@@ -2,7 +2,7 @@ extends Node
 
 var DICTIONARY:= {}
 
-func add_skill(init_id: String, init_name: String, init_active: bool):
+func add_skill(init_id: String, init_name: String, init_active: bool) -> void:
 	if DICTIONARY.has(init_id):
 		print("DUPLICATE SKILL: ", init_id, " ", init_name, init_active)
 	else:
@@ -19,13 +19,5 @@ func get_skill(id: String) -> Skill:
 		print("SKILL DOES NOT EXIST: ", id)
 		return ActiveSkill.new("SK_0", "default", true)
 
-
-# func edit_effect(id, property, value):
-
-# signal initialized
-
 func _ready():
 	add_skill("SK_0", "default", true)
-
-	# call_deferred("emit_signal", "initialized")
-

@@ -19,8 +19,6 @@ func get_effect(id: String) -> StatusEffect:
 
 # func edit_effect(id, property, value):
 
-# signal initialized
-
 func _ready():
 	add_effect("SE_0", "default")
 
@@ -40,5 +38,3 @@ func _ready():
 		var res:= DEEP_COPY.copy_base_stats(base_stats)
 		res.magical.attack += 20
 		return res
-
-	# call_deferred("emit_signal", "initialized")

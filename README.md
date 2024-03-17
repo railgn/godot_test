@@ -1,7 +1,9 @@
 Now:
-	party member class -> party members dictionary -> party singleton 
+	is it worth changing anything to an Array[type]?
 
-	add setter to skills_store (on party (member?)) to update status effect store based on new passive skills
+	party_member code alerts
+
+	party singleton
 
 	equipment
 		could affect mapping stats if setter finds the change between old and new objects.
