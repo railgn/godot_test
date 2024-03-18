@@ -5,6 +5,10 @@ Now:
 
 	party singleton
 
+	party test 
+		- changing level and class
+		- change equipment
+
 	equipment
 		could affect mapping stats if setter finds the change between old and new objects.
 		then, adds/or subtracts based on change

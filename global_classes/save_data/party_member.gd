@@ -1,5 +1,7 @@
 class_name PartyMember
 
+var DEEP_COPY = DeepCopy.new()
+
 var playable_character_id: String
 var party_position: int
 var level: int : 
@@ -11,16 +13,50 @@ var level: int :
 		level = new_level
 var class_id: String :
 	set(new_class_id):
-		## update skill tree, update skills_store (new innate skills)
+		## update skill tree, adds/removes innate skills from skills store
+			## first remove from old class id
+			## then add using new class id
+			##use add_skill and remove_skil functions
+		
 		class_id = new_class_id
 var promoted: bool
 var stats:= Stats.new()
-var skills_store:= Skills_Store.new():
+var skills_store:= SkillsStore.new():
 	set(new_skills_store):
-		##update status effect store based on new passive skills
+		var added_passives: Array[SkillsStore.SkillStore] = []
+		var removed_passives: Array[SkillsStore.SkillStore] = []
+
+		for skill_id in new_skills_store.passive_skills:
+			if not skills_store.passive_skills.has(skill_id):
+				added_passives.append(new_skills_store.passive_skills[skill_id])
+		
+		for skill_id in skills_store.passive_skills:
+			if not new_skills_store.passive_skills.has(skill_id):
+				removed_passives.append(skills_store.passive_skills[skill_id])
+		
+		for added_passive in added_passives:
+			var skill:PassiveSkill = Skills.get_skill(added_passive.id)
+			var se_granted:= skill.status_effect_granted
+
+			var effect:= Stats.StatusEffectStore.new(
+				se_granted.id, 
+				se_granted.turns_left, 
+				added_passive.level, 
+				se_granted.does_not_expire, 
+				se_granted.permanent_persists_outside_battle,
+			)			
+			stats.add_status_effect(effect)
+
+		for removed_passive in removed_passives:
+			var skill:PassiveSkill = Skills.get_skill(removed_passive.id)
+			var se_granted:= skill.status_effect_granted
+
+			stats.delete_status_effect(se_granted.id)
+
 		skills_store = new_skills_store
+
 var skill_tree ## skill tree class
-var equipment_slots: Equipment_Slots
+var equipment_slots: EquipmentSlots
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
@@ -30,19 +66,42 @@ func _init(init_playable_character_id: String, init_class_id: String, init_promo
 	promoted = init_promoted
 	skills_store = CharacterClasses.get_character_class(init_class_id).innate_skills
 	# skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
-	equipment_slots = Equipment_Slots.new(CharacterClasses.get_character_class(init_class_id).equipment_slot_array)
+	equipment_slots = EquipmentSlots.new(CharacterClasses.get_character_class(init_class_id).equipment_slot_array)
 
-class Skills_Store:
-	class Skill_Store:
+class SkillsStore:
+	class SkillStore:
 		var id: String
 		var level: int
-	var active_skills = Skill_Store.new()
-	var passive_skills = Skill_Store.new()
+		func _init(init_id: String, init_level:= 1):
+			id = init_id
+			level = init_level
 
-class Equipment_Slots:
+	var active_skills:= {}
+	var passive_skills:= {}
+
+func add_skill(active_bool: bool, init_id: String, init_level: int):
+	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
+	if active_bool:
+		res_skills_store.active_skills[init_id] = SkillsStore.SkillStore.new(init_id, init_level)
+	else:
+		res_skills_store.passive_skills[init_id] = SkillsStore.SkillStore.new(init_id, init_level)
+
+	skills_store = res_skills_store
+
+func delete_skill(id_to_delete: String):
+	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
+	if res_skills_store.active_skills.has(id_to_delete):
+		res_skills_store.active_skills.erase(id_to_delete)
+	elif res_skills_store.passive_skills.has(id_to_delete):
+		res_skills_store.passive_skills.erase(id_to_delete)
+
+	skills_store = res_skills_store
+
+class EquipmentSlots:
+	func _init(slot_array: Array[CharacterClass.Equipment_Slot]):
 	##build object of equipment slots
 		##key slot type
 		## property - cost
 		## property - equipment ID
-	func _init(slot_array: Array[CharacterClass.Equipment_Slot]):
+
 		pass

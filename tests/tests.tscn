@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://depuahmgkyxx8"]
+[gd_scene load_steps=3 format=3 uid="uid://depuahmgkyxx8"]
 
 [ext_resource type="Script" path="res://tests/stat_test.gd" id="1_g4cma"]
+[ext_resource type="Script" path="res://tests/party_test.gd" id="2_40epv"]
 
 [node name="Root" type="Node"]
+
+[node name="Stat Test" type="Node" parent="."]
 script = ExtResource("1_g4cma")
+
+[node name="Party Test" type="Node" parent="."]
+script = ExtResource("2_40epv")

@@ -11,8 +11,8 @@ extends Skill
 
 class PassiveSkillStatusEffectStore:
     var id:= "SE_0"
-    var turns_left:= 0
-    var does_not_expire:= false
+    var turns_left:= 99
+    var does_not_expire:= true
     var permanent_persists_outside_battle:= true
 
 var status_effect_granted:= PassiveSkillStatusEffectStore.new() 

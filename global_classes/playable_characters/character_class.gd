@@ -5,7 +5,7 @@ var name:= "default"
 var promoted:= false
 var skill_tree_id:= "ST0"
 
-var innate_skills:= PartyMember.Skills_Store.new()
+var innate_skills:= PartyMember.SkillsStore.new()
 var equipment_slot_array: Array[Equipment_Slot] = [Equipment_Slot.new("Foil", 1)]
 
 ##should it be a change basis?
@@ -13,7 +13,7 @@ var equipment_slot_array: Array[Equipment_Slot] = [Equipment_Slot.new("Foil", 1)
 ##promotion or class change should unequip equipment first
     ##then re-equip (if able)
     ##then this function runs
-var calc_mapping_stats: Callable = func(level: int, _equipment: PartyMember.Equipment_Slots) -> Stats.MappingStats: 
+var calc_mapping_stats: Callable = func(level: int, _equipment: PartyMember.EquipmentSlots) -> Stats.MappingStats: 
     var res_mapping_stats = Stats.MappingStats.new()
     for stat in res_mapping_stats:
         res_mapping_stats[stat] = level * 1   

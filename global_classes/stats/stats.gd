@@ -103,8 +103,7 @@ var base_stats_adder := BaseStats.new():
 		combat_stats = UPDATE_STATS.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
 		base_stats_adder = new_base_stats_adder
 
-##need to type this dictionary's values as "StatusEffectStore"
-##keep as setter vs. call manual (so only calls once at end of turn?)
+##only added/deleted from using add and delete functions below
 var status_effects_store := {}:
 	set(new_status_effects_store):
 		var res_base_stats_adder := BaseStats.new()
@@ -134,8 +133,18 @@ var status_effects_store := {}:
 		self.base_stats_adder = res_base_stats_adder
 		self.can_act = res_can_act
 
-#creates new copy of status effect dictionary for assignment to trigger setter
 func add_status_effect(new_effect: Stats.StatusEffectStore):
 	var res_status_effects = DEEP_COPY.copy_stats_status_effects(self.status_effects_store)
 	res_status_effects[new_effect.id] = new_effect
+
 	self.status_effects_store = res_status_effects
+
+func delete_status_effect(id_to_delete: String):
+	var res_status_effects = DEEP_COPY.copy_stats_status_effects(self.status_effects_store)
+	if res_status_effects.has(id_to_delete):
+		res_status_effects.erase(id_to_delete)
+	else:
+		print("DELETING STATUS EFFECT DOES NOT EXITS: ", id_to_delete)
+
+	self.status_effects_store = res_status_effects
+

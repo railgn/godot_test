@@ -48,3 +48,14 @@ func copy_stats_status_effects(original: Dictionary):
 			original[se_id].permanent_persists_outside_battle)
 
 	return res
+
+func copy_skills_store(original: PartyMember.SkillsStore) -> PartyMember.SkillsStore:
+	var res:= PartyMember.SkillsStore.new()
+
+	for skill_id in original.active_skills:
+		res.add_skill(true, skill_id, original.active_skills[skill_id].level)
+
+	for skill_id in original.passive_skills:
+		res.add_skill(false, skill_id, original.passive_skills[skill_id].level)
+	
+	return res
