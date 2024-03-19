@@ -27,7 +27,8 @@ func _ready():
 	stats_test.add_status_effect(new_effect_3)
 	stats_test.add_status_effect(new_effect_3)
 	stats_test.add_status_effect(new_effect_3)
-
+	
+	print("--- STAT TEST ---")
 	print("Stat Test Multiply --- Combat Physical Attack = 1.5: ", (stats_test.combat_stats.physical.attack == 1.5))
 	print("Stat Test Addition --- Combat Physical Defebse = 21: ", (stats_test.combat_stats.physical.defense == 21))
 	print("Stat Test Multiply + Addition --- Combat Magic Attack = 31.5: ", (stats_test.combat_stats.magical.attack == 31.5))

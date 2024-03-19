@@ -1,7 +1,11 @@
 Now:
+
+	FIND CAUSE OF REST OF "CLASS DOES NOT EXIST"
+
+
 	is it worth changing anything to an Array[type]?
 
-	party_member code alerts
+	party_member equipment
 
 	party singleton
 

@@ -9,31 +9,42 @@ var innate_skills:= PartyMember.SkillsStore.new()
 var equipment_slot_array: Array[Equipment_Slot] = [Equipment_Slot.new("Foil", 1)]
 
 ##should it be a change basis?
-    ##think about promotion timing or class switching?
+	##think about promotion timing or class switching?
 ##promotion or class change should unequip equipment first
-    ##then re-equip (if able)
-    ##then this function runs
+	##then re-equip (if able)
+	##then this function runs
 var calc_mapping_stats: Callable = func(level: int, _equipment: PartyMember.EquipmentSlots) -> Stats.MappingStats: 
-    var res_mapping_stats = Stats.MappingStats.new()
-    for stat in res_mapping_stats:
-        res_mapping_stats[stat] = level * 1   
-    
-    ##APPLY EQUIPMENT
+	var res_mapping_stats = mapping_stat_growths.call(level)
+	
+	##APPLY EQUIPMENT
 
-    return res_mapping_stats
+	return res_mapping_stats
+
+var mapping_stat_growths: Callable = func(level: int) -> Stats.MappingStats:
+	var res_mapping_stats = Stats.MappingStats.new()
+
+	res_mapping_stats.strength = level * 1  
+	res_mapping_stats.intelligence = level * 1  
+	res_mapping_stats.agility = level * 1  
+	res_mapping_stats.dexterity = level * 1  
+	res_mapping_stats.vitality = level * 1  
+	res_mapping_stats.wisdom = level * 1  
+	res_mapping_stats.luck = level * 1  
+
+	return res_mapping_stats
 
 class Equipment_Slot:
-    var slot_type: String ##add enum for this? would be shared by dictionary
-    var cost: int
-    var equipment_id: String
-    func _init(init_slot_type: String, init_cost: int, init_equipment_id:= ""):
-        slot_type = init_slot_type
-        cost = init_cost
-        equipment_id = init_equipment_id
+	var slot_type: String ##add enum for this? would be shared by dictionary
+	var cost: int
+	var equipment_id: String
+	func _init(init_slot_type: String, init_cost: int, init_equipment_id:= ""):
+		slot_type = init_slot_type
+		cost = init_cost
+		equipment_id = init_equipment_id
 
 func _init(init_id, init_name, init_promoted):
-    class_id = init_id
-    name = init_name
-    promoted = init_promoted
+	class_id = init_id
+	name = init_name
+	promoted = init_promoted
 
-    
+	

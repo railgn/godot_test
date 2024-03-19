@@ -2,6 +2,8 @@ extends Node
 
 var DICTIONARY:= {}
 
+signal initialized
+
 func add_party_member(init_character_id: String, init_class_id: String, init_promoted: bool) -> void:
 	if DICTIONARY.has(init_character_id):
 		print("DUPLICATE PARTY MEMBER: ", init_character_id, " ", init_class_id, " ", init_promoted)
@@ -15,7 +17,13 @@ func get_character(id: String) -> PartyMember:
 		print("PARTY MEMBER DOES NOT EXIST: ", id)
 		return PartyMember.new("P_0", "BC_0", false)
 
+
 func _ready():
+	CharacterClasses.initialized.connect(on_classes_initialized)
+
+func on_classes_initialized():
 	add_party_member("P_0", "BC_0", false)
 
 	add_party_member("P_1", "BC_1", false)
+
+	call_deferred("emit_signal", "initialized")

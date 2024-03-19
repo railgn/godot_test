@@ -4,37 +4,47 @@ var DEEP_COPY = DeepCopy.new()
 
 var playable_character_id: String
 var party_position: int
-var level: int : 
-	set(new_level):
-		var mapping_stat_function:= CharacterClasses.get_character_class(class_id).calc_mapping_stats
-		var res_mapping_stats = mapping_stat_function.call(new_level, equipment_slots)
-		
-		stats.mapping_stats = res_mapping_stats
-		level = new_level
 var class_id: String :
 	set(new_class_id):
 		## TODO update skill tree
+		var old_innate_skills: SkillsStore
+		if class_id:
+			old_innate_skills = CharacterClasses.get_character_class(class_id).innate_skills
+		else:
+			old_innate_skills = CharacterClasses.get_character_class("BC_0").innate_skills
 
-		var old_innate_skills:= CharacterClasses.get_character_class(class_id).innate_skills
 		var new_innate_skills:= CharacterClasses.get_character_class(new_class_id).innate_skills
 		
 		for skill in old_innate_skills.active_skills:
 			if not new_innate_skills.active_skills.has(skill):
-				self.delete_skill(skill.id)
+				self.delete_skill(old_innate_skills.active_skills[skill].id)
 		
 		for skill in old_innate_skills.passive_skills:
 			if not new_innate_skills.passive_skills.has(skill):
-				self.delete_skill(skill.id)
+				self.delete_skill(old_innate_skills.passive_skills[skill].id)
 
 		for skill in new_innate_skills.active_skills:
 			if not old_innate_skills.active_skills.has(skill):
-				self.add_skill(true, skill.id, skill.level)
+				self.add_skill(true, 
+					new_innate_skills.active_skills[skill].id, 
+					new_innate_skills.active_skills[skill].level,
+					)
 		
 		for skill in new_innate_skills.passive_skills:
 			if not old_innate_skills.passive_skills.has(skill):
-				self.add_skill(false, skill.id, skill.level)
+				self.add_skill(false, 
+					new_innate_skills.passive_skills[skill].id, 
+					new_innate_skills.passive_skills[skill].level,
+					)
 
 		class_id = new_class_id
+var level: int : 
+	set(new_level):
+		var calc_mapping_stat_function:= CharacterClasses.get_character_class(class_id).calc_mapping_stats
+		var res_mapping_stats = calc_mapping_stat_function.call(new_level, equipment_slots)
+		
+		stats.mapping_stats = res_mapping_stats
+		level = new_level
 var promoted: bool
 var stats:= Stats.new()
 var skills_store:= SkillsStore.new():
@@ -77,9 +87,9 @@ var equipment_slots: EquipmentSlots
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
 	party_position = Party.DICTIONARY.keys().size() - 1
-	level = PlayableCharacters.get_character(init_playable_character_id).recruitment_level
 	class_id = init_class_id
-	promoted = init_promoted
+	level = PlayableCharacters.get_character(init_playable_character_id).recruitment_level
+	promoted = init_promoted	
 	skills_store = CharacterClasses.get_character_class(init_class_id).innate_skills
 	## TODO skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
 	equipment_slots = EquipmentSlots.new(CharacterClasses.get_character_class(init_class_id).equipment_slot_array)
