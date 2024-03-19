@@ -13,11 +13,27 @@ var level: int :
 		level = new_level
 var class_id: String :
 	set(new_class_id):
-		## update skill tree, adds/removes innate skills from skills store
-			## first remove from old class id
-			## then add using new class id
-			##use add_skill and remove_skil functions
+		## TODO update skill tree
+
+		var old_innate_skills:= CharacterClasses.get_character_class(class_id).innate_skills
+		var new_innate_skills:= CharacterClasses.get_character_class(new_class_id).innate_skills
 		
+		for skill in old_innate_skills.active_skills:
+			if not new_innate_skills.active_skills.has(skill):
+				self.delete_skill(skill.id)
+		
+		for skill in old_innate_skills.passive_skills:
+			if not new_innate_skills.passive_skills.has(skill):
+				self.delete_skill(skill.id)
+
+		for skill in new_innate_skills.active_skills:
+			if not old_innate_skills.active_skills.has(skill):
+				self.add_skill(true, skill.id, skill.level)
+		
+		for skill in new_innate_skills.passive_skills:
+			if not old_innate_skills.passive_skills.has(skill):
+				self.add_skill(false, skill.id, skill.level)
+
 		class_id = new_class_id
 var promoted: bool
 var stats:= Stats.new()
@@ -55,17 +71,17 @@ var skills_store:= SkillsStore.new():
 
 		skills_store = new_skills_store
 
-var skill_tree ## skill tree class
+var skill_tree ## TODO skill tree class
 var equipment_slots: EquipmentSlots
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
-	party_position = Party.PARTY.keys().size() - 1
+	party_position = Party.DICTIONARY.keys().size() - 1
 	level = PlayableCharacters.get_character(init_playable_character_id).recruitment_level
 	class_id = init_class_id
 	promoted = init_promoted
 	skills_store = CharacterClasses.get_character_class(init_class_id).innate_skills
-	# skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
+	## TODO skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
 	equipment_slots = EquipmentSlots.new(CharacterClasses.get_character_class(init_class_id).equipment_slot_array)
 
 class SkillsStore:

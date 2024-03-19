@@ -13,7 +13,10 @@ func get_character_class(id: String) -> CharacterClass:
 		return DICTIONARY[id]
 	else:
 		print("SKILL DOES NOT EXIST: ", id)
-		return CharacterClass.new("BC0", "default", false)
+		return CharacterClass.new("BC_0", "default", false)
 
 func _ready():
-	add_character_class("BC0", "default", false)
+	add_character_class("BC_0", "default", false)
+
+	add_character_class("BC_1", "party test", false)
+	DICTIONARY.BC_1.innate_skills.passive_skills.SK_1 = PartyMember.SkillsStore.SkillStore.new("SK_1", 2) 

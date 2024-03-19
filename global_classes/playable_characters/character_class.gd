@@ -1,9 +1,9 @@
 class_name CharacterClass
 
-var class_id:= "BC0"
+var class_id:= "BC_0"
 var name:= "default"
 var promoted:= false
-var skill_tree_id:= "ST0"
+var skill_tree_id:= "ST_0"
 
 var innate_skills:= PartyMember.SkillsStore.new()
 var equipment_slot_array: Array[Equipment_Slot] = [Equipment_Slot.new("Foil", 1)]

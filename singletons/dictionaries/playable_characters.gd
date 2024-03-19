@@ -12,8 +12,11 @@ func get_character(id: String) -> PlayableCharacter:
 	if DICTIONARY.has(id):
 		return DICTIONARY[id]
 	else:
-		print("SKILL DOES NOT EXIST: ", id)
-		return PlayableCharacter.new("P0", "default", "BC0")
+		print("CHARACTER DOES NOT EXIST: ", id)
+		return PlayableCharacter.new("P_0", "default", "BC_0")
 
 func _ready():
-	add_character("P0", "default", "BC0")
+	add_character("P_0", "default", "BC_0")
+
+	add_character("P_1", "party test", "BC_1")
+	DICTIONARY.P_1.recruitment_level = 5

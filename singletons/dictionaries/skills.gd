@@ -21,3 +21,6 @@ func get_skill(id: String) -> Skill:
 
 func _ready():
 	add_skill("SK_0", "default", true)
+	
+	add_skill("SK_1", "passive stat test", false)
+	DICTIONARY.SK_1.status_effect_granted.id = "SE_1"
