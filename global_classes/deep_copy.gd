@@ -53,9 +53,9 @@ func copy_skills_store(original: PartyMember.SkillsStore) -> PartyMember.SkillsS
 	var res:= PartyMember.SkillsStore.new()
 
 	for skill_id in original.active_skills:
-		res.add_skill(true, skill_id, original.active_skills[skill_id].level)
+		res.active_skills[skill_id] = original.active_skills[skill_id]
 
 	for skill_id in original.passive_skills:
-		res.add_skill(false, skill_id, original.passive_skills[skill_id].level)
+		res.passive_skills[skill_id] = original.passive_skills[skill_id]
 	
 	return res

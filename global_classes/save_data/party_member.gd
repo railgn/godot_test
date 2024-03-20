@@ -7,6 +7,12 @@ var party_position: int
 var class_id: String :
 	set(new_class_id):
 		## TODO update skill tree
+		## TODO update equipment slots
+
+		##update stats
+		stats.mapping_stats = recalc_mapping_stats(new_class_id, level, equipment_slots)
+
+		##update skills
 		var old_innate_skills: SkillsStore
 		if class_id:
 			old_innate_skills = CharacterClasses.get_character_class(class_id).innate_skills
@@ -40,10 +46,7 @@ var class_id: String :
 		class_id = new_class_id
 var level: int : 
 	set(new_level):
-		var calc_mapping_stat_function:= CharacterClasses.get_character_class(class_id).calc_mapping_stats
-		var res_mapping_stats = calc_mapping_stat_function.call(new_level, equipment_slots)
-		
-		stats.mapping_stats = res_mapping_stats
+		stats.mapping_stats = recalc_mapping_stats(class_id, new_level, equipment_slots)
 		level = new_level
 var promoted: bool
 var stats:= Stats.new()
@@ -82,7 +85,9 @@ var skills_store:= SkillsStore.new():
 		skills_store = new_skills_store
 
 var skill_tree ## TODO skill tree class
-var equipment_slots: EquipmentSlots
+## TODO setter on equipment change
+## TODO deepcopy equipment slots
+var equipment_slots: Array[CharacterClass.Equipment_Slot]
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
@@ -92,7 +97,7 @@ func _init(init_playable_character_id: String, init_class_id: String, init_promo
 	promoted = init_promoted	
 	skills_store = CharacterClasses.get_character_class(init_class_id).innate_skills
 	## TODO skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
-	equipment_slots = EquipmentSlots.new(CharacterClasses.get_character_class(init_class_id).equipment_slot_array)
+	equipment_slots = CharacterClasses.get_character_class(init_class_id).equipment_slot_array
 
 class SkillsStore:
 	class SkillStore:
@@ -104,6 +109,15 @@ class SkillsStore:
 
 	var active_skills:= {}
 	var passive_skills:= {}
+
+func recalc_mapping_stats(func_class_id: String, func_level: int, func_equipment_slots: Array[CharacterClass.Equipment_Slot]) -> Stats.MappingStats:
+	var calc_mapping_stat_function:= CharacterClasses.get_character_class(func_class_id).mapping_stat_growths
+	var res_mapping_stats = calc_mapping_stat_function.call(func_level)
+
+	## Apply Equipment stats
+
+	return res_mapping_stats
+			
 
 func add_skill(active_bool: bool, init_id: String, init_level: int):
 	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
@@ -123,11 +137,5 @@ func delete_skill(id_to_delete: String):
 
 	skills_store = res_skills_store
 
-class EquipmentSlots:
-	func _init(slot_array: Array[CharacterClass.Equipment_Slot]):
-	##build object of equipment slots
-		##key slot type
-		## property - cost
-		## property - equipment ID
+## add and remove equipment
 
-		pass
