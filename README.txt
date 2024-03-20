@@ -1,16 +1,15 @@
 Now:
 	is it worth changing anything to an Array[type]?
 
+	equipment
+		party member code alerts
+		equipment class
+		equipment dictionary singleton
+
 	party_member equipment
 
 	party test 
 		- change equipment
-
-	equipment
-		could affect mapping stats if setter finds the change between old and new objects.
-		then, adds/or subtracts based on change
-
-		Character_class Code alert (mapping stats)
 
 Later:
 	add deep copy of skills? is this needed?
