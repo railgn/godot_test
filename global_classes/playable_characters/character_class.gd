@@ -24,15 +24,12 @@ var mapping_stat_growths: Callable = func(level: int) -> Stats.MappingStats:
 	return res_mapping_stats
 
 class Equipment_Slot:
-	enum SlotType {
-		FOIL,
-		YOYO,
-	}
 
-	var slot_type: Array[SlotType]
+
+	var slot_type: Array[Equipment.EquipmentType]
 	var cost: int
 	var equipment_id: String
-	func _init(init_slot_type: Array[SlotType], init_cost: int, init_equipment_id:= ""):
+	func _init(init_slot_type: Array[Equipment.EquipmentType], init_cost: int, init_equipment_id:= ""):
 		slot_type = init_slot_type
 		cost = init_cost
 		equipment_id = init_equipment_id

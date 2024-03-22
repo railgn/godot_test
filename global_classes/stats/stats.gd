@@ -60,33 +60,16 @@ var mirror := false
 var can_act := true
 var mapping_stats := MappingStats.new():
 	set(new_mapping_stats):
-		var res_base_stats:= BaseStats.new()
-		##strength
-		res_base_stats.physical.attack = new_mapping_stats.strength
-		##intelligence
-		res_base_stats.magical.attack = new_mapping_stats.intelligence
-		##agility
-		res_base_stats.turn_speed = new_mapping_stats.agility
-		##dexterity
-		res_base_stats.hit_rate = 1 + new_mapping_stats.dexterity*.02
-		##vitality
-		res_base_stats.hp.maximum = new_mapping_stats.vitality
-		res_base_stats.physical.defense = new_mapping_stats.vitality
-		##wisdom
-		res_base_stats.magical.defense = new_mapping_stats.wisdom
-		res_base_stats.healing_power = new_mapping_stats.wisdom
-		##luck
-		res_base_stats.critical_avoid = 1 + new_mapping_stats.luck*.01
-		res_base_stats.ailment_infliction_chance = 1 + new_mapping_stats.luck*.02
-		##agi + luck
-		res_base_stats.avoid = 1 + new_mapping_stats.agility*.02 + new_mapping_stats.luck*.01
-		##dex + luck
-		res_base_stats.critical_chance = 1 + new_mapping_stats.dexterity*.02 + new_mapping_stats.luck*.01
-		##int + wis
-		res_base_stats.mp.maximum = (new_mapping_stats.intelligence + new_mapping_stats.wisdom)
+		var res_base_stats = UPDATE_STATS.recalc_base_stats(new_mapping_stats, equipment_bases)
 		
 		base_stats = res_base_stats
 		mapping_stats = new_mapping_stats
+var equipment_bases := BaseStats.new():
+	set(new_equipment_bases):
+		var res_base_stats = UPDATE_STATS.recalc_base_stats(mapping_stats, new_equipment_bases)
+		
+		base_stats = res_base_stats
+		equipment_bases = new_equipment_bases
 var base_stats := BaseStats.new():
 	set(new_base_stats):
 		combat_stats = UPDATE_STATS.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)

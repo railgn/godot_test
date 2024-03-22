@@ -85,9 +85,12 @@ var skills_store:= SkillsStore.new():
 		skills_store = new_skills_store
 
 var skill_tree ## TODO skill tree class
-## TODO setter on equipment change
-## TODO deepcopy equipment slots
-var equipment_slots: Array[CharacterClass.Equipment_Slot]
+var equipment_slots: Array[CharacterClass.Equipment_Slot]:
+	set(new_equipment_slots):
+		## recalc_mapping_stats -> update stats.equipment_bases -> change skills
+		## TODO deepcopy equipment slots
+
+		equipment_slots = new_equipment_slots
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
@@ -115,6 +118,12 @@ func recalc_mapping_stats(func_class_id: String, func_level: int, func_equipment
 	var res_mapping_stats = calc_mapping_stat_function.call(func_level)
 
 	## Apply Equipment stats
+	# for each equip slot
+	# check if equipmentID is not null
+	# get info from dictionary
+	# add then multiply
+
+	##move this function to "update_stats"
 
 	return res_mapping_stats
 			

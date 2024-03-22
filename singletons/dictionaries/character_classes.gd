@@ -36,7 +36,7 @@ func _ready():
 
 		return res_mapping_stats
 
-	DICTIONARY.BC_1.equipment_slot_array.append(CharacterClass.Equipment_Slot.new([CharacterClass.Equipment_Slot.SlotType.FOIL], 1))
+	DICTIONARY.BC_1.equipment_slot_array.append(CharacterClass.Equipment_Slot.new([Equipment.EquipmentType.FOIL], 1))
 
 	call_deferred("emit_signal", "initialized")
 	

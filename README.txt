@@ -6,6 +6,8 @@ Now:
 		equipment class
 		equipment dictionary singleton
 
+	Double check if the "-1" in update stats "recalc_base_stats" is correct
+
 	party_member equipment
 
 	party test 

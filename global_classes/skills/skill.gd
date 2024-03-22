@@ -1,4 +1,4 @@
-class_name  Skill
+class_name Skill
 
 var id:= "SK_0"
 var name:= "default"
