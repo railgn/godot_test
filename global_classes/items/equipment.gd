@@ -5,10 +5,11 @@ var DEEP_COPY = DeepCopy.new()
 enum EquipmentType {
     FOIL,
     YOYO,
+	NONE
 }
 
-var id:= "EQ_0"
-var name:= "default"
+var id:= ""
+var name:= ""
 var description:= ""
 var type: EquipmentType
 
@@ -25,3 +26,8 @@ var mapping_stat_multiplier: Callable = func(original_stats: Stats.MappingStats)
 
 var skills_provided:= PartyMember.SkillsStore.new()
 var sell_price:= 1
+
+func _init(init_id: String, init_name: String, init_type: Equipment.EquipmentType):
+	id = init_id
+	name = init_name
+	type = init_type

@@ -1,6 +1,7 @@
 class_name PartyMember
 
 var DEEP_COPY = DeepCopy.new()
+var UPDATE_STATS = UpdateStats.new()
 
 var playable_character_id: String
 var party_position: int
@@ -10,7 +11,7 @@ var class_id: String :
 		## TODO update equipment slots
 
 		##update stats
-		stats.mapping_stats = recalc_mapping_stats(new_class_id, level, equipment_slots)
+		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(new_class_id, level, equipment_slots)
 
 		##update skills
 		var old_innate_skills: SkillsStore
@@ -46,7 +47,7 @@ var class_id: String :
 		class_id = new_class_id
 var level: int : 
 	set(new_level):
-		stats.mapping_stats = recalc_mapping_stats(class_id, new_level, equipment_slots)
+		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(class_id, new_level, equipment_slots)
 		level = new_level
 var promoted: bool
 var stats:= Stats.new()
@@ -87,15 +88,52 @@ var skills_store:= SkillsStore.new():
 var skill_tree ## TODO skill tree class
 var equipment_slots: Array[CharacterClass.Equipment_Slot]:
 	set(new_equipment_slots):
-		## recalc_mapping_stats -> 
-		##update stats.equipment_bases (update_stats.recalc_equipment_bases)-> 
+		##update mapping stats
+		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(class_id, level, new_equipment_slots)
+		##update equipment bases
+		stats.equipment_bases = UPDATE_STATS.recalc_equipment_bases(new_equipment_slots)
 		
 		##change skills
+		var old_equipment_skills:= SkillsStore.new()
+		for slot in equipment_slots:
+			if slot.equipment_id != "EQ_0" and slot.equipment_id:
+				var equip: Equipment = Equipments.get_equipment(slot.equipment_id)
+				for active_skill_id in equip.skills_provided.active_skills:
+					old_equipment_skills.active_skills[active_skill_id] = equip.skills_provided.active_skills[active_skill_id]
+				for passive_skill_id in equip.skills_provided.passive_skills:
+					old_equipment_skills.passive_skills[passive_skill_id] = equip.skills_provided.passive_skills[passive_skill_id]
 
+		var new_equipment_skills:= SkillsStore.new()
+		for slot in new_equipment_slots:
+			if slot.equipment_id != "EQ_0" and slot.equipment_id:
+				var equip: Equipment = Equipments.get_equipment(slot.equipment_id)
+				for active_skill_id in equip.skills_provided.active_skills:
+					new_equipment_skills.active_skills[active_skill_id] = equip.skills_provided.active_skills[active_skill_id]
+				for passive_skill_id in equip.skills_provided.passive_skills:
+					new_equipment_skills.passive_skills[passive_skill_id] = equip.skills_provided.passive_skills[passive_skill_id]
 
+		##abstract this section? input (new and old skills), returns array of skills to add and of skills to delete
+		for skill in old_equipment_skills.active_skills:
+			if not new_equipment_skills.active_skills.has(skill):
+				self.delete_skill(old_equipment_skills.active_skills[skill].id)
+		
+		for skill in old_equipment_skills.passive_skills:
+			if not new_equipment_skills.passive_skills.has(skill):
+				self.delete_skill(old_equipment_skills.passive_skills[skill].id)
 
-
-
+		for skill in new_equipment_skills.active_skills:
+			if not old_equipment_skills.active_skills.has(skill):
+				self.add_skill(true, 
+					new_equipment_skills.active_skills[skill].id, 
+					new_equipment_skills.active_skills[skill].level,
+					)
+		
+		for skill in new_equipment_skills.passive_skills:
+			if not old_equipment_skills.passive_skills.has(skill):
+				self.add_skill(false, 
+					new_equipment_skills.passive_skills[skill].id, 
+					new_equipment_skills.passive_skills[skill].level,
+					)
 
 		equipment_slots = new_equipment_slots
 
@@ -118,22 +156,7 @@ class SkillsStore:
 			level = init_level
 
 	var active_skills:= {}
-	var passive_skills:= {}
-
-func recalc_mapping_stats(func_class_id: String, func_level: int, func_equipment_slots: Array[CharacterClass.Equipment_Slot]) -> Stats.MappingStats:
-	var calc_mapping_stat_function:= CharacterClasses.get_character_class(func_class_id).mapping_stat_growths
-	var res_mapping_stats = calc_mapping_stat_function.call(func_level)
-
-	## Apply Equipment mapping stats
-	# for each equip slot
-	# check if equipmentID is not null
-	# get info from dictionary
-	# add then multiply
-
-	##move this function to "update_stats"
-
-	return res_mapping_stats
-			
+	var passive_skills:= {}			
 
 func add_skill(active_bool: bool, init_id: String, init_level: int):
 	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
@@ -153,5 +176,4 @@ func delete_skill(id_to_delete: String):
 
 	skills_store = res_skills_store
 
-## add and remove equipment
-
+## TODO add and remove equipment functons

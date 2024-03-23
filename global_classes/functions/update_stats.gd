@@ -110,14 +110,23 @@ func recalc_base_stats(mapping_stats: Stats.MappingStats, equipment_bases: Stats
 	
 	return res_base_stats
 
+func recalc_mapping_stats(class_id: String, level: int, equipment_slots: Array[CharacterClass.Equipment_Slot]) -> Stats.MappingStats:
+	var calc_mapping_stat_function:= CharacterClasses.get_character_class(class_id).mapping_stat_growths
+	var res_mapping_stats = calc_mapping_stat_function.call(level)
+
+	for slot in equipment_slots:
+		if slot.equipment_id != "EQ_0" and slot.equipment_id:
+			var equip: Equipment = Equipments.get_equipment(slot.equipment_id)
+			res_mapping_stats = equip.mapping_stat_multiplier.call(equip.mapping_stat_adder.call(res_mapping_stats))
+
+	return res_mapping_stats
+
 func recalc_equipment_bases(equipment_slots: Array[CharacterClass.Equipment_Slot]) -> Stats.BaseStats:
-	var res = Stats.BaseStats.new()
+	var res_base_stats = Stats.BaseStats.new()
 
-	## Apply Equipment base stats
-	# for each equip slot
-	# check if equipmentID is not null
-	# get info from dictionary
-	# add
+	for slot in equipment_slots:
+		if slot.equipment_id != "EQ_0" and slot.equipment_id:
+			var equip: Equipment = Equipments.get_equipment(slot.equipment_id)
+			res_base_stats = equip.equipment_base_adder.call(res_base_stats)
 
-
-	return res
+	return res_base_stats
