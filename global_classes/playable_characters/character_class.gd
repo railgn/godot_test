@@ -24,8 +24,6 @@ var mapping_stat_growths: Callable = func(level: int) -> Stats.MappingStats:
 	return res_mapping_stats
 
 class Equipment_Slot:
-
-
 	var slot_type: Array[Equipment.EquipmentType]
 	var cost: int
 	var equipment_id: String

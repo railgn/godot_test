@@ -109,3 +109,15 @@ func recalc_base_stats(mapping_stats: Stats.MappingStats, equipment_bases: Stats
 	res_base_stats.mp.maximum = (mapping_stats.intelligence + mapping_stats.wisdom) + equipment_bases.mp.maximum - 1
 	
 	return res_base_stats
+
+func recalc_equipment_bases(equipment_slots: Array[CharacterClass.Equipment_Slot]) -> Stats.BaseStats:
+	var res = Stats.BaseStats.new()
+
+	## Apply Equipment base stats
+	# for each equip slot
+	# check if equipmentID is not null
+	# get info from dictionary
+	# add
+
+
+	return res

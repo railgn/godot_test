@@ -59,3 +59,16 @@ func copy_skills_store(original: PartyMember.SkillsStore) -> PartyMember.SkillsS
 		res.passive_skills[skill_id] = original.passive_skills[skill_id]
 	
 	return res
+
+func copy_equipment_slot(original: CharacterClass.Equipment_Slot) -> CharacterClass.Equipment_Slot:
+	var res:= CharacterClass.Equipment_Slot.new(original.slot_type, original.cost, original.equipment_id)
+
+	return res
+
+func copy_equipment_slot_array(original: Array[CharacterClass.Equipment_Slot]) -> Array[CharacterClass.Equipment_Slot]:
+	var res: Array[CharacterClass.Equipment_Slot] = []
+
+	for slot in original:
+		res.append(copy_equipment_slot(slot))
+
+	return res
