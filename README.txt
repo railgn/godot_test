@@ -3,8 +3,6 @@ Now:
 
 	equipment
 		party member code alerts
-		equipment class
-		equipment dictionary singleton
 
 	Double check if the "-1" in update stats "recalc_base_stats" is correct
 

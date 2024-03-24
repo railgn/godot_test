@@ -8,7 +8,12 @@ var party_position: int
 var class_id: String :
 	set(new_class_id):
 		## TODO update skill tree
+
 		## TODO update equipment slots
+		if class_id:
+			equipment_slots = CharacterClasses.get_character_class(new_class_id).equipment_slots
+
+			## keep equipment IDs if slots are available
 
 		##update stats
 		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(new_class_id, level, equipment_slots)
@@ -145,7 +150,7 @@ func _init(init_playable_character_id: String, init_class_id: String, init_promo
 	promoted = init_promoted	
 	skills_store = CharacterClasses.get_character_class(init_class_id).innate_skills
 	## TODO skill_tree = Constructor using CharacterClasses.get_character_class(class_id).skill_tree_id 
-	equipment_slots = CharacterClasses.get_character_class(init_class_id).equipment_slot_array
+	equipment_slots = CharacterClasses.get_character_class(init_class_id).equipment_slots
 
 class SkillsStore:
 	class SkillStore:
@@ -158,7 +163,7 @@ class SkillsStore:
 	var active_skills:= {}
 	var passive_skills:= {}			
 
-func add_skill(active_bool: bool, init_id: String, init_level: int):
+func add_skill(active_bool: bool, init_id: String, init_level: int) -> void:
 	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
 	if active_bool:
 		res_skills_store.active_skills[init_id] = SkillsStore.SkillStore.new(init_id, init_level)
@@ -167,7 +172,7 @@ func add_skill(active_bool: bool, init_id: String, init_level: int):
 
 	skills_store = res_skills_store
 
-func delete_skill(id_to_delete: String):
+func delete_skill(id_to_delete: String) -> void:
 	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
 	if res_skills_store.active_skills.has(id_to_delete):
 		res_skills_store.active_skills.erase(id_to_delete)
@@ -176,4 +181,22 @@ func delete_skill(id_to_delete: String):
 
 	skills_store = res_skills_store
 
-## TODO add and remove equipment functons
+func add_equipment(equipment_id: String, slot_index: int) -> void:
+	var equip:= Equipments.get_equipment(equipment_id)
+	var slot: CharacterClass.Equipment_Slot
+	if slot_index < equipment_slots.size():
+		slot = equipment_slots[slot_index]
+
+	if equip and slot:
+		if equip.type in slot.slot_types and equip.cost <= slot.max_cost:
+			var res_equip_slots = DEEP_COPY.copy_equipment_slot_array(equipment_slots)
+			res_equip_slots[slot_index].equipment_id = equipment_id
+			equipment_slots = res_equip_slots
+
+func remove_equipment(slot_index: int) -> void:
+	if slot_index < equipment_slots.size():
+		var res_equip_slots = DEEP_COPY.copy_equipment_slot_array(equipment_slots)
+		res_equip_slots[slot_index].equipment_id = ""
+		equipment_slots = res_equip_slots
+		
+		

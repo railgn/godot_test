@@ -61,7 +61,7 @@ func copy_skills_store(original: PartyMember.SkillsStore) -> PartyMember.SkillsS
 	return res
 
 func copy_equipment_slot(original: CharacterClass.Equipment_Slot) -> CharacterClass.Equipment_Slot:
-	var res:= CharacterClass.Equipment_Slot.new(original.slot_type, original.cost, original.equipment_id)
+	var res:= CharacterClass.Equipment_Slot.new(original.slot_types, original.equipment_id, original.max_cost)
 
 	return res
 

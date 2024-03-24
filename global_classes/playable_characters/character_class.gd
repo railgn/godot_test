@@ -6,7 +6,7 @@ var promoted:= false
 var skill_tree_id:= "ST_0"
 
 var innate_skills:= PartyMember.SkillsStore.new()
-var equipment_slot_array: Array[Equipment_Slot] = []
+var equipment_slots: Array[Equipment_Slot] = []
 
 ##should it be a change basis?
 	##think about promotion timing or class switching?
@@ -24,12 +24,12 @@ var mapping_stat_growths: Callable = func(level: int) -> Stats.MappingStats:
 	return res_mapping_stats
 
 class Equipment_Slot:
-	var slot_type: Array[Equipment.EquipmentType]
-	var cost: int
+	var slot_types: Array[Equipment.EquipmentType]
+	var max_cost: int
 	var equipment_id: String
-	func _init(init_slot_type: Array[Equipment.EquipmentType], init_cost: int, init_equipment_id:= ""):
-		slot_type = init_slot_type
-		cost = init_cost
+	func _init(init_slot_type: Array[Equipment.EquipmentType], init_equipment_id:= "" , init_cost:= 1):
+		slot_types = init_slot_type
+		max_cost = init_cost
 		equipment_id = init_equipment_id
 
 func _init(init_id, init_name, init_promoted):
