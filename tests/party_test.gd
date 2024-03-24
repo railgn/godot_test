@@ -57,10 +57,20 @@ func on_party_initialized():
 	print("MULT PHYS ATK --- P_0: ", Party.get_character("P_0").stats.base_stats_multiplier.physical.attack, " | P_1: ", Party.get_character("P_1").stats.base_stats_multiplier.physical.attack)
 	print("COMBAT PHYS ATK --- P_0: ", Party.get_character("P_0").stats.combat_stats.physical.attack, " | P_1: ", Party.get_character("P_1").stats.combat_stats.physical.attack)
 	print("")
-	print("-- EQUIP MAPPING ADD & MULT: ", Party.get_character("P_1").stats.mapping_stats.intelligence == 80)
+	print("-- Equip Mapping Add & Multiply: ", Party.get_character("P_1").stats.mapping_stats.intelligence == 80)
+	print("INTELLIGENCE --- P_0: ", Party.get_character("P_0").stats.mapping_stats.intelligence, " | P_1: ", Party.get_character("P_1").stats.mapping_stats.intelligence)
+	
+	Party.DICTIONARY.P_1.class_id = "BC_2"
+	print("")
+	print("-- P1 Change Class but Keep Equipment: ", Party.get_character("P_1").stats.mapping_stats.intelligence == 80)
+	print("CLASS --- P_0: ", Party.get_character("P_0").class_id," | P_1: ", Party.get_character("P_1").class_id)
 	print("INTELLIGENCE --- P_0: ", Party.get_character("P_0").stats.mapping_stats.intelligence, " | P_1: ", Party.get_character("P_1").stats.mapping_stats.intelligence)
 
-	Party.DICTIONARY.P_1.remove_equipment(0)
+	Party.DICTIONARY.P_1.class_id = "BC_0"
 	print("")
-	print("-- P1 Remove Equipment: ", Party.get_character("P_1").stats.combat_stats.physical.attack == 18)
+	print("-- P1 Change Class and Remove Equipment: ", Party.get_character("P_1").stats.combat_stats.physical.attack == 6)
+	print("CLASS --- P_0: ", Party.get_character("P_0").class_id," | P_1: ", Party.get_character("P_1").class_id)
 	print("COMBAT PHYS ATK --- P_0: ", Party.get_character("P_0").stats.combat_stats.physical.attack, " | P_1: ", Party.get_character("P_1").stats.combat_stats.physical.attack)
+	print("INTELLIGENCE --- P_0: ", Party.get_character("P_0").stats.mapping_stats.intelligence, " | P_1: ", Party.get_character("P_1").stats.mapping_stats.intelligence)
+
+	

@@ -38,5 +38,8 @@ func _ready():
 
 	DICTIONARY.BC_1.equipment_slots.append(CharacterClass.Equipment_Slot.new([Equipment.EquipmentType.FOIL]))
 
+	add_character_class("BC_2", "party test 2", false)
+	DICTIONARY.BC_2.equipment_slots.append(CharacterClass.Equipment_Slot.new([Equipment.EquipmentType.FOIL]))
+
 	call_deferred("emit_signal", "initialized")
 	
