@@ -1,15 +1,7 @@
 Now:
 	is it worth changing anything to an Array[type]?
 
-	equipment
-		party member code alerts
-
-	Double check if the "-1" in update stats "recalc_base_stats" is correct
-
-	party_member equipment
-
-	party test 
-		- change equipment
+	Battle Script time?
 
 Later:
 	add deep copy of skills? is this needed?
