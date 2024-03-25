@@ -9,21 +9,18 @@ var class_id: String :
 	set(new_class_id):
 		## TODO update skill tree
 
-		## TODO update equipment slots
+		## update equipment slots
 		if class_id:
 			var res_equipment_slots = CharacterClasses.get_character_class(new_class_id).equipment_slots
 			var copied_slot_ids: Array[int] = []
 
 			for new_slot in res_equipment_slots:
 				for i in range(equipment_slots.size()):
-					print("hit")
-					print(equipment_slots[i].equipment_id)
 					if equipment_slots[i].equipment_id and (i not in copied_slot_ids):
 						var equip = Equipments.get_equipment(equipment_slots[i].equipment_id)
 						if equip.type in new_slot.slot_types and equip.cost <= new_slot.max_cost:
 							new_slot.equipment_id = equipment_slots[i].equipment_id
 							copied_slot_ids.append(i)
-
 
 			equipment_slots = res_equipment_slots
 
@@ -210,5 +207,3 @@ func remove_equipment(slot_index: int) -> void:
 		var res_equip_slots = DEEP_COPY.copy_equipment_slot_array(equipment_slots)
 		res_equip_slots[slot_index].equipment_id = ""
 		equipment_slots = res_equip_slots
-		
-		
