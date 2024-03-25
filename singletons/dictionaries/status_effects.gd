@@ -4,6 +4,11 @@ var DEEP_COPY = DeepCopy.new()
 
 var DICTIONARY:= {}
 
+# EXAMPLE: to clean up the dict modifications.
+# func add_effect2(effect_id: String, effect: StatusEffect):
+# 	effect.initialize(DICTIONARY) # for example, allow status effects to take the DICTIONARY as a param and mutate it.
+# 	DICTIONARY[effect_id] = effect
+
 func add_effect(init_id: String, init_name: String):
 	if DICTIONARY.has(init_id):
 		print("DUPLICATE STATUS EFFECT: ", init_id, " ", init_name)
@@ -38,3 +43,21 @@ func _ready():
 		var res:= DEEP_COPY.copy_base_stats(base_stats)
 		res.magical.attack += 20
 		return res
+
+	# add_effect("SE_3", "poison number 1", Poison.new())
+	# DICTIONARY.SE_3.on_damage_taken = func()
+		
+	
+#all status effecst must implement StatusEffect class
+# class Poison implements StatusEffect {
+#   func add_effect() {
+#	DICTIONARY.SE_3.effect_on_count_down = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats:
+		# var res:= DEEP_COPY.copy_base_stats(base_stats)
+		# res..attack += 20
+		# return res
+#}
+#}
+
+# class CurablePoison implements Poison {
+# 	func onDamage
+# }
