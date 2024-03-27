@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://depuahmgkyxx8"]
+
+[ext_resource type="Script" path="res://scenes/tests/stat_test.gd" id="1_g4cma"]
+[ext_resource type="Script" path="res://scenes/tests/party_test.gd" id="2_40epv"]
+[ext_resource type="Script" path="res://scenes/tests/party_test_dictionary.gd" id="3_c1fg6"]
+
+[node name="Tests" type="Node"]
+
+[node name="Stat Test" type="Node" parent="."]
+script = ExtResource("1_g4cma")
+
+[node name="Party Test" type="Node" parent="."]
+script = ExtResource("2_40epv")
+
+[node name="party_dictionary" type="Node" parent="Party Test"]
+script = ExtResource("3_c1fg6")

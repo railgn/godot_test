@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://dd68i573311v0"]
+
+[ext_resource type="Script" path="res://scenes/battle_system/battle_system.gd" id="1_3ldrs"]
+
+[node name="Battle_System" type="Node"]
+script = ExtResource("1_3ldrs")
+
+[node name="Real" type="Node" parent="."]
+
+[node name="Player" type="Node" parent="Real"]
+
+[node name="Enemy" type="Node" parent="Real"]
+
+[node name="Mirror" type="Node" parent="."]
+
+[node name="Player" type="Node" parent="Mirror"]
+
+[node name="Enemy" type="Node" parent="Mirror"]

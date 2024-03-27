@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkrx4wsp5ca14"]
+
+[ext_resource type="Script" path="res://scenes/battle_system/player_unit/player_unit.gd" id="1_2vgxn"]
+
+[node name="Player_Unit" type="Node"]
+script = ExtResource("1_2vgxn")
