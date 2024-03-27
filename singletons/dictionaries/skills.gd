@@ -11,7 +11,6 @@ func add_skill(init_id: String, init_name: String, init_active: bool) -> void:
 		else:
 			DICTIONARY[init_id] = PassiveSkill.new(init_id, init_name, init_active)
 
-
 func get_skill(id: String) -> Skill:
 	if DICTIONARY.has(id):
 		return DICTIONARY[id]

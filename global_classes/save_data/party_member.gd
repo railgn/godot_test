@@ -1,8 +1,5 @@
 class_name PartyMember
 
-var DEEP_COPY = DeepCopy.new()
-var UPDATE_STATS = UpdateStats.new()
-
 var playable_character_id: String
 var party_position: int
 var class_id: String :
@@ -25,7 +22,7 @@ var class_id: String :
 			equipment_slots = res_equipment_slots
 
 		##update stats
-		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(new_class_id, level, equipment_slots)
+		stats.mapping_stats = UpdateStats.recalc_mapping_stats(new_class_id, level, equipment_slots)
 
 		##update skills
 		var old_innate_skills: SkillsStore
@@ -61,7 +58,7 @@ var class_id: String :
 		class_id = new_class_id
 var level: int : 
 	set(new_level):
-		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(class_id, new_level, equipment_slots)
+		stats.mapping_stats = UpdateStats.recalc_mapping_stats(class_id, new_level, equipment_slots)
 		level = new_level
 var promoted: bool
 var stats:= Stats.new()
@@ -103,9 +100,9 @@ var skill_tree ## TODO skill tree class
 var equipment_slots: Array[CharacterClass.Equipment_Slot]:
 	set(new_equipment_slots):
 		##update mapping stats
-		stats.mapping_stats = UPDATE_STATS.recalc_mapping_stats(class_id, level, new_equipment_slots)
+		stats.mapping_stats = UpdateStats.recalc_mapping_stats(class_id, level, new_equipment_slots)
 		##update equipment bases
-		stats.equipment_bases = UPDATE_STATS.recalc_equipment_bases(new_equipment_slots)
+		stats.equipment_bases = UpdateStats.recalc_equipment_bases(new_equipment_slots)
 		
 		##change skills
 		var old_equipment_skills:= SkillsStore.new()
@@ -153,7 +150,7 @@ var equipment_slots: Array[CharacterClass.Equipment_Slot]:
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
-	party_position = Party.DICTIONARY.keys().size() - 1
+	party_position = Party.DICTIONARY.keys().size()
 	class_id = init_class_id
 	level = PlayableCharacters.get_character(init_playable_character_id).recruitment_level
 	promoted = init_promoted	
@@ -173,7 +170,7 @@ class SkillsStore:
 	var passive_skills:= {}			
 
 func add_skill(active_bool: bool, init_id: String, init_level: int) -> void:
-	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
+	var res_skills_store = DeepCopy.copy_skills_store(skills_store)
 	if active_bool:
 		res_skills_store.active_skills[init_id] = SkillsStore.SkillStore.new(init_id, init_level)
 	else:
@@ -182,7 +179,7 @@ func add_skill(active_bool: bool, init_id: String, init_level: int) -> void:
 	skills_store = res_skills_store
 
 func delete_skill(id_to_delete: String) -> void:
-	var res_skills_store = DEEP_COPY.copy_skills_store(skills_store)
+	var res_skills_store = DeepCopy.copy_skills_store(skills_store)
 	if res_skills_store.active_skills.has(id_to_delete):
 		res_skills_store.active_skills.erase(id_to_delete)
 	elif res_skills_store.passive_skills.has(id_to_delete):
@@ -198,12 +195,12 @@ func add_equipment(equipment_id: String, slot_index: int) -> void:
 
 	if equip and slot:
 		if equip.type in slot.slot_types and equip.cost <= slot.max_cost:
-			var res_equip_slots = DEEP_COPY.copy_equipment_slot_array(equipment_slots)
+			var res_equip_slots = DeepCopy.copy_equipment_slot_array(equipment_slots)
 			res_equip_slots[slot_index].equipment_id = equipment_id
 			equipment_slots = res_equip_slots
 
 func remove_equipment(slot_index: int) -> void:
 	if slot_index < equipment_slots.size():
-		var res_equip_slots = DEEP_COPY.copy_equipment_slot_array(equipment_slots)
+		var res_equip_slots = DeepCopy.copy_equipment_slot_array(equipment_slots)
 		res_equip_slots[slot_index].equipment_id = ""
 		equipment_slots = res_equip_slots

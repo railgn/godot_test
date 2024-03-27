@@ -1,5 +1,4 @@
 class_name Stats
-# extends Resource
 
 var UPDATE_STATS = UpdateStats.new()
 var DEEP_COPY = DeepCopy.new()

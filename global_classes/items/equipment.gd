@@ -1,7 +1,5 @@
 class_name Equipment
 
-var DEEP_COPY = DeepCopy.new()
-
 enum EquipmentType {
     FOIL,
     YOYO,
@@ -15,14 +13,14 @@ var type: EquipmentType
 var cost:= 1
 
 var equipment_base_adder: Callable = func(original_stats: Stats.BaseStats) -> Stats.BaseStats:
-	var res_base_stats = DEEP_COPY.copy_base_stats(original_stats)
+	var res_base_stats = DeepCopy.copy_base_stats(original_stats)
 	return res_base_stats
 
 var mapping_stat_adder: Callable = func(original_stats: Stats.MappingStats) -> Stats.MappingStats:
-	var res_mapping_stats = DEEP_COPY.copy_mapping_stats(original_stats)
+	var res_mapping_stats = DeepCopy.copy_mapping_stats(original_stats)
 	return res_mapping_stats
 var mapping_stat_multiplier: Callable = func(original_stats: Stats.MappingStats) -> Stats.MappingStats:
-	var res_mapping_stats = DEEP_COPY.copy_mapping_stats(original_stats)
+	var res_mapping_stats = DeepCopy.copy_mapping_stats(original_stats)
 	return res_mapping_stats
 
 var skills_provided:= PartyMember.SkillsStore.new()
