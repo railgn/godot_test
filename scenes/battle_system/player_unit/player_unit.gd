@@ -14,7 +14,6 @@ var equipment_slots: Array[CharacterClass.Equipment_Slot]
 static func new_player_unit(unit_save_data: PartyMember) -> BattlePlayerUnit:
 	var unit: BattlePlayerUnit = player_unit_scene.instantiate()
 	
-	
 	unit.playable_character_id = unit_save_data.playable_character_id
 	unit.party_position = unit_save_data.party_position
 	unit.class_id = unit_save_data.class_id
@@ -25,8 +24,12 @@ static func new_player_unit(unit_save_data: PartyMember) -> BattlePlayerUnit:
 
 	unit.name = PlayableCharacters.get_character(unit_save_data.playable_character_id).name
 
+	## sprite assignment?
+	## UI should have it's own nodes that pull from here
+
 	return unit
 
 func _ready():
+
 	pass
 

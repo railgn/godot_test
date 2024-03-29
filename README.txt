@@ -1,5 +1,6 @@
 Now:
-	Enemy class and dictionary
+	Encounter and battlesystem code alerts
+	main code alert
 
 	Battle Script time?
 		1. minimize calculations and loops
