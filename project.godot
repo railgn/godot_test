@@ -22,6 +22,8 @@ Party="*res://singletons/save_data/party.gd"
 PlayableCharacters="*res://singletons/dictionaries/playable_characters.gd"
 CharacterClasses="*res://singletons/dictionaries/character_classes.gd"
 Equipments="*res://singletons/dictionaries/equipments.gd"
+Enemies="*res://singletons/dictionaries/enemies.gd"
+Encounters="*res://singletons/dictionaries/encounters.gd"
 
 [editor]
 

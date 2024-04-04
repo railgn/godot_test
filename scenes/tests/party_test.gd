@@ -8,9 +8,6 @@ func _ready():
 	party_dictionary.initialized.connect(on_party_initialized)
 
 func on_party_initialized():
-	# Consider using asserts.
-	var a:= 1
-	assert(a == 1)
 
 	print("--- PARTY TEST ---")
 

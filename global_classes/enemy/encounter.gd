@@ -1,6 +1,3 @@
-##Dictionaries to add - encounters, enemies
-##classes: enemies, Scripted AI, dialogue?
-
 class_name Encounter
 
 class EnemyData:

@@ -1,6 +1,5 @@
 Now:
-	Encounter and battlesystem code alerts
-	main code alert
+	battlesystem -> main code alerts
 
 	Battle Script time?
 		1. minimize calculations and loops
@@ -112,6 +111,8 @@ Later:
 
 	targetting functions
 	Skill tree "TODO" 's
+
+	Scripted AI + dialogue
 
 	is it worth changing anything to an Array[type]?
 
