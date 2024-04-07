@@ -1,7 +1,5 @@
 extends Node
 
-var DEEP_COPY = DeepCopy.new()
-
 var DICTIONARY:= {}
 
 # EXAMPLE: to clean up the dict modifications.
@@ -29,18 +27,18 @@ func _ready():
 
 	add_effect("SE_1", "stat_test_buff_1")
 	DICTIONARY.SE_1.base_stat_multiplier_function = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats:
-		var res:= DEEP_COPY.copy_base_stats(base_stats)
+		var res:= DeepCopy.copy_base_stats(base_stats)
 		res.physical.attack *= 1.5
 		res.magical.attack *= 1.5
 		return res
 	DICTIONARY.SE_1.base_stat_adder_function = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats:
-		var res:= DEEP_COPY.copy_base_stats(base_stats)
+		var res:= DeepCopy.copy_base_stats(base_stats)
 		res.physical.defense += 20
 		return res
 	
 	add_effect("SE_2", "stat_test_buff_2")
 	DICTIONARY.SE_2.base_stat_adder_function = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats:
-		var res:= DEEP_COPY.copy_base_stats(base_stats)
+		var res:= DeepCopy.copy_base_stats(base_stats)
 		res.magical.attack += 20
 		return res
 
@@ -52,7 +50,7 @@ func _ready():
 # class Poison implements StatusEffect {
 #   func add_effect() {
 #	DICTIONARY.SE_3.effect_on_count_down = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats:
-		# var res:= DEEP_COPY.copy_base_stats(base_stats)
+		# var res:= DeepCopy.copy_base_stats(base_stats)
 		# res..attack += 20
 		# return res
 #}
