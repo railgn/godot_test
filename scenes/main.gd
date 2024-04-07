@@ -8,7 +8,7 @@ func _ready():
 func _on_party_initialized():
 
 	## replace with a query on encounter dictionary
-	var encounter:= Encounter.new()
+	var encounter:= Encounters.get_encounter("ENC_0")
 
 	start_battle(encounter)
 

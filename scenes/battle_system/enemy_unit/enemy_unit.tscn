@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b842sl1e15fgp"]
+
+[ext_resource type="Script" path="res://scenes/battle_system/enemy_unit/enemy_unit.gd" id="1_b8ovj"]
+
+[node name="Enemy_Unit" type="Node"]
+script = ExtResource("1_b8ovj")

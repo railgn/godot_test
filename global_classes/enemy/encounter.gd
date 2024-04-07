@@ -10,8 +10,14 @@ class EnemyData:
 		level = init_level
 		overrides = init_overrides
 
+var id: String
 var enemies: Array[EnemyData]
 var battle_system_id: String
 var environment_or_visual_template ## default to savedata location
 var battle_end_conditions ##
 var flag_triggers_on_completion ##
+
+func _init(init_id: String, init_enemies: Array[EnemyData], init_battle_system:= "default"):
+	id = init_id
+	enemies = init_enemies
+	battle_system_id = init_battle_system

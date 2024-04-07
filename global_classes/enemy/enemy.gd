@@ -2,8 +2,8 @@ class_name Enemy
 
 var id: String
 var name: String
-var description: String
-var sprite_id = {
+var description := ""
+var sprite_id := {
     'real' : 0,
     'mirror' : 0,
 }
@@ -37,3 +37,7 @@ class ItemDrop:
 	func _init(init_item_id: String, init_drop_chance: float):
 		item_id = init_item_id
 		drop_chance = init_drop_chance
+
+func _init(init_id: String, init_name: String):
+	id = init_id
+	name = init_name

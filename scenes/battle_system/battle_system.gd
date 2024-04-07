@@ -7,6 +7,10 @@ var main: Node
 var party: Dictionary
 var encounter: Encounter
 
+var battle_over:= false
+var drops #Dict = key (Item ID): value (quantity)
+var turn := 0
+
 static func new_battle(init_party: Dictionary, init_encounter: Encounter) -> BattleSystem:
 	var battle_system: BattleSystem = battle_system_scene.instantiate()
 
@@ -20,18 +24,26 @@ func _ready():
 	main.start_battle_signal.connect(_on_start_battle_signal)
 
 func _on_start_battle_signal():
+
 	for party_member in party:
-		var unit_instance = BattlePlayerUnit.new_player_unit(Party.DICTIONARY[party_member])
+		var unit_instance = BattlePlayerUnit.new_player_unit(party[party_member])
 		$Real/Player.add_child(unit_instance)
 
-	# for enemy in enecounter
+	for enemy in encounter.enemies:
+		var real_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, false)
+		$Real/Enemy.add_child(real_unit_instance)	
+		
+		var mirror_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, true)
+		$Mirror/Enemy.add_child(mirror_unit_instance)	
 
-	#enemy unit
-	#creates unit node
-	# gets dictionary info using enemy id
-	# applies level where applicable (stats, skills)
-	# for prop in overrides:
-		#switch statement for each type of property
+
+	#battle()
+
+
+# while(!battle_over)
+
+# every time an action is taken, run check_for_battle_over()
+	
 
 	
 		

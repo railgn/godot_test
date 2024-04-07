@@ -1,8 +1,5 @@
 class_name Stats
 
-var UPDATE_STATS = UpdateStats.new()
-var DEEP_COPY = DeepCopy.new()
-
 class MappingStats:
 	var strength: int = 1
 	var intelligence: int = 1
@@ -59,30 +56,30 @@ var mirror := false
 var can_act := true
 var mapping_stats := MappingStats.new():
 	set(new_mapping_stats):
-		var res_base_stats = UPDATE_STATS.recalc_base_stats(new_mapping_stats, equipment_bases)
+		var res_base_stats = UpdateStats.recalc_base_stats(new_mapping_stats, equipment_bases)
 		
 		base_stats = res_base_stats
 		mapping_stats = new_mapping_stats
 var equipment_bases := BaseStats.new():
 	set(new_equipment_bases):
-		var res_base_stats = UPDATE_STATS.recalc_base_stats(mapping_stats, new_equipment_bases)
+		var res_base_stats = UpdateStats.recalc_base_stats(mapping_stats, new_equipment_bases)
 		
 		base_stats = res_base_stats
 		equipment_bases = new_equipment_bases
 var base_stats := BaseStats.new():
 	set(new_base_stats):
-		combat_stats = UPDATE_STATS.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
 		base_stats = new_base_stats
 var combat_stats := BaseStats.new()
 
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
-		combat_stats = UPDATE_STATS.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
 		base_stats_multiplier = new_base_stats_multiplier
 
 var base_stats_adder := BaseStats.new():
 	set(new_base_stats_adder):
-		combat_stats = UPDATE_STATS.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
 		base_stats_adder = new_base_stats_adder
 
 ##only added/deleted from using add and delete functions below
@@ -116,13 +113,13 @@ var status_effects_store := {}:
 		self.can_act = res_can_act
 
 func add_status_effect(new_effect: Stats.StatusEffectStore):
-	var res_status_effects = DEEP_COPY.copy_stats_status_effects(self.status_effects_store)
+	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects_store)
 	res_status_effects[new_effect.id] = new_effect
 
 	self.status_effects_store = res_status_effects
 
 func delete_status_effect(id_to_delete: String):
-	var res_status_effects = DEEP_COPY.copy_stats_status_effects(self.status_effects_store)
+	var res_status_effects = DeepCopy.copy_stats_status_effects(self.status_effects_store)
 	if res_status_effects.has(id_to_delete):
 		res_status_effects.erase(id_to_delete)
 	else:

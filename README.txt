@@ -1,5 +1,5 @@
 Now:
-	battlesystem -> main code alerts
+	add visuals to unit nodes (take ids and assign sprite from a Dictionary)
 
 	Battle Script time?
 		1. minimize calculations and loops
@@ -113,6 +113,7 @@ Later:
 	Skill tree "TODO" 's
 
 	Scripted AI + dialogue
+	Enemy overrides in "enemy_unit.gd"
 
 	is it worth changing anything to an Array[type]?
 

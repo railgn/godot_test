@@ -6,7 +6,7 @@ func add_enemy(init_id: String, init_name: String) -> void:
 	if DICTIONARY.has(init_id):
 		print("DUPLICATE ENEMY: ", init_id, " ", init_name)
 	else:
-		var enemy = Enemy.new()
+		var enemy = Enemy.new(init_id, init_name)
 		enemy.id = init_id
 		enemy.name = init_name
 
@@ -17,7 +17,7 @@ func get_enemy(id: String) -> Enemy:
 		return DICTIONARY[id]
 	else:
 		print("ENEMY DOES NOT EXIST: ", id)
-		return Enemy.new()
+		return Enemy.new("E_0", "default")
 
 func _ready():
 	add_enemy("E_0", "default")
