@@ -1,7 +1,7 @@
 class_name BattleEnemyUnit
 extends Node
 
-const enemy_unit_scene: PackedScene = preload("res://scenes/battle_system/enemy_unit/enemy_unit.tscn")
+# const enemy_unit_scene: PackedScene = preload("res://scenes/battle_system/enemy_unit/enemy_unit.tscn")
 
 var turn_initialized: int
 
@@ -13,6 +13,7 @@ var drop_table: Array[Enemy.ItemDrop]
 var scripted_ai
 
 static func new_enemy_unit(enemy_data: Encounter.EnemyData, mirror: bool, init_turn_initialized:= 1) -> BattleEnemyUnit:
+	var enemy_unit_scene: PackedScene = load("res://scenes/battle_system/enemy_unit/enemy_unit.tscn")
 	var unit: BattleEnemyUnit = enemy_unit_scene.instantiate()
 	var dictionary_data := Enemies.get_enemy(enemy_data.enemy_id)
 	

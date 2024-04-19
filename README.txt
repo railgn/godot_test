@@ -1,5 +1,6 @@
 Now:
 	add visuals to unit nodes (take ids and assign sprite from a Dictionary)
+		add for enemy
 
 	Battle Script time?
 		1. minimize calculations and loops

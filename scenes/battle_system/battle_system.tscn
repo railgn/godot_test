@@ -1,9 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://dd68i573311v0"]
+[gd_scene load_steps=4 format=3 uid="uid://d4k73xk2ato2x"]
 
-[ext_resource type="Script" path="res://scenes/battle_system/battle_system.gd" id="1_3ldrs"]
+[ext_resource type="Script" path="res://scenes/battle_system/battle_system.gd" id="1_lod8b"]
 
-[node name="Battle_System" type="Node"]
-script = ExtResource("1_3ldrs")
+[sub_resource type="BoxShape3D" id="BoxShape3D_l5vk6"]
+size = Vector3(4, 1, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r5ws1"]
+size = Vector3(4, 1, 4)
+
+[node name="BattleSystem" type="Node"]
+script = ExtResource("1_lod8b")
 
 [node name="Real" type="Node" parent="."]
 
@@ -16,3 +22,18 @@ script = ExtResource("1_3ldrs")
 [node name="Player" type="Node" parent="Mirror"]
 
 [node name="Enemy" type="Node" parent="Mirror"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29007, 2.48466)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.556818, 0.830635, 0, -0.830635, 0.556818, 0, 4.32831, 3.04391)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_l5vk6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_r5ws1")

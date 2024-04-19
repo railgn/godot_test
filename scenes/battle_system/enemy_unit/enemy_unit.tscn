@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b842sl1e15fgp"]
+[gd_scene load_steps=2 format=3 uid="uid://tugwdxf45x5d"]
 
-[ext_resource type="Script" path="res://scenes/battle_system/enemy_unit/enemy_unit.gd" id="1_b8ovj"]
+[ext_resource type="Script" path="res://scenes/battle_system/enemy_unit/enemy_unit.gd" id="1_q1yst"]
 
-[node name="Enemy_Unit" type="Node"]
-script = ExtResource("1_b8ovj")
+[node name="EnemyUnit" type="Node"]
+script = ExtResource("1_q1yst")

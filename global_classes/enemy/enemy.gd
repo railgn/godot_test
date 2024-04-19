@@ -3,7 +3,7 @@ class_name Enemy
 var id: String
 var name: String
 var description := ""
-var sprite_id := {
+var sprite_ids := {
     'real' : 0,
     'mirror' : 0,
 }

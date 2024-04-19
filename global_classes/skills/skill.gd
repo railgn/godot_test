@@ -7,7 +7,7 @@ var tooltip:= ""
 var hidden:= false
 var active:= true
 
-var sprite_id = {
+var sprite_ids = {
     'menu' : 0,
     'battle' : 0,
 }

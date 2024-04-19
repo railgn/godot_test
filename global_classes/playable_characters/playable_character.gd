@@ -5,6 +5,12 @@ var name:= "default"
 var recruitment_level:= 1
 var base_class_id:= "BC_0"
 var promoted_class_ids: Array[String] = ["PC_0"]
+var sprite_ids := {
+    "battle":{
+            'real' : "battle_sprite_0",
+            'mirror' : "battle_sprite_0"
+    }
+}
 
 func _init(init_id: String, init_name: String, init_base_class: String):
     id = init_id

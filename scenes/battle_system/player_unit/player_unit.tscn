@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkrx4wsp5ca14"]
+[gd_scene load_steps=3 format=3 uid="uid://ipeyu758bly4"]
 
-[ext_resource type="Script" path="res://scenes/battle_system/player_unit/player_unit.gd" id="1_2vgxn"]
+[ext_resource type="Script" path="res://scenes/battle_system/player_unit/player_unit.gd" id="1_8wsu7"]
+[ext_resource type="Script" path="res://scenes/battle_system/player_unit/player_sprite.gd" id="2_w8mud"]
 
-[node name="Player_Unit" type="Node"]
-script = ExtResource("1_2vgxn")
+[node name="PlayerUnit" type="Node"]
+script = ExtResource("1_8wsu7")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+centered = false
+pixel_size = 0.001
+script = ExtResource("2_w8mud")

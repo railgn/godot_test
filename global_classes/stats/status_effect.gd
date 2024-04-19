@@ -4,7 +4,7 @@ var id:= "SE_0"
 var name:= "default"
 var description:= ""
 var hidden:= false
-var sprite_id = {
+var sprite_ids = {
     'menu' : 0,
     'battle' : 0,
 }

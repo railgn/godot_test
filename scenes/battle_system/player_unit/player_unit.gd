@@ -1,7 +1,7 @@
 class_name BattlePlayerUnit
 extends Node
 
-const player_unit_scene: PackedScene = preload("res://scenes/battle_system/player_unit/player_unit.tscn")
+# const player_unit_scene: PackedScene = preload("res://scenes/battle_system/player_unit/player_unit.tscn")
 
 var turn_initialized: int
 
@@ -14,6 +14,7 @@ var skills_store: PartyMember.SkillsStore
 var equipment_slots: Array[CharacterClass.Equipment_Slot]
 
 static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:= 1) -> BattlePlayerUnit:
+	var player_unit_scene: PackedScene = load("res://scenes/battle_system/player_unit/player_unit.tscn")
 	var unit: BattlePlayerUnit = player_unit_scene.instantiate()
 	
 	unit.playable_character_id = unit_save_data.playable_character_id
