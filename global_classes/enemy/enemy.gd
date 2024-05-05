@@ -4,8 +4,10 @@ var id: String
 var name: String
 var description := ""
 var sprite_ids := {
-    'real' : 0,
-    'mirror' : 0,
+    "battle":{
+            'real' : "battle_sprite_2",
+            'mirror' : "battle_sprite_2"
+    }
 }
 var skills:= EnemySkillsStore.new()
 var stats:= EnemyStatsStore.new()

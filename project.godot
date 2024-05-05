@@ -25,6 +25,12 @@ Equipments="*res://singletons/dictionaries/equipments.gd"
 Enemies="*res://singletons/dictionaries/enemies.gd"
 Encounters="*res://singletons/dictionaries/encounters.gd"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
 [editor]
 
 version_control/plugin_name="GitPlugin"

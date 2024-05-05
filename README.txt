@@ -1,8 +1,12 @@
 Now:
-	add visuals to unit nodes (take ids and assign sprite from a Dictionary)
-		add for enemy
+	Why isnt this in 2D????
 
 	Battle Script time?
+
+		Make the cycle be a function of player count
+
+
+
 		1. minimize calculations and loops
 		- any time you try to access something, if you loop it'll happen way too many times
 		2. it's okay to have a million match statements, (if/else), this is fast

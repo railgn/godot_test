@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://tugwdxf45x5d"]
+[gd_scene load_steps=3 format=3 uid="uid://tugwdxf45x5d"]
 
 [ext_resource type="Script" path="res://scenes/battle_system/enemy_unit/enemy_unit.gd" id="1_q1yst"]
+[ext_resource type="Script" path="res://scenes/battle_system/enemy_unit/enemy_sprite.gd" id="2_scuia"]
 
-[node name="EnemyUnit" type="Node"]
+[node name="EnemyUnit" type="Node2D"]
 script = ExtResource("1_q1yst")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+script = ExtResource("2_scuia")
