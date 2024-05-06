@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxxwc8ua44xbn"]
+
+[ext_resource type="Script" path="res://scenes/battle_system/turn_order/turn_order.gd" id="1_n052h"]
+
+[node name="Turn Order" type="Node2D"]
+script = ExtResource("1_n052h")

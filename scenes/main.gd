@@ -1,20 +1,27 @@
-extends Node
+extends Node2D
 
-signal start_battle_signal
+signal battle_ready
+
+var party_ready:= false
 
 func _ready():
 	Party.initialized.connect(_on_party_initialized)
+	for location: BattleLocation in $Map.get_children():
+		location.location_chosen.connect(_on_location_chosen)
 
 func _on_party_initialized():
+	party_ready = true
 
-	var encounter:= Encounters.get_encounter("ENC_0")
+func _on_location_chosen(location_type: Location.LocationType):
+	$Map.hide()
 
-	start_battle(encounter)
+	match location_type:
+		Location.LocationType.BATTLE:
+			var encounter:= Encounters.get_encounter("ENC_0")
+			start_battle(encounter)
+
 
 func start_battle(encounter: Encounter, _battle_system:= "default", party:= "default"):
-	##hide current scene
-	##loading screen
-
 	var battle_party: Dictionary
 
 	match party:
@@ -25,7 +32,18 @@ func start_battle(encounter: Encounter, _battle_system:= "default", party:= "def
 
 	var battle_system_instance = BattleSystem.new_battle(battle_party, encounter)
 	add_child(battle_system_instance)
-	start_battle_signal.emit()
+	battle_ready.emit()
 
 func _process(_delta):
-	pass
+	if Input.is_action_just_pressed("pause"):
+		get_tree().paused = !get_tree().paused
+		if get_tree().paused:
+			$PauseMenu.show()
+		else:
+			$PauseMenu.hide()
+
+	if party_ready:
+		show()
+	else:
+		hide()
+

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbsgthq66hbia"]
+
+[ext_resource type="Script" path="res://scenes/map/battle_location.gd" id="1_58g1d"]
+[ext_resource type="Script" path="res://scenes/map/map.gd" id="1_yxqhd"]
+
+[node name="Map" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_yxqhd")
+
+[node name="BattleLocation" type="Button" parent="."]
+offset_left = 476.0
+offset_top = 246.0
+offset_right = 760.0
+offset_bottom = 323.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 50
+text = "Battle"
+script = ExtResource("1_58g1d")

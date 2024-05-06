@@ -5,7 +5,7 @@ var child_count: int
 func arrange_y(children: Array[Node]):
 	# var screen_height:= 720
 	var center:= 0
-	var distance_between:= 200
+	var distance_between:= 150
 
 	var first_y = -(((children.size() - 1.0) * distance_between)/2 + center)
 

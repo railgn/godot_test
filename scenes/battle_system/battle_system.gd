@@ -1,7 +1,7 @@
 class_name BattleSystem
 extends Node
 
-# const battle_system_scene: PackedScene = preload("res://scenes/battle_system/battle_system.tscn")
+signal turn_order_change()
 
 var main: Node
 var party: Dictionary
@@ -9,7 +9,12 @@ var encounter: Encounter
 
 var battle_over:= false
 var drops #Dict = key (Item ID): value (quantity)
-var turn := 0
+var turn_count := 0
+
+var units_in_turn_order: Array[BattleUnit]:
+	set(new_units_in_turn_order):
+		turn_order_change.emit(new_units_in_turn_order)
+		units_in_turn_order = new_units_in_turn_order
 
 static func new_battle(init_party: Dictionary, init_encounter: Encounter) -> BattleSystem:
 	var battle_system_scene: PackedScene = load("res://scenes/battle_system/battle_system.tscn")
@@ -23,10 +28,18 @@ static func new_battle(init_party: Dictionary, init_encounter: Encounter) -> Bat
 
 func _ready():
 	main = get_parent()
-	main.start_battle_signal.connect(_on_start_battle_signal)
+	main.battle_ready.connect(_on_battle_ready)
 
-func _on_start_battle_signal():
+func _on_battle_ready():
 
+	initial_unit_spawn()
+
+	turn()
+
+# every time an action is taken, run check_for_battle_over()
+
+
+func initial_unit_spawn():
 	for party_member in party:
 		var unit_instance = BattlePlayerUnit.new_player_unit(party[party_member])
 		$UnitStations/Real/Player.add_child(unit_instance)
@@ -38,39 +51,33 @@ func _on_start_battle_signal():
 		var mirror_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, true)
 		$UnitStations/Mirror/Enemy.add_child(mirror_unit_instance)	
 
-	start_turn()
 
-# every time an action is taken, run check_for_battle_over()
+func turn():
+	turn_count += 1
+	units_in_turn_order = CreateTurnOrder.initial(turn_count, GetUnits.all_units($UnitStations))
 
-func start_turn():
-	turn += 1
-	var ordered_units = set_turn_order(turn, GetUnits.all_units($UnitStations))
+	for unit in units_in_turn_order:
+		if !unit.stats.player:
+			## enemy AI and non player ally sprites -> display intents over all non player sprites sprites
+			pass
+
+
+	units_in_turn_order[0].units_turn = true
+	## action(unit[0])
+		##act if not player
+		## if player
+			##build menus(unit[0])
+				##menus send signals to battlesystem with data of what was chosen
+
+
+
+	# for unit in units_in_turn_order:
+	# 	unit.units_turn.emit(unit.turn_order_index)
 
 
 
 
-func set_turn_order(current_turn, all_units: Array[BattleUnit]) -> Array[BattleUnit]:
-	var res: Array[BattleUnit]= []
 
-	var turn_order_obj = {}
-	var turn_order_arr = []
-
-	for unit in all_units:
-		if !unit.stats.ally and unit.stats.mirror and unit.turn_initialized == current_turn:
-			continue
-
-		var turn_speed = unit.stats.combat_stats.turn_speed * (1.0 + randf() * 0.5)
-		turn_order_obj[turn_speed] = unit
-		turn_order_arr.append(turn_speed)
-
-	
-	turn_order_arr.sort_custom(func(a, b): return a > b)
-	print(turn_order_arr)
-
-	for speed in turn_order_arr:
-		res.append(turn_order_obj[speed])
-
-	return res
 
 func _process(delta):
 	if(battle_over):
