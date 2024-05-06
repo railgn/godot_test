@@ -14,3 +14,4 @@ script = ExtResource("1_gxiyv")
 [node name="Map" parent="." instance=ExtResource("3_8rdkb")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_e1m3f")]
+position = Vector2(50, 50)

@@ -22,6 +22,7 @@ func _ready():
 	CharacterClasses.initialized.connect(on_classes_initialized)
 
 func on_classes_initialized():
+	# add_party_member("P_1", "BC_1", false)
 	add_party_member("P_2", "BC_0", false)
 	add_party_member("P_3", "BC_0", false)
 	add_party_member("P_4", "BC_0", false)

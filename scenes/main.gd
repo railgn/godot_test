@@ -46,4 +46,3 @@ func _process(_delta):
 		show()
 	else:
 		hide()
-
