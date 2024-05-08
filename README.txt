@@ -1,5 +1,10 @@
 Now:
-	Why isnt this in 2D????
+	
+	Check phone notes
+
+
+	Type for chosen action	
+		use for intent saving and for result of menu signal
 
 	Battle Script time?
 

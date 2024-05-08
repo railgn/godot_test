@@ -34,8 +34,6 @@ func build_menus(path_array: Array[String]):
 		menu_options = res
 
 
-
-
 	if path_array.size() > 0:
 		menu_options.append("back")
 	var y_offset:= 0
@@ -60,7 +58,23 @@ func build_menus(path_array: Array[String]):
 
 		button.option_selected.connect(_on_option_selected)
 
+		button.set_focus_mode(Control.FOCUS_ALL)
+
 		add_child(button)
+
+	for i in range(get_children().size()):
+		var node: PauseMenuButton = get_child(i)
+
+		if i == 0:
+			node.grab_focus()
+			node.set_focus_neighbor(SIDE_TOP, get_child(get_children().size() - 1).get_path())
+		else:
+			node.set_focus_neighbor(SIDE_TOP, get_child(i - 1).get_path())
+
+		if i < (get_children().size() - 1):
+			node.set_focus_neighbor(SIDE_BOTTOM, get_child(i + 1).get_path())
+		else:
+			node.set_focus_neighbor(SIDE_BOTTOM, get_child(0).get_path())
 
 
 
@@ -76,7 +90,7 @@ func follow_path(path_arr: Array[String]):
 func _on_option_selected(button: Button):
 
 	if button.text == "back":
-		current_path_array.pop_back()
+		current_path_array = current_path_array.slice(0, current_path_array.size()- 1)
 	else:
 		current_path_array.append(button.text)
 
@@ -86,3 +100,9 @@ func _on_option_selected(button: Button):
 
 	build_menus(current_path_array)
 
+
+func _process(_delta):
+	if Input.is_action_just_pressed("ui_cancel"):
+		var last_button = get_child(get_children().size()-1)
+		if last_button.text == "back":
+			_on_option_selected(last_button)

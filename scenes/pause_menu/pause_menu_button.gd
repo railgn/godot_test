@@ -1,7 +1,7 @@
 class_name PauseMenuButton
 extends Button
 
-signal option_selected
+signal option_selected(button_text: String)
 
 func _init(option:String):
 	name = option

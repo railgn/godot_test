@@ -27,8 +27,3 @@ static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:=
 	## UI should have it's own nodes that pull from here
 
 	return unit
-
-func _ready():
-
-	pass
-

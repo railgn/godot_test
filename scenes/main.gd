@@ -39,6 +39,7 @@ func _process(_delta):
 		get_tree().paused = !get_tree().paused
 		if get_tree().paused:
 			$PauseMenu.show()
+			$PauseMenu.get_child(0).grab_focus()
 		else:
 			$PauseMenu.hide()
 

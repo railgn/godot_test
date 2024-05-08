@@ -16,6 +16,8 @@ var units_in_turn_order: Array[BattleUnit]:
 		turn_order_change.emit(new_units_in_turn_order)
 		units_in_turn_order = new_units_in_turn_order
 
+var chosen_intent: Intent
+
 static func new_battle(init_party: Dictionary, init_encounter: Encounter) -> BattleSystem:
 	var battle_system_scene: PackedScene = load("res://scenes/battle_system/battle_system.tscn")
 
@@ -33,6 +35,8 @@ func _ready():
 func _on_battle_ready():
 
 	initial_unit_spawn()
+
+	#loop await turns?
 
 	turn()
 
@@ -56,27 +60,51 @@ func turn():
 	turn_count += 1
 	units_in_turn_order = CreateTurnOrder.initial(turn_count, GetUnits.all_units($UnitStations))
 
+	#Non-player Intents
 	for unit in units_in_turn_order:
 		if !unit.stats.player:
+			unit.intent = Intent.new() ## replace with AI
 			## enemy AI and non player ally sprites -> display intents over all non player sprites sprites
-			pass
+
+	##Action
+	for unit in units_in_turn_order:
+		unit.units_turn = true
+		chosen_intent = null	
+		
+		if unit.stats.can_act:
+			if !unit.stats.player:
+				chosen_intent = unit.intent
+			else:
+				var Actions_Menu:= ActionsMenu.new($UnitStations)
+				
+				add_child(Actions_Menu)
+				#build actions menu
+					#needs way of checking if skills are usable
+						#cost
+						#status effect conditions
+						#special conditions (grave spawner max grave limit)
+
+				#await action signal
+					## dont even bother with this step? have action menu create target menu and just await for target selection?
+				#hide actions menu (can show if they back out of target menu)
+				var chosen_intent =	await Actions_Menu.intent_chosen
+
+			
+			if chosen_intent:
+				#switch chosen_intent.action.type
+					#await skill(ID, user, target)
+						#await unit.play_animation
+
+				##add logic for if chosen target is gone
+				pass
+
+			##handle deaths (redo turn order and enemy intent targets)
 
 
-	units_in_turn_order[0].units_turn = true
-	## action(unit[0])
-		##act if not player
-		## if player
-			##build menus(unit[0])
-				##menus send signals to battlesystem with data of what was chosen
-
-
-
-	# for unit in units_in_turn_order:
-	# 	unit.units_turn.emit(unit.turn_order_index)
-
-
-
-
+		#add end of turn status effect logic
+		unit.intent = Intent.new() ##clear intent
+		##handle deaths again
+		unit.units_turn = false
 
 
 func _process(delta):
