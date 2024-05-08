@@ -16,8 +16,6 @@ var units_in_turn_order: Array[BattleUnit]:
 		turn_order_change.emit(new_units_in_turn_order)
 		units_in_turn_order = new_units_in_turn_order
 
-var chosen_intent: Intent
-
 static func new_battle(init_party: Dictionary, init_encounter: Encounter) -> BattleSystem:
 	var battle_system_scene: PackedScene = load("res://scenes/battle_system/battle_system.tscn")
 
@@ -69,15 +67,15 @@ func turn():
 	##Action
 	for unit in units_in_turn_order:
 		unit.units_turn = true
-		chosen_intent = null	
+		var chosen_intent: Intent
 		
 		if unit.stats.can_act:
 			if !unit.stats.player:
 				chosen_intent = unit.intent
 			else:
-				var Actions_Menu:= ActionsMenu.new($UnitStations)
+				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations)
 				
-				add_child(Actions_Menu)
+				add_child(actions_menu_instance)
 				#build actions menu
 					#needs way of checking if skills are usable
 						#cost
@@ -87,7 +85,7 @@ func turn():
 				#await action signal
 					## dont even bother with this step? have action menu create target menu and just await for target selection?
 				#hide actions menu (can show if they back out of target menu)
-				var chosen_intent =	await Actions_Menu.intent_chosen
+				chosen_intent =	await actions_menu_instance.intent_chosen
 
 			
 			if chosen_intent:

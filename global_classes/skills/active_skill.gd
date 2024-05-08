@@ -79,7 +79,7 @@ var damage_type:= DamangeType.NONE
 var magnitude:= Magnitude.new()
 var cost:= Cost.new()
 
-var prerequisite:= {
+var prerequisites:= {
     ## examples - {} i.e. none, {status_effect: "SE_5"} OR {skill: "SK_15"}
     ## Battle System would loop through all keys and apply a switch statement
 }
