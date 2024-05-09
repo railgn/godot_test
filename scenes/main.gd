@@ -8,18 +8,18 @@ func _ready():
 	Party.initialized.connect(_on_party_initialized)
 	for location: BattleLocation in $Map.get_children():
 		location.location_chosen.connect(_on_location_chosen)
-
+	
 func _on_party_initialized():
 	party_ready = true
 
 func _on_location_chosen(location_type: Location.LocationType):
 	$Map.hide()
+	$Map.set_process(false)
 
 	match location_type:
 		Location.LocationType.BATTLE:
 			var encounter:= Encounters.get_encounter("ENC_0")
 			start_battle(encounter)
-
 
 func start_battle(encounter: Encounter, _battle_system:= "default", party:= "default"):
 	var battle_party: Dictionary

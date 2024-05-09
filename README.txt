@@ -1,6 +1,27 @@
 Now:
+
+	Skill menu "is able to be used"
+	Targetting menus
+
+	back to battle system script
+
+	Generating locations randomly
+	adding focus mode to locations
+	rewards
+	health bar UI
+
+	Save data:
+		Relics
+		Items (gold)
+		location
+		time played
+
+	Options:
+		Resolution
+		Volume
+		Fullscreen
 	
-	Check phone notes
+	Check phone notes (5/8)
 
 
 	Type for chosen action	

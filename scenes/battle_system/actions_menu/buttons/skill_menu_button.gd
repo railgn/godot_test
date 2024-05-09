@@ -23,19 +23,18 @@ func check_if_skill_usable(unit_check: BattlePlayerUnit, skill_check:ActiveSkill
 	##for prerequisite in prerequisites
 		##match
 
-	
-	
-	
+
 	return usable
-
-
-
-
 
 func _ready():
 	pressed.connect(_on_pressed)
 
+	focus_entered.connect(_on_focus_entered)
+	
 func _on_pressed():
 	var action:= Intent.Action.new(Intent.Action.Type.SKILL, skill.id)
 
 	action_chosen.emit(action)
+
+func _on_focus_entered():
+	dialogue_change.emit(skill.description)

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqlu6kjlhyb7n"]
+
+[ext_resource type="Script" path="res://DialgoueBox.gd" id="1_jjo8m"]
+
+[node name="DialogueBox" type="RichTextLabel"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -500.0
+offset_top = 600.0
+offset_right = 500.0
+offset_bottom = 640.0
+grow_horizontal = 2
+script = ExtResource("1_jjo8m")

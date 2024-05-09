@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://d4k73xk2ato2x"]
+[gd_scene load_steps=6 format=3 uid="uid://d4k73xk2ato2x"]
 
 [ext_resource type="Script" path="res://scenes/battle_system/battle_system.gd" id="1_lod8b"]
 [ext_resource type="Script" path="res://scenes/battle_system/unit_station.gd" id="2_fgttb"]
 [ext_resource type="PackedScene" uid="uid://bxxwc8ua44xbn" path="res://scenes/battle_system/turn_order/turn_order.tscn" id="3_cpcrn"]
+[ext_resource type="PackedScene" uid="uid://bqlu6kjlhyb7n" path="res://scenes/battle_system/dialogue_box/dialogue_box.tscn" id="4_md28t"]
+[ext_resource type="Script" path="res://scenes/battle_system/dialogue_box/dialogue_box.gd" id="5_8qyxk"]
 
 [node name="BattleSystem" type="Node"]
 process_mode = 1
@@ -32,3 +34,6 @@ script = ExtResource("2_fgttb")
 
 [node name="Turn Order" parent="." instance=ExtResource("3_cpcrn")]
 position = Vector2(100, 80)
+
+[node name="DialogueBox" parent="." instance=ExtResource("4_md28t")]
+script = ExtResource("5_8qyxk")

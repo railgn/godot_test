@@ -19,6 +19,7 @@ func get_character_class(id: String) -> CharacterClass:
 
 func _ready():
 	add_character_class("BC_0", "default", false)
+	DICTIONARY.BC_0.innate_skills.active_skills.SK_0 = PartyMember.SkillsStore.SkillStore.new("SK_0", 1) 
 
 	add_character_class("BC_1", "party test", false)
 	##probably safer to give an "add innate skills" func to CharacterClass

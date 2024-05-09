@@ -20,6 +20,8 @@ func get_skill(id: String) -> Skill:
 
 func _ready():
 	add_skill("SK_0", "Attack", true)
+	DICTIONARY.SK_0.description = "Basic Attack"
+
 	
 	add_skill("SK_1", "passive stat test", false)
 	DICTIONARY.SK_1.status_effect_granted.id = "SE_1"

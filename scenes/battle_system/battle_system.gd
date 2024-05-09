@@ -73,7 +73,7 @@ func turn():
 			if !unit.stats.player:
 				chosen_intent = unit.intent
 			else:
-				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations)
+				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations, $DialogueBox)
 				
 				add_child(actions_menu_instance)
 				#build actions menu
