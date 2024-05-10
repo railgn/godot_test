@@ -3,6 +3,7 @@ extends ActionsMenuButton
 
 
 func _ready():
+	add_to_group("actions_menu_button")
 	text = "Back"
 	focus_entered.connect(_on_focus_entered)
 

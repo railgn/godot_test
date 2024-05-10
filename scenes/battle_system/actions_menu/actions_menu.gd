@@ -30,9 +30,8 @@ func _ready():
 
 func build_action_menus():
 	hide()
-	for n in get_children():
-		remove_child(n)
-		n.queue_free()
+
+	destroy_group("actions_menu_button")
 
 	for type in Intent.Action.Type:
 		match type:
@@ -65,15 +64,11 @@ func build_action_menus():
 func build_skill_menus():
 	hide()
 
-	##abstract this
-	for n in get_children():
-		remove_child(n)
-		n.queue_free()
-	
+	destroy_group("actions_menu_button")
 	for skill_id in unit.skills_store_player.active_skills:
 		var skills_store: PartyMember.SkillsStore.SkillStore = unit.skills_store_player.active_skills[skill_id] 
 
-		var button:= SkillMenuButton.new(skills_store.id, unit)
+		var button:= SkillMenuButton.new(skills_store.id, skills_store.level, unit)
 		button.action_chosen.connect(_on_action_chosen)
 		button.dialogue_change.connect(dialogue_box._on_dialogue_change)
 		add_child(button)
@@ -83,25 +78,84 @@ func build_skill_menus():
 	back_button.dialogue_change.connect(dialogue_box._on_dialogue_change)
 	add_child(back_button)
 
-	spacing_and_focus(get_children())
+	spacing_and_focus(get_tree().get_nodes_in_group("actions_menu_button"))
 
 	show()
 
 func build_target_menus():
-	## connect to signal
-	##target back button needs to delete target menu then unhide non target menu
-	pass
+	print("build target menus")
+
+	var potential_targets:= Target_Funcs.find_potential_targets(unit, chosen_intent.action, unit_stations)
+	print("target: ", potential_targets)
+
+	for targets in potential_targets:
+		var target_controller = TargetController.new(targets)
+		target_controller.target_chosen.connect(_on_target_chosen)
+		target_controller.target_back.connect(_on_target_back)
+		add_child(target_controller)
+		print("added target controller")
+
+	var target_controllers:= get_tree().get_nodes_in_group("target_controller")
+
+	for i in range(target_controllers.size()):
+		var node: Control = target_controllers[i]
+
+		if i == 0:
+			node.grab_focus()
+			node.set_focus_neighbor(SIDE_TOP, target_controllers[target_controllers.size() - 1].get_path())
+		else:
+			node.set_focus_neighbor(SIDE_TOP, target_controllers[i - 1].get_path())
+
+		if i < (target_controllers.size() - 1):
+			node.set_focus_neighbor(SIDE_BOTTOM, target_controllers[i + 1].get_path())
+		else:
+			node.set_focus_neighbor(SIDE_BOTTOM, target_controllers[0].get_path())
+
 
 func _on_action_chosen(action: Intent.Action):
-	for child in get_children():
-		child.hide()
+	for n in get_tree().get_nodes_in_group("actions_menu_button"):
+		n.hide()
 	
 	chosen_intent.action = action
 	build_target_menus()
 
-func _on_target_chosen(target: Intent.Target):
-	chosen_intent.target = target
-	intent_chosen.emit(chosen_intent)
+func _on_target_chosen(target: Intent.Target, target_controller: TargetController):
+	target_controller.release_focus()
+
+	if !chosen_intent.target:
+		chosen_intent.target = target
+
+		match target.meta.number:
+			ActiveSkill.Target.TargetNumber.TWO:
+				destroy_group("target_controller")
+				build_target_menus()
+			"_": 
+				print("intent emitted")
+				intent_chosen.emit(chosen_intent)
+
+	else:
+		chosen_intent.target.additional_targets = target.node_paths
+		
+		print("intent emitted")
+		intent_chosen.emit(chosen_intent)
+
+
+func _on_target_back(target_controller: TargetController):
+	target_controller.release_focus()
+	destroy_group("target_controller")
+
+	if !chosen_intent.target:
+		print("null")
+		print("show actions menu")
+		for n in get_tree().get_nodes_in_group("actions_menu_button"):
+			n.show()
+		
+		get_tree().get_nodes_in_group("actions_menu_button")[0].grab_focus()
+		
+	else:
+		print("not null")
+		chosen_intent.target = null
+		build_target_menus()
 
 func spacing_and_focus(buttons:Array[Node]):
 	var y_offset:= 0
@@ -129,5 +183,10 @@ func spacing_and_focus(buttons:Array[Node]):
 
 	
 	buttons[0].grab_focus()
+
+func destroy_group(group_name: String):
+	for n in get_tree().get_nodes_in_group(group_name):
+		remove_child(n)
+		n.queue_free()
 
 

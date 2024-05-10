@@ -24,8 +24,7 @@ class Target:
     enum TargetNumber{
         NONE,
         ONE,
-        TWO,
-        THREE,
+        TWO, # add three later. only two for now
         ADJACENT, #splash damage
         ALL,
     }
@@ -41,8 +40,8 @@ class Magnitude:
 
 class Cost:
     var resource:= SkillCostResource.NONE
-    # think about: if used on bleeding target, no cost
-    var amount: Callable = func(_skill_level: int, _resource:SkillCostResource, _user: Stats, _target: Stats) -> int: return 0
+    # think about: if used on bleeding target, refunds cost (cant really do "no cost" cause you would have to select target first)
+    var amount: Callable = func(skill_level: int, resource:SkillCostResource, user: Stats) -> int: return 0
 
 enum SkillType {
     NONE,
@@ -79,10 +78,22 @@ var damage_type:= DamangeType.NONE
 var magnitude:= Magnitude.new()
 var cost:= Cost.new()
 
+
+
+enum PrerequisitesEnum {
+    STATUS_EFFECT,
+    SKILL,
+    POWER_CHARGE,
+    YOYO
+}
+
 var prerequisites:= {
     ## examples - {} i.e. none, {status_effect: "SE_5"} OR {skill: "SK_15"}
     ## Battle System would loop through all keys and apply a switch statement
 }
+
+
+
 
 var active_optional_properties:= {
     ## - Guaranteed Crit

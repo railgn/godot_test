@@ -1,7 +1,9 @@
 Now:
 
-	Skill menu "is able to be used"
-	Targetting menus
+	Need to test: Skill menu "is able to be used"
+	actions menu - abstract and cleanup code
+
+	write find potential target function
 
 	back to battle system script
 

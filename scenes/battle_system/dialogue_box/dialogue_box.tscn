@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bqlu6kjlhyb7n"]
 
-[ext_resource type="Script" path="res://DialgoueBox.gd" id="1_jjo8m"]
+[ext_resource type="Script" path="res://scenes/battle_system/dialogue_box/dialogue_box.gd" id="1_jjo8m"]
 
 [node name="DialogueBox" type="RichTextLabel"]
 anchors_preset = 5

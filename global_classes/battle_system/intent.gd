@@ -3,7 +3,6 @@ class_name Intent
 var action: Action
 var target: Target
 
-
 class Action:
 	enum Type {
 		BASIC_ATTACK,
@@ -20,7 +19,8 @@ class Action:
 		type = init_type
 		id = init_id
 
-
 class Target:
 	var meta: ActiveSkill.Target
-	var node_paths
+	var node_paths: Array[NodePath]
+	var additional_targets: Array[NodePath]
+	

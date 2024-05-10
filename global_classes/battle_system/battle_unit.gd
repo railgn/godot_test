@@ -1,5 +1,5 @@
 class_name BattleUnit
-extends Node
+extends Node2D
 
 signal unit_focussed_change
 signal units_turn_change
@@ -11,7 +11,6 @@ var level: int
 var stats: Stats
 var intent: Intent
 
-
 var units_turn := false:
 	set(new_units_turn):
 		units_turn_change.emit(turn_order_index, new_units_turn)
@@ -19,5 +18,14 @@ var units_turn := false:
 var focussed := false:
 	set(new_focussed):
 		unit_focussed_change.emit(turn_order_index, new_focussed)
+
+		if new_focussed == true:
+			modulate = Color.RED
+		else:
+			modulate = Color.WHITE
+		
 		focussed = new_focussed
+
+
+
 

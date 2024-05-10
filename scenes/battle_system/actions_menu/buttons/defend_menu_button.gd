@@ -5,6 +5,7 @@ func _init():
 	text = "Defend"
 
 func _ready():
+	add_to_group("actions_menu_button")
 	pressed.connect(_on_pressed)
 	focus_entered.connect(_on_focus_entered)
 	
