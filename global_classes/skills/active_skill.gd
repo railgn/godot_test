@@ -7,8 +7,8 @@ class Target:
         SELF,
         ALLY,
         ENEMY,
-        ANY,
-        ALL,
+        ANY, 
+        ALL, #Use Any + All instead
     }
 
     enum TargetSide{
@@ -26,12 +26,14 @@ class Target:
         ONE,
         TWO, # add three later. only two for now
         ADJACENT, #splash damage
+        ALL_SIDE, # Any + All side = mirror, real
+        ALL_SIDE_SPLIT, # Any + All side split = mirror enemy, mirror ally, real enemy, real ally
         ALL,
     }
 
-    var type:= TargetType.NONE
-    var side:= TargetSide.NONE
-    var number:= TargetNumber.NONE
+    var type:= TargetType.ENEMY
+    var side:= TargetSide.SAME
+    var number:= TargetNumber.ONE
 
 class Magnitude:
     var damage: Callable = func(_skill_level: int, _user: Stats, _target: Stats, _damage_type: DamangeType) -> int: return 0
@@ -39,9 +41,9 @@ class Magnitude:
     var healing: Callable = func(_skill_level: int, _user: Stats, _target: Stats) -> int: return 0
 
 class Cost:
-    var resource:= SkillCostResource.NONE
+    var resource:= SkillCostResource.MP
     # think about: if used on bleeding target, refunds cost (cant really do "no cost" cause you would have to select target first)
-    var amount: Callable = func(skill_level: int, resource:SkillCostResource, user: Stats) -> int: return 0
+    var amount: Callable = func(_skill_level: int, _resource:SkillCostResource, _user: Stats) -> int: return 0
 
 enum SkillType {
     NONE,

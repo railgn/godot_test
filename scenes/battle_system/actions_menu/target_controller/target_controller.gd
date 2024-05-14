@@ -16,7 +16,6 @@ func _ready():
 	focus_exited.connect(_on_focus_exited)
 
 func _on_focus_entered():
-	print("focus entered: ", target.node_paths[0])
 	for node_path in find_nodes_to_focus(target):
 		var node: BattleUnit = get_node(node_path)
 		node.focussed = true
@@ -39,9 +38,7 @@ func find_nodes_to_focus(target_local: Intent.Target) -> Array[NodePath]:
 
 func _process(_delta):
 	if has_focus() and Input.is_action_just_pressed("ui_accept"):
-		print("target chosen")
 		target_chosen.emit(target, self)
 	if has_focus() and Input.is_action_just_pressed("ui_cancel"):
-		print("target back")
 		target_back.emit(self)
 	

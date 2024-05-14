@@ -85,7 +85,11 @@ func turn():
 				#await action signal
 					## dont even bother with this step? have action menu create target menu and just await for target selection?
 				#hide actions menu (can show if they back out of target menu)
+				print("waiting for intent signal")
 				chosen_intent =	await actions_menu_instance.intent_chosen
+				print("intent recieved:")
+				print("action: ", chosen_intent.action)
+				print("target: ", chosen_intent.target)
 
 			
 			if chosen_intent:

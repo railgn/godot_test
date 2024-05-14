@@ -18,5 +18,5 @@ func get_encounter(id: String) -> Encounter:
 		return Encounter.new("ENC_0", enemies)
 
 func _ready():
-	var enemies:Array[Encounter.EnemyData] = [Encounter.EnemyData.new("E_0", 1)]
+	var enemies:Array[Encounter.EnemyData] = [Encounter.EnemyData.new("E_0", 1), Encounter.EnemyData.new("E_0", 1)]
 	add_encounter("ENC_0", enemies)

@@ -1,8 +1,20 @@
 Now:
+	add focus memory for last action menu or target controller used.
+		have every button emit on focus(self)
+		save an object on action menu that has:
+			"menu" : last focussed index
+			gets updated every time focus emit is triggered
+			would need to add an identifying string to each type of menu button
+				focus_menu_group:= "skill"
+
+			can eventually add this as part of the ActionsMenu constructor.
+			the battlesystem will save this in an object:
+				Player node: object
+			
+			the intent chosen signal can also send this object back to the battlesystem to save
 
 	Need to test: Skill menu "is able to be used"
-	actions menu - abstract and cleanup code
-
+		
 	write find potential target function
 
 	back to battle system script
@@ -11,6 +23,14 @@ Now:
 	adding focus mode to locations
 	rewards
 	health bar UI
+
+	Rewards and Options should be singletons
+		- Options.playback_speed for animation nodes
+		- save data nodes
+			- save node as?
+				- on new game, use save as default node
+			- save node dictionary as json
+				- ready function loads json as dictionary
 
 	Save data:
 		Relics
@@ -22,12 +42,10 @@ Now:
 		Resolution
 		Volume
 		Fullscreen
+
+	try dialogue plugin
 	
 	Check phone notes (5/8)
-
-
-	Type for chosen action	
-		use for intent saving and for result of menu signal
 
 	Battle Script time?
 

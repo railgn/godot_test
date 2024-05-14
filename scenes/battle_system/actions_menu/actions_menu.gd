@@ -27,7 +27,6 @@ static func new_actions_menu(init_unit: BattlePlayerUnit, init_unit_stations, in
 func _ready():
 	build_action_menus()
 
-
 func build_action_menus():
 	hide()
 
@@ -65,6 +64,7 @@ func build_skill_menus():
 	hide()
 
 	destroy_group("actions_menu_button")
+
 	for skill_id in unit.skills_store_player.active_skills:
 		var skills_store: PartyMember.SkillsStore.SkillStore = unit.skills_store_player.active_skills[skill_id] 
 
@@ -83,34 +83,18 @@ func build_skill_menus():
 	show()
 
 func build_target_menus():
-	print("build target menus")
 
 	var potential_targets:= Target_Funcs.find_potential_targets(unit, chosen_intent.action, unit_stations)
-	print("target: ", potential_targets)
 
 	for targets in potential_targets:
 		var target_controller = TargetController.new(targets)
 		target_controller.target_chosen.connect(_on_target_chosen)
 		target_controller.target_back.connect(_on_target_back)
 		add_child(target_controller)
-		print("added target controller")
 
 	var target_controllers:= get_tree().get_nodes_in_group("target_controller")
 
-	for i in range(target_controllers.size()):
-		var node: Control = target_controllers[i]
-
-		if i == 0:
-			node.grab_focus()
-			node.set_focus_neighbor(SIDE_TOP, target_controllers[target_controllers.size() - 1].get_path())
-		else:
-			node.set_focus_neighbor(SIDE_TOP, target_controllers[i - 1].get_path())
-
-		if i < (target_controllers.size() - 1):
-			node.set_focus_neighbor(SIDE_BOTTOM, target_controllers[i + 1].get_path())
-		else:
-			node.set_focus_neighbor(SIDE_BOTTOM, target_controllers[0].get_path())
-
+	setup_focus(target_controllers)
 
 func _on_action_chosen(action: Intent.Action):
 	for n in get_tree().get_nodes_in_group("actions_menu_button"):
@@ -121,39 +105,34 @@ func _on_action_chosen(action: Intent.Action):
 
 func _on_target_chosen(target: Intent.Target, target_controller: TargetController):
 	target_controller.release_focus()
-
+	
 	if !chosen_intent.target:
 		chosen_intent.target = target
-
 		match target.meta.number:
 			ActiveSkill.Target.TargetNumber.TWO:
 				destroy_group("target_controller")
 				build_target_menus()
-			"_": 
-				print("intent emitted")
+			_:
+				destroy_group("target_controller")
 				intent_chosen.emit(chosen_intent)
 
 	else:
 		chosen_intent.target.additional_targets = target.node_paths
-		
-		print("intent emitted")
+		destroy_group("target_controller")
+		print("emit intent")
 		intent_chosen.emit(chosen_intent)
-
 
 func _on_target_back(target_controller: TargetController):
 	target_controller.release_focus()
 	destroy_group("target_controller")
 
 	if !chosen_intent.target:
-		print("null")
-		print("show actions menu")
 		for n in get_tree().get_nodes_in_group("actions_menu_button"):
+			print(n.text)
 			n.show()
 		
 		get_tree().get_nodes_in_group("actions_menu_button")[0].grab_focus()
-		
 	else:
-		print("not null")
 		chosen_intent.target = null
 		build_target_menus()
 
@@ -165,10 +144,12 @@ func spacing_and_focus(buttons:Array[Node]):
 		button.position.y = y_offset
 		y_offset+= distance_between
 
-		button.set_focus_mode(Control.FOCUS_ALL)
+	setup_focus(buttons)
 
+func setup_focus(buttons: Array[Node]):
 	for i in range(buttons.size()):
-		var node: Button = buttons[i]
+		var node: Control = buttons[i]
+		node.set_focus_mode(Control.FOCUS_ALL)
 
 		if i == 0:
 			node.grab_focus()
@@ -180,9 +161,6 @@ func spacing_and_focus(buttons:Array[Node]):
 			node.set_focus_neighbor(SIDE_BOTTOM, buttons[i + 1].get_path())
 		else:
 			node.set_focus_neighbor(SIDE_BOTTOM, buttons[0].get_path())
-
-	
-	buttons[0].grab_focus()
 
 func destroy_group(group_name: String):
 	for n in get_tree().get_nodes_in_group(group_name):
