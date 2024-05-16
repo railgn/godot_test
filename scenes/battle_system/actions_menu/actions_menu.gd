@@ -128,7 +128,6 @@ func _on_target_back(target_controller: TargetController):
 
 	if !chosen_intent.target:
 		for n in get_tree().get_nodes_in_group("actions_menu_button"):
-			print(n.text)
 			n.show()
 		
 		get_tree().get_nodes_in_group("actions_menu_button")[0].grab_focus()

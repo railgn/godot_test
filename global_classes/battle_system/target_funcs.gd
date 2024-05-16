@@ -60,7 +60,7 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 				res_target_side = ResTargetSide.REAL
 		ActiveSkill.Target.TargetSide.BOTH:
 			res_target_side = ResTargetSide.BOTH
-		_:
+		_: ## SAME
 			if unit.stats.mirror:
 				res_target_side = ResTargetSide.MIRROR
 			else:
@@ -156,10 +156,10 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 				ResTargetSide.REAL:
 					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
 				ResTargetSide.MIRROR:
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemey")
+					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
 				ResTargetSide.BOTH:
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemey")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemey")
+					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
+					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
 
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL:
@@ -405,27 +405,6 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 			res.append(build_res_target(meta, res_targets, []))
 		ActiveSkill.Target.TargetType.SELF:
 			res.append(build_res_target(meta, [unit.get_path()], []))
-
-
-
-
-
-
-	# var example_target: = unit_stations.get_node("Real").get_node("Enemy").get_child(0)
-	# var example_path = example_target.get_path()
-	
-	# var example_intent_target:= Intent.Target.new()
-
-	
-	# var example_meta: = ActiveSkill.Target.new()
-	# example_meta.type = ActiveSkill.Target.TargetType.ENEMY
-	# example_meta.number = ActiveSkill.Target.TargetNumber.ONE
-	# example_meta.side = ActiveSkill.Target.TargetSide.SAME
-	
-	# example_intent_target.meta = example_meta
-	# example_intent_target.node_paths = [example_path]
-
-	# res.append(example_intent_target)
 
 	return res
 
