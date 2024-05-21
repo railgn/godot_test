@@ -1,30 +1,25 @@
 Now:
-	in target func:
-		- when assigning unit stations
-			- if station.get_child_count() > 0, assign station = null
-
-		-make sure bug with "empty mirror side allies target" is fixed after this
-	
-	"on target select" in action menu
-		- add "targetted_finalized" prop to battle unit class
-		- set as true 
-			-"add arrow above their head when true"
-
-		-gets set to false after action has played
-		-also gets set to false on "TWO" select if player presses the back button	
-	
 	add focus memory for last action menu or target controller used.
 		have every button emit a new signal on focus(self)
 			new on signal func and connection in actions menu
+
+
+
 		save an object on action menu as a global property that has:
 			"menu" : last focussed index
 			gets updated every time focus emit is triggered
 			would need to add an identifying string to each type of menu button
 				focus_menu_group:= "skill"
 
+			HERE
+			Continue to debug this
+
 			can eventually add this as part of the ActionsMenu constructor.
 			the battlesystem will save this in an object:
 				Player node: object
+
+			maybe save on player_battle_unit instead?
+				and then eventually save back on party member to have inter-battle memory?
 			
 			the intent chosen signal can also send this object back to the battlesystem to save
 			before creating actions menu, battlesystem checks if the object has a property for this unit

@@ -81,6 +81,13 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 					real_ally_station = unit_stations.get_node("Real").get_node("Player")
 					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
 
+			if real_ally_station:
+				if real_ally_station.get_child_count() == 0:
+					real_ally_station = null
+			if mirror_ally_station:	
+				if mirror_ally_station.get_child_count() == 0:
+					mirror_ally_station = null
+
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL:
 					var res_targets: Array[NodePath] = []
@@ -160,6 +167,13 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 				ResTargetSide.BOTH:
 					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
 					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+
+			if real_enemy_station:
+				if real_enemy_station.get_child_count() == 0:
+					real_enemy_station = null
+			if mirror_enemy_station:	
+				if mirror_enemy_station.get_child_count() == 0:
+					mirror_enemy_station = null
 
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL:
@@ -246,6 +260,19 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
 					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
 					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+
+			if real_ally_station:
+				if real_ally_station.get_child_count() == 0:
+					real_ally_station = null
+			if mirror_ally_station:	
+				if mirror_ally_station.get_child_count() == 0:
+					mirror_ally_station = null
+			if real_enemy_station:
+				if real_enemy_station.get_child_count() == 0:
+					real_enemy_station = null
+			if mirror_enemy_station:	
+				if mirror_enemy_station.get_child_count() == 0:
+					mirror_enemy_station = null
 
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL_SIDE_SPLIT:
@@ -387,6 +414,19 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
 					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
 					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+
+			if real_ally_station:
+				if real_ally_station.get_child_count() == 0:
+					real_ally_station = null
+			if mirror_ally_station:	
+				if mirror_ally_station.get_child_count() == 0:
+					mirror_ally_station = null
+			if real_enemy_station:
+				if real_enemy_station.get_child_count() == 0:
+					real_enemy_station = null
+			if mirror_enemy_station:	
+				if mirror_enemy_station.get_child_count() == 0:
+					mirror_enemy_station = null
 				
 			var res_targets: Array[NodePath] = []
 			if real_ally_station:

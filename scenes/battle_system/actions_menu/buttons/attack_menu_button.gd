@@ -16,3 +16,4 @@ func _on_pressed():
 
 func _on_focus_entered():
 	dialogue_change.emit("Basic Attack")
+	last_control_focus.emit("Action", self)

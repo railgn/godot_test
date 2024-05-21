@@ -1,8 +1,9 @@
 class_name BattleUnit
 extends Node2D
 
-signal unit_focussed_change
-signal units_turn_change
+signal units_turn_change(turn_order_index: int, new_units_turn: bool)
+signal unit_focussed_change(turn_order_index: int, new_focussed: bool)
+signal finalized_as_target_change(new_finalized_as_target: bool)
 
 var turn_order_index: int
 var turn_initialized: int
@@ -25,6 +26,10 @@ var focussed := false:
 			modulate = Color.WHITE
 		
 		focussed = new_focussed
+var finalized_as_target:= false:
+	set(new_finalized_as_target):
+		finalized_as_target_change.emit(new_finalized_as_target)
+		finalized_as_target = new_finalized_as_target
 
 
 

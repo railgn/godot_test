@@ -5,6 +5,7 @@ var sprite_id: String
 var sprite_mapper = preload("res://assets/sprites/sprite_mapper.json")
 
 var sprite: Texture2D
+@export var units_turn_offset: int = 100
 
 func _ready():
 	enemy_unit = get_parent()
@@ -19,5 +20,13 @@ func _ready():
 
 	self.texture = sprite
 
+	enemy_unit.units_turn_change.connect(_on_units_turn)
+
 func _process(delta):
 	self.flip_h = !enemy_unit.stats.mirror
+
+func _on_units_turn(_turn_order_index, new_units_turn):
+	if new_units_turn:
+		offset.x = units_turn_offset
+	else:
+		offset.x = 0

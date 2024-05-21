@@ -3,6 +3,7 @@ extends Control
 
 signal target_chosen(target: Intent.Target)
 signal target_back()
+signal last_control_focus(group: String, control: Control)
 
 var target: Intent.Target
 
@@ -19,6 +20,7 @@ func _on_focus_entered():
 	for node_path in find_nodes_to_focus(target):
 		var node: BattleUnit = get_node(node_path)
 		node.focussed = true
+	last_control_focus.emit("Target", self)
 
 func _on_focus_exited():
 	for node_path in find_nodes_to_focus(target):

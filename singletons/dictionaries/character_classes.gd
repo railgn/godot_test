@@ -19,7 +19,7 @@ func get_character_class(id: String) -> CharacterClass:
 
 func _ready():
 	add_character_class("BC_0", "default", false)
-	DICTIONARY.BC_0.innate_skills.active_skills.SK_0 = PartyMember.SkillsStore.SkillStore.new("SK_0", 1)
+	# DICTIONARY.BC_0.innate_skills.active_skills.SK_0 = PartyMember.SkillsStore.SkillStore.new("SK_0", 1)
 	# DICTIONARY.BC_0.innate_skills.active_skills.SK_TargetTest1 = PartyMember.SkillsStore.SkillStore.new("SK_TargetTest1", 1)
 	# DICTIONARY.BC_0.innate_skills.active_skills.SK_TargetTest2 = PartyMember.SkillsStore.SkillStore.new("SK_TargetTest2", 1)
 	# DICTIONARY.BC_0.innate_skills.active_skills.SK_TargetTest3 = PartyMember.SkillsStore.SkillStore.new("SK_TargetTest3", 1)

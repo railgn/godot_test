@@ -11,6 +11,8 @@ var unit_stations
 var mirror_cast_resource
 var dialogue_box
 
+var control_index_memory:= {}
+
 static func new_actions_menu(init_unit: BattlePlayerUnit, init_unit_stations, init_dialogue_box) -> ActionsMenu:
 	var actions_menu_scene: PackedScene = load("res://scenes/battle_system/actions_menu/actions_menu.tscn")
 
@@ -38,25 +40,31 @@ func build_action_menus():
 				var button:= AttackMenuButton.new()
 				button.action_chosen.connect(_on_action_chosen)
 				button.dialogue_change.connect(dialogue_box._on_dialogue_change)
+				button.last_control_focus.connect(_on_last_control_focus)
 				add_child(button)
 			"DEFEND":
 				var button:= DefendMenuButton.new()
 				button.action_chosen.connect(_on_action_chosen)
 				button.dialogue_change.connect(dialogue_box._on_dialogue_change)
+				button.last_control_focus.connect(_on_last_control_focus)
 				add_child(button)
 			"SKILL":
 				var button:= ActionsMenuButton.new()
 				button.text = "Skill"
 				button.pressed.connect(build_skill_menus)
-				button.focus_entered.connect(func (): button.dialogue_change.emit("Skill"))
+				button.focus_entered.connect(func (): 
+					button.dialogue_change.emit("Skill")
+					button.last_control_focus.emit("Action", button)
+					)
 				button.dialogue_change.connect(dialogue_box._on_dialogue_change)
+				button.last_control_focus.connect(_on_last_control_focus)
 				add_child(button)
 			"MIRROR_CAST":
 				pass
 			"ITEM":
 				pass
 
-	spacing_and_focus(get_children())
+	spacing_and_focus(get_tree().get_nodes_in_group("actions_menu_button"), "Action")
 
 	show()
 
@@ -71,6 +79,7 @@ func build_skill_menus():
 		var button:= SkillMenuButton.new(skills_store.id, skills_store.level, unit)
 		button.action_chosen.connect(_on_action_chosen)
 		button.dialogue_change.connect(dialogue_box._on_dialogue_change)
+		button.last_control_focus.connect(_on_last_control_focus)
 		add_child(button)
 
 	var back_button = BackMenuButton.new()
@@ -78,7 +87,7 @@ func build_skill_menus():
 	back_button.dialogue_change.connect(dialogue_box._on_dialogue_change)
 	add_child(back_button)
 
-	spacing_and_focus(get_tree().get_nodes_in_group("actions_menu_button"))
+	spacing_and_focus(get_tree().get_nodes_in_group("actions_menu_button"), "Skill")
 
 	show()
 
@@ -86,15 +95,21 @@ func build_target_menus():
 
 	var potential_targets:= Target_Funcs.find_potential_targets(unit, chosen_intent.action, unit_stations)
 
+	var target_controller_home = Node2D.new()
+	target_controller_home.add_to_group("target_controller_home")
+
 	for targets in potential_targets:
 		var target_controller = TargetController.new(targets)
 		target_controller.target_chosen.connect(_on_target_chosen)
 		target_controller.target_back.connect(_on_target_back)
-		add_child(target_controller)
+		target_controller.last_control_focus.connect(_on_last_control_focus)
+		target_controller_home.add_child(target_controller)
+
+	add_child(target_controller_home)
 
 	var target_controllers:= get_tree().get_nodes_in_group("target_controller")
 
-	setup_focus(target_controllers)
+	setup_focus(target_controllers, "Target")
 
 func _on_action_chosen(action: Intent.Action):
 	for n in get_tree().get_nodes_in_group("actions_menu_button"):
@@ -105,26 +120,29 @@ func _on_action_chosen(action: Intent.Action):
 
 func _on_target_chosen(target: Intent.Target, target_controller: TargetController):
 	target_controller.release_focus()
+	set_finalized_target(target)
 	
 	if !chosen_intent.target:
 		chosen_intent.target = target
 		match target.meta.number:
 			ActiveSkill.Target.TargetNumber.TWO:
-				destroy_group("target_controller")
 				build_target_menus()
 			_:
 				destroy_group("target_controller")
+				destroy_group("target_controller_home")
 				intent_chosen.emit(chosen_intent)
 
 	else:
 		chosen_intent.target.additional_targets = target.node_paths
 		destroy_group("target_controller")
+		destroy_group("target_controller_home")
 		print("emit intent")
 		intent_chosen.emit(chosen_intent)
 
 func _on_target_back(target_controller: TargetController):
 	target_controller.release_focus()
 	destroy_group("target_controller")
+	destroy_group("target_controller_home")
 
 	if !chosen_intent.target:
 		for n in get_tree().get_nodes_in_group("actions_menu_button"):
@@ -132,10 +150,11 @@ func _on_target_back(target_controller: TargetController):
 		
 		get_tree().get_nodes_in_group("actions_menu_button")[0].grab_focus()
 	else:
+		unset_finalized_target(chosen_intent.target)
 		chosen_intent.target = null
 		build_target_menus()
 
-func spacing_and_focus(buttons:Array[Node]):
+func spacing_and_focus(buttons:Array[Node], group: String):
 	var y_offset:= 0
 	var distance_between:= 40
 
@@ -143,15 +162,15 @@ func spacing_and_focus(buttons:Array[Node]):
 		button.position.y = y_offset
 		y_offset+= distance_between
 
-	setup_focus(buttons)
+	setup_focus(buttons, group)
 
-func setup_focus(buttons: Array[Node]):
+func setup_focus(buttons: Array[Node], group: String):
 	for i in range(buttons.size()):
 		var node: Control = buttons[i]
 		node.set_focus_mode(Control.FOCUS_ALL)
 
 		if i == 0:
-			node.grab_focus()
+			# node.grab_focus()
 			node.set_focus_neighbor(SIDE_TOP, buttons[buttons.size() - 1].get_path())
 		else:
 			node.set_focus_neighbor(SIDE_TOP, buttons[i - 1].get_path())
@@ -161,9 +180,40 @@ func setup_focus(buttons: Array[Node]):
 		else:
 			node.set_focus_neighbor(SIDE_BOTTOM, buttons[0].get_path())
 
+	if control_index_memory.has(group):
+		if control_index_memory[group] < buttons.size():
+			buttons[control_index_memory[group]].grab_focus()
+		else:
+			buttons[0].grab_focus()	
+	else:
+		buttons[0].grab_focus()	
+
+		
+
 func destroy_group(group_name: String):
 	for n in get_tree().get_nodes_in_group(group_name):
 		remove_child(n)
 		n.queue_free()
+
+func set_finalized_target(target: Intent.Target):
+	for node_path: NodePath in target.node_paths:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = true
+	for node_path: NodePath in target.additional_targets:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = true
+
+func unset_finalized_target(target: Intent.Target):
+	for node_path: NodePath in target.node_paths:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = false
+	for node_path: NodePath in target.additional_targets:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = false
+
+func _on_last_control_focus(group: String, control: Control):
+	control_index_memory[group] = control.get_index()
+
+	print(control_index_memory)
 
 

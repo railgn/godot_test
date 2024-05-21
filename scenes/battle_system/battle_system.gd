@@ -34,8 +34,6 @@ func _on_battle_ready():
 
 	initial_unit_spawn()
 
-	#loop await turns?
-
 	turn()
 
 # every time an action is taken, run check_for_battle_over()
@@ -63,6 +61,8 @@ func turn():
 		if !unit.stats.player:
 			unit.intent = Intent.new() ## replace with AI
 			## enemy AI and non player ally sprites -> display intents over all non player sprites sprites
+				## for node in enemy stations:
+					## switch node.intent.action.type
 
 	##Action
 	for unit in units_in_turn_order:
@@ -74,37 +74,26 @@ func turn():
 				chosen_intent = unit.intent
 			else:
 				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations, $DialogueBox)
-				
 				add_child(actions_menu_instance)
-				#build actions menu
-					#needs way of checking if skills are usable
-						#cost
-						#status effect conditions
-						#special conditions (grave spawner max grave limit)
-
-				#await action signal
-					## dont even bother with this step? have action menu create target menu and just await for target selection?
-				#hide actions menu (can show if they back out of target menu)
-				print("waiting for intent signal")
 				chosen_intent =	await actions_menu_instance.intent_chosen
-				print("intent recieved:")
-				print("action: ", chosen_intent.action)
-				print("target: ", chosen_intent.target)
-
 			
-			if chosen_intent:
-				#switch chosen_intent.action.type
-					#await skill(ID, user, target)
-						#await unit.play_animation
+		if chosen_intent:
+			#switch chosen_intent.action.type
+				#await skill(ID, user, target)
+					#await unit.play_animation
 
-				##add logic for if chosen target is gone
-				pass
+			##add logic for if chosen target is gone
 
-			##handle deaths (redo turn order and enemy intent targets)
+			## ideally should remove this after enemy AI is implemented
+			if chosen_intent.target:
+				unset_finalized_target(chosen_intent.target)
 
+		##handle deaths (redo turn order and enemy intent targets)
+		
 
 		#add end of turn status effect logic
-		unit.intent = Intent.new() ##clear intent
+		
+		unit.intent = null ##clear intent
 		##handle deaths again
 		unit.units_turn = false
 
@@ -115,5 +104,13 @@ func _process(delta):
 
 	
 
-	
+
+
+func unset_finalized_target(target: Intent.Target):
+	for node_path: NodePath in target.node_paths:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = false
+	for node_path: NodePath in target.additional_targets:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = false
 		
