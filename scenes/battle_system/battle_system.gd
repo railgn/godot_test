@@ -73,22 +73,30 @@ func turn():
 			if !unit.stats.player:
 				chosen_intent = unit.intent
 			else:
-				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations, $DialogueBox)
+				var actions_menu_instance:= ActionsMenu.new_actions_menu(unit, $UnitStations, $DialogueBox, unit.control_index_memory)
 				add_child(actions_menu_instance)
+				print("awaiting intent")
 				chosen_intent =	await actions_menu_instance.intent_chosen
+				remove_child(actions_menu_instance)
+				actions_menu_instance.queue_free()
 			
 		if chosen_intent:
+			if chosen_intent.target:
+				set_finalized_target(chosen_intent.target)
 			#switch chosen_intent.action.type
 				#await skill(ID, user, target)
 					#await unit.play_animation
 
-			##add logic for if chosen target is gone
+			##add logic for if chosen target is gone (only applicable for AI)
 
 			## ideally should remove this after enemy AI is implemented
 			if chosen_intent.target:
 				unset_finalized_target(chosen_intent.target)
 
 		##handle deaths (redo turn order and enemy intent targets)
+			## if player -> put in deaths door
+				## if not -> handle deletion
+			## enemy -> drops/rewards
 		
 
 		#add end of turn status effect logic
@@ -104,7 +112,13 @@ func _process(delta):
 
 	
 
-
+func set_finalized_target(target: Intent.Target):
+	for node_path: NodePath in target.node_paths:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = true
+	for node_path: NodePath in target.additional_targets:
+		var node: BattleUnit = get_node(node_path)
+		node.finalized_as_target = true
 
 func unset_finalized_target(target: Intent.Target):
 	for node_path: NodePath in target.node_paths:

@@ -22,5 +22,6 @@ func _ready():
 	DICTIONARY.P_1.recruitment_level = 5
 
 	add_character("P_2", "player 1", "BC_0")
+	DICTIONARY.P_2.recruitment_level = 5
 	add_character("P_3", "player 2", "BC_0")
 	add_character("P_4", "player 3", "BC_0")

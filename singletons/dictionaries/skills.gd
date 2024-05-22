@@ -92,6 +92,7 @@ func _ready():
 	DICTIONARY.SK_TargetTest17.target.type = ActiveSkill.Target.TargetType.ENEMY
 	DICTIONARY.SK_TargetTest17.target.side = ActiveSkill.Target.TargetSide.SAME
 	DICTIONARY.SK_TargetTest17.target.number = ActiveSkill.Target.TargetNumber.TWO
+	DICTIONARY.SK_TargetTest17.cost.amount = func(skill_level, _resource, _user) -> int: return skill_level * 5 
 
 
 	## Any unit. Both side

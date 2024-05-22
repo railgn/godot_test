@@ -5,7 +5,7 @@ var sprite_id: String
 var sprite_mapper = preload("res://assets/sprites/sprite_mapper.json")
 
 var sprite: Texture2D
-@export var units_turn_offset: int = 100
+@export var units_turn_offset: int = 150
 
 func _ready():
 	enemy_unit = get_parent()

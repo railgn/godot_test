@@ -8,6 +8,7 @@ var party_position: int
 var class_id: String 
 var skills_store_player: PartyMember.SkillsStore
 var equipment_slots: Array[CharacterClass.Equipment_Slot]
+var control_index_memory: Dictionary
 
 static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:= 1) -> BattlePlayerUnit:
 	var player_unit_scene: PackedScene = load("res://scenes/battle_system/player_unit/player_unit.tscn")
@@ -20,6 +21,7 @@ static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:=
 	unit.level = unit_save_data.level
 	unit.stats = unit_save_data.stats
 	unit.skills_store_player = unit_save_data.skills_store
+	unit.control_index_memory = unit_save_data.control_index_memory
 
 	unit.name = PlayableCharacters.get_character(unit_save_data.playable_character_id).name
 	unit.turn_initialized = init_turn_initialized

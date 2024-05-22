@@ -1,31 +1,8 @@
 Now:
-	add focus memory for last action menu or target controller used.
-		have every button emit a new signal on focus(self)
-			new on signal func and connection in actions menu
-
-
-
-		save an object on action menu as a global property that has:
-			"menu" : last focussed index
-			gets updated every time focus emit is triggered
-			would need to add an identifying string to each type of menu button
-				focus_menu_group:= "skill"
-
-			HERE
-			Continue to debug this
-
-			can eventually add this as part of the ActionsMenu constructor.
-			the battlesystem will save this in an object:
-				Player node: object
-
-			maybe save on player_battle_unit instead?
-				and then eventually save back on party member to have inter-battle memory?
-			
-			the intent chosen signal can also send this object back to the battlesystem to save
-			before creating actions menu, battlesystem checks if the object has a property for this unit
-				if not, actions menu constructor defaults it to empty
-
 	test out skill can be used func
+
+	when combat stats change, if current > max, current = max
+	when mapping/base stats change, increase current by same amount as max changed
 
 	back to battle system script
 
@@ -47,6 +24,16 @@ Now:
 		Items (gold)
 		location
 		time played
+		Rewards (rewards unlocked, also need a rewards singleton for compiling all available rewards (maybe on run start, game compiles all skills/equipment that the current party can use))
+			All rewards dictionary:
+				- id
+				- price
+				- weighting/rarity
+				- category (skill, equip, etc.)
+				- restriction (character: id, or class : id, or equip slot: id)
+			alternative is to store all rewards in the class/character class
+				then cross check this against rewards unlocked in savedata to get the possible rewards for the current run
+				storage on the character should group skills of the same "branch" together (like a skill tree)
 
 	Options:
 		Resolution
@@ -56,6 +43,11 @@ Now:
 	try dialogue plugin
 	
 	Check phone notes (5/8)
+
+
+	generate map using random.seed as the rng
+		seed generated on save data creation
+
 
 	Battle Script time?
 

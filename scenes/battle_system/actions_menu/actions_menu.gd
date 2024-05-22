@@ -7,13 +7,13 @@ var chosen_intent:= Intent.new()
 
 var unit: BattlePlayerUnit
 
-var unit_stations
+var unit_stations: Node
 var mirror_cast_resource
-var dialogue_box
+var dialogue_box: Node
 
-var control_index_memory:= {}
+var control_index_memory: Dictionary
 
-static func new_actions_menu(init_unit: BattlePlayerUnit, init_unit_stations, init_dialogue_box) -> ActionsMenu:
+static func new_actions_menu(init_unit: BattlePlayerUnit, init_unit_stations, init_dialogue_box, init_control_index_memory) -> ActionsMenu:
 	var actions_menu_scene: PackedScene = load("res://scenes/battle_system/actions_menu/actions_menu.tscn")
 
 	var actions_menu: ActionsMenu = actions_menu_scene.instantiate()
@@ -21,6 +21,8 @@ static func new_actions_menu(init_unit: BattlePlayerUnit, init_unit_stations, in
 	actions_menu.unit = init_unit
 	actions_menu.unit_stations = init_unit_stations
 	actions_menu.dialogue_box = init_dialogue_box
+	actions_menu.control_index_memory = init_control_index_memory
+
 	## any global resource should be an input (, mirror_cast_resource: int)
 		## only used to check if a skill is usable
 
@@ -148,7 +150,13 @@ func _on_target_back(target_controller: TargetController):
 		for n in get_tree().get_nodes_in_group("actions_menu_button"):
 			n.show()
 		
-		get_tree().get_nodes_in_group("actions_menu_button")[0].grab_focus()
+		## not ideal, but should be fine. Cant swap initial action options though, but wasnt planning on that anyways
+		if control_index_memory.has("Action"):
+			if control_index_memory["Action"] == 0 or control_index_memory["Action"] == 1:
+				setup_focus(get_tree().get_nodes_in_group("actions_menu_button"), "Action")
+			elif control_index_memory["Action"] == 2:
+				setup_focus(get_tree().get_nodes_in_group("actions_menu_button"), "Skill")
+	
 	else:
 		unset_finalized_target(chosen_intent.target)
 		chosen_intent.target = null
@@ -213,7 +221,3 @@ func unset_finalized_target(target: Intent.Target):
 
 func _on_last_control_focus(group: String, control: Control):
 	control_index_memory[group] = control.get_index()
-
-	print(control_index_memory)
-
-

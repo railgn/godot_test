@@ -297,19 +297,23 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 							res_targets.append(node.get_path())
 						res.append(build_res_target(meta, res_targets, []))
 				ActiveSkill.Target.TargetNumber.ALL_SIDE:
-					if real_ally_station:
+					if real_ally_station or real_enemy_station:
 						var res_targets: Array[NodePath] = []
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
+						if real_ally_station:
+							for node in real_ally_station.get_children():
+								res_targets.append(node.get_path())
+						if real_enemy_station:
+							for node in real_enemy_station.get_children():
+								res_targets.append(node.get_path())
 						res.append(build_res_target(meta, res_targets, []))
-					if mirror_ally_station:
+					if mirror_ally_station or mirror_enemy_station:
 						var res_targets: Array[NodePath] = []
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
+						if mirror_ally_station:
+							for node in mirror_ally_station.get_children():
+								res_targets.append(node.get_path())
+						if mirror_enemy_station:	
+							for node in mirror_enemy_station.get_children():
+								res_targets.append(node.get_path())
 						res.append(build_res_target(meta, res_targets, []))
 				ActiveSkill.Target.TargetNumber.ALL:
 					var res_targets: Array[NodePath] = []

@@ -2,15 +2,15 @@ extends Node2D
 
 signal battle_ready
 
-var party_ready:= false
-
 func _ready():
+	hide()
 	Party.initialized.connect(_on_party_initialized)
 	for location: BattleLocation in $Map.get_children():
 		location.location_chosen.connect(_on_location_chosen)
 	
 func _on_party_initialized():
-	party_ready = true
+	show()
+	$Map/BattleLocation.grab_focus()
 
 func _on_location_chosen(location_type: Location.LocationType):
 	$Map.hide()
@@ -42,8 +42,3 @@ func _process(_delta):
 			$PauseMenu.get_child(0).grab_focus()
 		else:
 			$PauseMenu.hide()
-
-	if party_ready:
-		show()
-	else:
-		hide()

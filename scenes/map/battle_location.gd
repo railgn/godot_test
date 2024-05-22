@@ -7,7 +7,6 @@ signal location_chosen
 func _ready():
 	set_focus_mode(Control.FOCUS_ALL)
 	pressed.connect(_on_pressed)
-	
 
 func _on_pressed():
 	location_chosen.emit(location_type)

@@ -147,6 +147,7 @@ var equipment_slots: Array[CharacterClass.Equipment_Slot]:
 					)
 
 		equipment_slots = new_equipment_slots
+var control_index_memory:= {}
 
 func _init(init_playable_character_id: String, init_class_id: String, init_promoted: bool):
 	playable_character_id = init_playable_character_id
