@@ -37,18 +37,20 @@ class StatusEffectStore:
 	var level: int
 	var does_not_expire: bool
 	var permanent_persists_outside_battle: bool
+	var optional_node_store: Array[BattleUnit]
 
 	func _init(init_id: String, 
 			init_turns_left: int, 
 			init_level:= 1, 
 			init_does_not_expire:= false, 
-			init_permanent_persists_outside_battle:= false):
+			init_permanent_persists_outside_battle:= false,
+			init_optional_node_store: Array[BattleUnit] = []):
 		self.id = init_id
 		self.turns_left = init_turns_left
 		self.level = init_level
 		self.does_not_expire = init_does_not_expire
 		self.permanent_persists_outside_battle = init_permanent_persists_outside_battle
-
+		self.optional_node_store = init_optional_node_store
 var alive := true
 var player := true
 var ally := true
@@ -68,18 +70,18 @@ var equipment_bases := BaseStats.new():
 		equipment_bases = new_equipment_bases
 var base_stats := BaseStats.new():
 	set(new_base_stats):
-		combat_stats = UpdateStats.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(new_base_stats, base_stats_adder, base_stats_multiplier, combat_stats)
 		base_stats = new_base_stats
 var combat_stats := BaseStats.new()
 
 var base_stats_multiplier := BaseStats.new():
 	set(new_base_stats_multiplier):
-		combat_stats = UpdateStats.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(base_stats, base_stats_adder, new_base_stats_multiplier, combat_stats)
 		base_stats_multiplier = new_base_stats_multiplier
 
 var base_stats_adder := BaseStats.new():
 	set(new_base_stats_adder):
-		combat_stats = UpdateStats.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier)
+		combat_stats = UpdateStats.update_combat_stats(base_stats,new_base_stats_adder,base_stats_multiplier, combat_stats)
 		base_stats_adder = new_base_stats_adder
 
 ##only added/deleted from using add and delete functions below

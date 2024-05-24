@@ -1,12 +1,15 @@
 extends Node2D
 
 signal battle_ready
+var unpause_focus_owner: Control
+var viewport: Viewport
 
 func _ready():
 	hide()
 	Party.initialized.connect(_on_party_initialized)
 	for location: BattleLocation in $Map.get_children():
 		location.location_chosen.connect(_on_location_chosen)
+	viewport = get_viewport()
 	
 func _on_party_initialized():
 	show()
@@ -38,7 +41,10 @@ func _process(_delta):
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
 		if get_tree().paused:
+			unpause_focus_owner = viewport.gui_get_focus_owner()
+
 			$PauseMenu.show()
 			$PauseMenu.get_child(0).grab_focus()
 		else:
 			$PauseMenu.hide()
+			unpause_focus_owner.grab_focus()

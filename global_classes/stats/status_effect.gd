@@ -29,7 +29,7 @@ var action_on_cure:= {
 
 var optional_properties:= {
     ##guaranteed_crit: True,
-    ##taunt_target: unit_reference // who is the taunt victim forced to target
+    ##taunt: true
     ##effect_on_turn_start: use action? store similar data to scripted enemy AI
 }
 

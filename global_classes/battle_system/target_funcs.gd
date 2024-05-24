@@ -8,6 +8,8 @@ enum ResTargetSide {
 
 static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action, unit_stations:Node) -> Array[Intent.Target]:
 	var res: Array[Intent.Target] = []
+	var taunt_res: Array[Intent.Target] = []
+	var invisible_targets: Array[NodePath] = []
 
 	## Assignment of meta target info
 	var meta = ActiveSkill.Target.new()	
@@ -66,392 +68,126 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 			else:
 				res_target_side = ResTargetSide.REAL
 
+	var taunt_node_paths: Array[NodePath] = []
+	for effect in unit.stats.status_effects_store:
+		var effect_data:= StatusEffects.get_effect(unit.stats.status_effects_store[effect].id)
+		if effect_data.optional_properties.has("taunt"):
+			print(unit.stats.status_effects_store[effect].optional_node_store)
+			var taunt_target_node: BattleUnit = unit.stats.status_effects_store[effect].optional_node_store[0]
+			if taunt_target_node:
+				if taunt_target_node.stats.alive:
+					taunt_node_paths.append(taunt_target_node.get_path())
+
+
+	var add_all_targets:= func (stations: Array) -> void:
+		var res_targets:= get_all_nodes(stations)
+		if res_targets.size() > 0:
+			res.append(build_res_target(meta, res_targets, []))
+		
+	##invis and taunt for single target and adjacent
+
+	var add_single_targets:= func (stations: Array) -> void:
+		for station in stations:
+			if station:
+				for node in station.get_children():
+					var node_path = node.get_path()
+					
+					res.append(build_res_target(meta, [node_path], []))
+					if taunt_node_paths.size() > 0:
+						if node_path in taunt_node_paths:
+							taunt_res.append(build_res_target(meta, [node_path], []))
+	
+	var add_adjacent_targets:= func (stations: Array) -> void:
+		for station in stations:
+			if station:
+				var main_targets: Array[Node] = []
+				for node in station.get_children():
+					main_targets.append(node)
+
+				for i in range(main_targets.size()):
+					var additional_targets: Array[NodePath] = []
+					if i > 0:
+						additional_targets.append(main_targets[i-1].get_path())
+					if i < main_targets.size()-1:
+						additional_targets.append(main_targets[i+1].get_path())
+
+					var node_path = main_targets[i].get_path()
+					res.append(build_res_target(meta, [node_path], additional_targets))
+					if taunt_node_paths.size() > 0:
+						if node_path in taunt_node_paths:
+							taunt_res.append(build_res_target(meta, [node_path], additional_targets))
+
 	## Res -> Intent.Target
 	match res_target_type:
 		ActiveSkill.Target.TargetType.ALLY:
-			var real_ally_station: Node
-			var mirror_ally_station: Node
-
-			match res_target_side:
-				ResTargetSide.REAL:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-				ResTargetSide.MIRROR:
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-				ResTargetSide.BOTH:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-
-			if real_ally_station:
-				if real_ally_station.get_child_count() == 0:
-					real_ally_station = null
-			if mirror_ally_station:	
-				if mirror_ally_station.get_child_count() == 0:
-					mirror_ally_station = null
+			var real_ally_station:= assign_real_ally_station(res_target_side, unit_stations)
+			var mirror_ally_station:= assign_mirror_ally_station(res_target_side, unit_stations)
 
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL:
-					var res_targets: Array[NodePath] = []
-					if real_ally_station:
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-					if mirror_ally_station:
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-					res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station, mirror_ally_station])
 				ActiveSkill.Target.TargetNumber.ALL_SIDE:
-					if real_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station])
+					add_all_targets.call([mirror_ally_station])
 				ActiveSkill.Target.TargetNumber.ALL_SIDE_SPLIT:
-					if real_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station])
+					add_all_targets.call([mirror_ally_station])
 				ActiveSkill.Target.TargetNumber.ADJACENT:
-					if real_ally_station:
-						var main_targets: Array[Node] = []
-						for node in real_ally_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-
-					if mirror_ally_station:
-						var main_targets: Array[Node] = []
-						for node in mirror_ally_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-				_:	## ONE AND TWO? Since Two is covered by additional_targets logic in actions_menu
-					if real_ally_station:
-						for node in real_ally_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-					if mirror_ally_station:
-						for node in mirror_ally_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-		ActiveSkill.Target.TargetType.ENEMY:
-			var real_enemy_station: Node
-			var mirror_enemy_station: Node
-
-			match res_target_side:
-				ResTargetSide.REAL:
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-				ResTargetSide.MIRROR:
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
-				ResTargetSide.BOTH:
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
-
-			if real_enemy_station:
-				if real_enemy_station.get_child_count() == 0:
-					real_enemy_station = null
-			if mirror_enemy_station:	
-				if mirror_enemy_station.get_child_count() == 0:
-					mirror_enemy_station = null
-
-			match res_target_number:
-				ActiveSkill.Target.TargetNumber.ALL:
-					var res_targets: Array[NodePath] = []
-					if real_enemy_station:
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
-					if mirror_enemy_station:
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
-					res.append(build_res_target(meta, res_targets, []))
-				ActiveSkill.Target.TargetNumber.ALL_SIDE:
-					if real_enemy_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_enemy_station:
-						var res_targets: Array[NodePath] = []
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-				ActiveSkill.Target.TargetNumber.ALL_SIDE_SPLIT:
-					if real_enemy_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_enemy_station:
-						var res_targets: Array[NodePath] = []
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-				ActiveSkill.Target.TargetNumber.ADJACENT:
-					if real_enemy_station:
-						var main_targets: Array[Node] = []
-						for node in real_enemy_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-
-					if mirror_enemy_station:
-						var main_targets: Array[Node] = []
-						for node in mirror_enemy_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
+					add_adjacent_targets.call([real_ally_station, mirror_ally_station])
 				_:	## ONE AND TWO
-					if real_enemy_station:
-						for node in real_enemy_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-					if mirror_enemy_station:
-						for node in mirror_enemy_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-		ActiveSkill.Target.TargetType.ANY:
-			var real_ally_station: Node
-			var mirror_ally_station: Node
-			var real_enemy_station: Node
-			var mirror_enemy_station: Node
-			
-			match res_target_side:
-				ResTargetSide.REAL:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-				ResTargetSide.MIRROR:
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
-				ResTargetSide.BOTH:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+					add_single_targets.call([real_ally_station, mirror_ally_station])
+		ActiveSkill.Target.TargetType.ENEMY:
+			var real_enemy_station:= assign_real_enemy_station(res_target_side, unit_stations)
+			var mirror_enemy_station:= assign_mirror_enemy_station(res_target_side, unit_stations)
 
-			if real_ally_station:
-				if real_ally_station.get_child_count() == 0:
-					real_ally_station = null
-			if mirror_ally_station:	
-				if mirror_ally_station.get_child_count() == 0:
-					mirror_ally_station = null
-			if real_enemy_station:
-				if real_enemy_station.get_child_count() == 0:
-					real_enemy_station = null
-			if mirror_enemy_station:	
-				if mirror_enemy_station.get_child_count() == 0:
-					mirror_enemy_station = null
+			match res_target_number:
+				ActiveSkill.Target.TargetNumber.ALL:
+					add_all_targets.call([real_enemy_station, mirror_enemy_station])
+				ActiveSkill.Target.TargetNumber.ALL_SIDE:
+					add_all_targets.call([real_enemy_station])
+					add_all_targets.call([mirror_enemy_station])
+				ActiveSkill.Target.TargetNumber.ALL_SIDE_SPLIT:
+					add_all_targets.call([real_enemy_station])
+					add_all_targets.call([mirror_enemy_station])
+				ActiveSkill.Target.TargetNumber.ADJACENT:
+					add_adjacent_targets.call([real_enemy_station, mirror_enemy_station])
+				_:	## ONE AND TWO
+					add_single_targets.call([real_enemy_station, mirror_enemy_station])
+		ActiveSkill.Target.TargetType.ANY:
+			var real_ally_station:= assign_real_ally_station(res_target_side, unit_stations)
+			var mirror_ally_station:= assign_mirror_ally_station(res_target_side, unit_stations)
+			var real_enemy_station:= assign_real_enemy_station(res_target_side, unit_stations)
+			var mirror_enemy_station:= assign_mirror_enemy_station(res_target_side, unit_stations)
 
 			match res_target_number:
 				ActiveSkill.Target.TargetNumber.ALL_SIDE_SPLIT:
-					if real_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_ally_station:
-						var res_targets: Array[NodePath] = []
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if real_enemy_station:
-						var res_targets: Array[NodePath] = []
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_enemy_station:	
-						var res_targets: Array[NodePath] = []
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station])
+					add_all_targets.call([real_enemy_station])
+					add_all_targets.call([mirror_ally_station])
+					add_all_targets.call([mirror_enemy_station])
 				ActiveSkill.Target.TargetNumber.ALL_SIDE:
-					if real_ally_station or real_enemy_station:
-						var res_targets: Array[NodePath] = []
-						if real_ally_station:
-							for node in real_ally_station.get_children():
-								res_targets.append(node.get_path())
-						if real_enemy_station:
-							for node in real_enemy_station.get_children():
-								res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
-					if mirror_ally_station or mirror_enemy_station:
-						var res_targets: Array[NodePath] = []
-						if mirror_ally_station:
-							for node in mirror_ally_station.get_children():
-								res_targets.append(node.get_path())
-						if mirror_enemy_station:	
-							for node in mirror_enemy_station.get_children():
-								res_targets.append(node.get_path())
-						res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station, real_enemy_station])
+					add_all_targets.call([mirror_ally_station,mirror_enemy_station])
 				ActiveSkill.Target.TargetNumber.ALL:
-					var res_targets: Array[NodePath] = []
-					if real_ally_station:
-						for node in real_ally_station.get_children():
-							res_targets.append(node.get_path())
-					if mirror_ally_station:
-						for node in mirror_ally_station.get_children():
-							res_targets.append(node.get_path())
-					if real_enemy_station:
-						for node in real_enemy_station.get_children():
-							res_targets.append(node.get_path())
-					if mirror_enemy_station:	
-						for node in mirror_enemy_station.get_children():
-							res_targets.append(node.get_path())
-
-					res.append(build_res_target(meta, res_targets, []))
+					add_all_targets.call([real_ally_station, real_enemy_station, mirror_ally_station,mirror_enemy_station])
 				ActiveSkill.Target.TargetNumber.ADJACENT:
-					if real_ally_station:
-						var main_targets: Array[Node] = []
-						for node in real_ally_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-
-					if mirror_ally_station:
-						var main_targets: Array[Node] = []
-						for node in mirror_ally_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-
-					if real_enemy_station:
-						var main_targets: Array[Node] = []
-						for node in real_enemy_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
-
-					if mirror_enemy_station:
-						var main_targets: Array[Node] = []
-						for node in mirror_enemy_station.get_children():
-							main_targets.append(node)
-
-						for i in range(main_targets.size()):
-							var additional_targets: Array[NodePath] = []
-							if i > 0:
-								additional_targets.append(main_targets[i-1].get_path())
-							if i < main_targets.size()-1:
-								additional_targets.append(main_targets[i+1].get_path())
-
-							res.append(build_res_target(meta, [main_targets[i].get_path()], additional_targets))
+					add_adjacent_targets.call([real_ally_station, real_enemy_station, mirror_ally_station, mirror_enemy_station])
 				_: ## One and Two
-					if real_ally_station:
-						for node in real_ally_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-					if mirror_ally_station:
-						for node in mirror_ally_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-					if real_enemy_station:
-						for node in real_enemy_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
-					if mirror_enemy_station:
-						for node in mirror_enemy_station.get_children():
-							res.append(build_res_target(meta, [node.get_path()], []))
+					add_single_targets.call([real_ally_station, real_enemy_station, mirror_enemy_station, mirror_enemy_station])
 		ActiveSkill.Target.TargetType.ALL:
-			var real_ally_station: Node
-			var mirror_ally_station: Node
-			var real_enemy_station: Node
-			var mirror_enemy_station: Node
-			
-			match res_target_side:
-				ResTargetSide.REAL:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-				ResTargetSide.MIRROR:
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
-				ResTargetSide.BOTH:
-					real_ally_station = unit_stations.get_node("Real").get_node("Player")
-					mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
-					real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
-					mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
-
-			if real_ally_station:
-				if real_ally_station.get_child_count() == 0:
-					real_ally_station = null
-			if mirror_ally_station:	
-				if mirror_ally_station.get_child_count() == 0:
-					mirror_ally_station = null
-			if real_enemy_station:
-				if real_enemy_station.get_child_count() == 0:
-					real_enemy_station = null
-			if mirror_enemy_station:	
-				if mirror_enemy_station.get_child_count() == 0:
-					mirror_enemy_station = null
+			var real_ally_station:= assign_real_ally_station(res_target_side, unit_stations)
+			var mirror_ally_station:= assign_mirror_ally_station(res_target_side, unit_stations)
+			var real_enemy_station:= assign_real_enemy_station(res_target_side, unit_stations)
+			var mirror_enemy_station:= assign_mirror_enemy_station(res_target_side, unit_stations)
 				
-			var res_targets: Array[NodePath] = []
-			if real_ally_station:
-				for node in real_ally_station.get_children():
-					res_targets.append(node.get_path())
-			if mirror_ally_station:
-				for node in mirror_ally_station.get_children():
-					res_targets.append(node.get_path())
-			if real_enemy_station:
-				for node in real_enemy_station.get_children():
-					res_targets.append(node.get_path())
-			if mirror_enemy_station:	
-				for node in mirror_enemy_station.get_children():
-					res_targets.append(node.get_path())
-
-			res.append(build_res_target(meta, res_targets, []))
+			add_all_targets.call([real_ally_station, real_enemy_station, mirror_ally_station,mirror_enemy_station])
 		ActiveSkill.Target.TargetType.SELF:
 			res.append(build_res_target(meta, [unit.get_path()], []))
 
-	return res
-
+	if taunt_res.size() > 0:
+		return taunt_res
+	else:
+		return res
 
 static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePath], additional_targets: Array[NodePath]) -> Intent.Target:
 	var res = Intent.Target.new()
@@ -461,3 +197,73 @@ static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePat
 	res.additional_targets = additional_targets
 
 	return res
+
+static func assign_real_ally_station(res_target_side, unit_stations:Node) -> Node:
+	var real_ally_station: Node
+
+	match res_target_side:
+		ResTargetSide.REAL:
+			real_ally_station = unit_stations.get_node("Real").get_node("Player")
+		ResTargetSide.BOTH:
+			real_ally_station = unit_stations.get_node("Real").get_node("Player")
+	
+	if real_ally_station:
+		if real_ally_station.get_child_count() == 0:
+			real_ally_station = null
+
+	return real_ally_station
+
+static func assign_real_enemy_station(res_target_side, unit_stations:Node) -> Node:
+	var real_enemy_station: Node
+
+	match res_target_side:
+		ResTargetSide.REAL:
+			real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
+		ResTargetSide.BOTH:
+			real_enemy_station = unit_stations.get_node("Real").get_node("Enemy")
+	
+	if real_enemy_station:
+		if real_enemy_station.get_child_count() == 0:
+			real_enemy_station = null
+
+	return real_enemy_station
+
+static func assign_mirror_ally_station(res_target_side, unit_stations:Node) -> Node:
+	var mirror_ally_station: Node
+
+	match res_target_side:
+		ResTargetSide.MIRROR:
+			mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
+		ResTargetSide.BOTH:
+			mirror_ally_station = unit_stations.get_node("Mirror").get_node("Player")
+	
+	if mirror_ally_station:
+		if mirror_ally_station.get_child_count() == 0:
+			mirror_ally_station = null
+
+	return mirror_ally_station
+
+static func assign_mirror_enemy_station(res_target_side, unit_stations:Node) -> Node:
+	var mirror_enemy_station: Node
+
+	match res_target_side:
+		ResTargetSide.MIRROR:
+			mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+		ResTargetSide.BOTH:
+			mirror_enemy_station = unit_stations.get_node("Mirror").get_node("Enemy")
+	
+	if mirror_enemy_station:
+		if mirror_enemy_station.get_child_count() == 0:
+			mirror_enemy_station = null
+
+	return mirror_enemy_station
+
+static func get_all_nodes(stations: Array) -> Array[NodePath]:
+	var res_targets: Array[NodePath] = []
+
+	for station in stations:
+		if station:
+			for node in station.get_children():
+				res_targets.append(node.get_path())
+
+	return res_targets

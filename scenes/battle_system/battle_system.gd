@@ -68,6 +68,11 @@ func turn():
 	for unit in units_in_turn_order:
 		unit.units_turn = true
 		var chosen_intent: Intent
+
+		##TAUNT TEST
+		# var taunt_store:= Stats.StatusEffectStore.new("SE_Taunt", 99)
+		# taunt_store.optional_node_store = [$UnitStations/Real/Enemy.get_child(0)]
+		# unit.stats.add_status_effect(taunt_store)
 		
 		if unit.stats.can_act:
 			if !unit.stats.player:

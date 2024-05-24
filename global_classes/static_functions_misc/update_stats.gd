@@ -73,11 +73,27 @@ static func add_mapping_stats(base: Stats.MappingStats, adder: Stats.MappingStat
 
 	return res
 
-static func update_combat_stats(base_stats:Stats.BaseStats, base_stats_adder:Stats.BaseStats, base_stats_multiplier:Stats.BaseStats) -> Stats.BaseStats:
+static func update_combat_stats(base_stats:Stats.BaseStats, base_stats_adder:Stats.BaseStats, base_stats_multiplier:Stats.BaseStats, original_combat_stats:Stats.BaseStats) -> Stats.BaseStats:
 	var res_combat_stats:= DeepCopy.copy_base_stats(base_stats)
 	res_combat_stats = multiply_base_stats(add_base_stats(res_combat_stats, base_stats_adder), base_stats_multiplier)
 
+	res_combat_stats.hp = current_resource_update(res_combat_stats.hp, original_combat_stats.hp)
+	res_combat_stats.mp = current_resource_update(res_combat_stats.mp, original_combat_stats.mp)
+	res_combat_stats.energy = current_resource_update(res_combat_stats.energy, original_combat_stats.energy)
+
 	return res_combat_stats
+
+static func current_resource_update(new_resource: Stats.BaseStats.StatResource, old_resource: Stats.BaseStats.StatResource) -> Stats.BaseStats.StatResource:
+	if old_resource.maximum >= new_resource.maximum:
+		new_resource.current = old_resource.current
+	else:
+		var increase = new_resource.maximum - old_resource.maximum
+		new_resource.current += increase
+
+	if new_resource.current > new_resource.maximum:
+		new_resource.current = new_resource.maximum
+	
+	return new_resource
 
 static func recalc_base_stats(mapping_stats: Stats.MappingStats, equipment_bases: Stats.BaseStats) -> Stats.BaseStats:
 	var res_base_stats:= Stats.BaseStats.new()

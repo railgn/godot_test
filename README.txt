@@ -1,8 +1,12 @@
 Now:
 	test out skill can be used func
 
-	when combat stats change, if current > max, current = max
-	when mapping/base stats change, increase current by same amount as max changed
+	add taunt logic to "all" target func?????
+	invisible logic	(for adjacent and single target)
+		if non invisible targets.size > 0,
+			return non invisible targets
+		else
+			return all targets
 
 	back to battle system script
 
