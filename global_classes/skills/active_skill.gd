@@ -117,6 +117,7 @@ var active_optional_properties:= {
     ## - Cannot Miss
     ## - On_Kill_ID
     ## - Revive Target
+    ##      -revive hp %
     ## - Repeats
     ##     - Repeats would occur on the same target
     ## - Spawn ID

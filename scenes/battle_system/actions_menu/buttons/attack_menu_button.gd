@@ -10,7 +10,7 @@ func _ready():
 	focus_entered.connect(_on_focus_entered)
 	
 func _on_pressed():
-	var action:= Intent.Action.new(Intent.Action.Type.BASIC_ATTACK, "SK_0")
+	var action:= Intent.Action.new(Intent.Action.Type.BASIC_ATTACK, "SK_0", 1)
 
 	action_chosen.emit(action)
 

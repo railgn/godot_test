@@ -1,7 +1,7 @@
 class_name BattleSystem
 extends Node
 
-signal turn_order_change()
+signal turn_order_change(units_in_turn_order: Array[BattleUnit])
 
 var main: Node
 var party: Dictionary
@@ -40,6 +40,9 @@ func _on_battle_ready():
 
 
 func initial_unit_spawn():
+
+	##add battle start status effect logic
+
 	for party_member in party:
 		var unit_instance = BattlePlayerUnit.new_player_unit(party[party_member])
 		unit_instance.unit_died.connect(_on_unit_death)
@@ -75,6 +78,16 @@ func turn():
 	##Action
 	for unit in units_in_turn_order:
 		unit.units_turn = true
+
+		##beginning of turn status effect logic
+
+
+
+
+
+
+
+
 		var chosen_intent: Intent
 
 		##TAUNT TEST
@@ -133,9 +146,9 @@ func turn():
 		
 
 		#add end of turn status effect logic
+		##handle deaths again
 		
 		unit.intent = null ##clear intent
-		##handle deaths again
 		unit.units_turn = false
 
 
@@ -149,6 +162,8 @@ func _on_unit_death(unit: BattleUnit):
 	#for status effect in status effects
 		#match
 			#check for explode/others
+
+	##update turn order to remove unit
 	pass
 	
 

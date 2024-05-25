@@ -13,23 +13,17 @@ static func process_skill(user: BattleUnit, intent: Intent, unit_stations: Node)
 	var skill_info: ActiveSkill = Skills.get_skill(intent.action.id)
 
 	var skill_cost:= calc_skill_cost(skill_info, user, intent)
+
+	var main_target_nodes: Array[Node] = []
+	for node_path in intent.target.node_paths:
+		main_target_nodes.append(unit_stations.get_node(node_path))	
+
+	var additional_target_nodes: Array[Node] = []
+	for node_path in intent.target.node_paths:
+		additional_target_nodes.append(unit_stations.get_node(node_path))	
 	
 	## consume resource
-	match skill_cost.resource:
-		ActiveSkill.SkillCostResource.MP:
-			user.stats.combat_stats.mp.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.HP:
-			user.stats.combat_stats.hp.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.ENERGY:
-			user.stats.combat_stats.energy.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.YOYO:
-			##reduce status effect level
-			##or just add it as a proper resource to Base_Stats class
-			pass
-		ActiveSkill.SkillCostResource.POWER_CHARGE:
-			##reduce status effect level
-			##or just add it as a proper resource to Base_Stats class
-			pass
+	apply_resource_cost(true, skill_cost, user)
 
 	var skill_magnitude:= calc_skill_magnitude(skill_info, user, intent)
 
@@ -70,19 +64,60 @@ static func process_skill(user: BattleUnit, intent: Intent, unit_stations: Node)
 				pass
 			"status_effect_on_target":
 				pass
+			"cost_refund_on_bleed":
+				var refund:= false
+				for target in main_target_nodes:
+					if UnitConditionals.is_bleeding(target):
+						refund = true
+						break
+				
+				if !refund:
+					for target in additional_target_nodes:
+						if UnitConditionals.is_bleeding(target):
+							refund = true
+							break
+
+				if refund:
+					apply_resource_cost(false, skill_cost, user)
 			_:
 				pass
 
 static func calc_skill_cost(skill_info: ActiveSkill, user: BattleUnit, intent: Intent) -> ProcessCost:
 	var res:= ProcessCost.new()
-	## call off skill info
+
+	res.resource = skill_info.cost.resource
+	res.amount = skill_info.cost.amount.call(intent.action.level, skill_info.cost.resource, user.stats)
 
 	return res
 
 static func calc_skill_magnitude(skill_info: ActiveSkill, user: BattleUnit, intent: Intent) -> ProcessMagnitude:
 	var res:= ProcessMagnitude.new()
 	## call off skill info
-	if skill_info.active_optional_properties.has("cost_refund_on_bleed"):
-		pass
 
 	return res
+
+static func apply_resource_cost(consume: bool, skill_cost: ProcessCost, user: BattleUnit):
+	var applied_amount = skill_cost.amount
+	
+	if !consume:
+		applied_amount = -applied_amount
+
+	match skill_cost.resource:
+		ActiveSkill.SkillCostResource.MP:
+			user.stats.combat_stats.mp.current -= skill_cost.amount
+		ActiveSkill.SkillCostResource.HP:
+			user.stats.combat_stats.hp.current -= skill_cost.amount
+		ActiveSkill.SkillCostResource.ENERGY:
+			user.stats.combat_stats.energy.current -= skill_cost.amount
+		ActiveSkill.SkillCostResource.YOYO:
+			##reduce status effect level
+			##or just add it as a proper resource to Base_Stats class
+			pass
+		ActiveSkill.SkillCostResource.POWER_CHARGE:
+			##reduce status effect level
+			##or just add it as a proper resource to Base_Stats class
+			pass
+
+	
+		
+

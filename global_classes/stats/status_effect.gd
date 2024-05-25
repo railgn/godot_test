@@ -32,6 +32,7 @@ var optional_properties:= {
     ##taunt: true
     ##effect_on_turn_start: use action? store similar data to scripted enemy AI
     ##invisible: true
+    ##bleed: true
 }
 
 func _init(init_id: String, init_name: String):

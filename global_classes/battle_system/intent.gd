@@ -14,10 +14,12 @@ class Action:
 
 	var type: Type
 	var id: String
+	var level: int
 
-	func _init(init_type: Type, init_id: String):
+	func _init(init_type: Type, init_id: String, init_level: int):
 		type = init_type
 		id = init_id
+		level = init_level
 
 class Target:
 	var meta: ActiveSkill.Target

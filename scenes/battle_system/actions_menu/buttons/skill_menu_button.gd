@@ -83,7 +83,7 @@ func _ready():
 	focus_entered.connect(_on_focus_entered)
 	
 func _on_pressed():
-	var action:= Intent.Action.new(Intent.Action.Type.SKILL, skill.id)
+	var action:= Intent.Action.new(Intent.Action.Type.SKILL, skill.id, level)
 
 	action_chosen.emit(action)
 
