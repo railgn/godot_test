@@ -25,7 +25,5 @@ static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:=
 
 	unit.name = PlayableCharacters.get_character(unit_save_data.playable_character_id).name
 	unit.turn_initialized = init_turn_initialized
-	## sprite assignment?
-	## UI should have it's own nodes that pull from here
 
 	return unit

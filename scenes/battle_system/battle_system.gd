@@ -42,15 +42,23 @@ func _on_battle_ready():
 func initial_unit_spawn():
 	for party_member in party:
 		var unit_instance = BattlePlayerUnit.new_player_unit(party[party_member])
+		unit_instance.unit_died.connect(_on_unit_death)
+		unit_instance.add_to_group("ally")
+		unit_instance.add_to_group("player")
 		$UnitStations/Real/Player.add_child(unit_instance)
 
 	for enemy in encounter.enemies:
 		var real_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, false)
+		real_unit_instance.unit_died.connect(_on_unit_death)
+		real_unit_instance.add_to_group("enemy")
+		real_unit_instance.add_to_group("real_enemy")
 		$UnitStations/Real/Enemy.add_child(real_unit_instance)	
 		
 		var mirror_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, true)
+		mirror_unit_instance.unit_died.connect(_on_unit_death)
+		mirror_unit_instance.add_to_group("enemy")
+		mirror_unit_instance.add_to_group("mirror_enemy")
 		$UnitStations/Mirror/Enemy.add_child(mirror_unit_instance)	
-
 
 func turn():
 	turn_count += 1
@@ -70,9 +78,14 @@ func turn():
 		var chosen_intent: Intent
 
 		##TAUNT TEST
-		# var taunt_store:= Stats.StatusEffectStore.new("SE_Taunt", 99)
+		# var taunt_store:= Stats.StatusEffectStore.new("SE_Taunt", 0)
 		# taunt_store.optional_node_store = [$UnitStations/Real/Enemy.get_child(0)]
 		# unit.stats.add_status_effect(taunt_store)
+
+		##INVIS TEST
+		# var invis_store:= Stats.StatusEffectStore.new("SE_Invis", 99)
+		# var en = $UnitStations/Real/Enemy.get_child(0)
+		# en.stats.add_status_effect(invis_store)
 		
 		if unit.stats.can_act:
 			if !unit.stats.player:
@@ -88,11 +101,26 @@ func turn():
 		if chosen_intent:
 			if chosen_intent.target:
 				set_finalized_target(chosen_intent.target)
-			#switch chosen_intent.action.type
-				#await skill(ID, user, target)
-					#await unit.play_animation
+			
+			if !unit.stats.player:
+				##add logic for if chosen target is gone (only applicable for AI)
+				pass
 
-			##add logic for if chosen target is gone (only applicable for AI)
+			match chosen_intent.action.type:
+				Intent.Action.Type.BASIC_ATTACK:
+					pass
+				Intent.Action.Type.DEFEND:
+					pass
+				Intent.Action.Type.SKILL:
+					##is await necessary?
+					await ProcessSkill.process_skill(unit, chosen_intent, $UnitStations)
+				Intent.Action.Type.MIRROR_CAST:
+					pass
+				Intent.Action.Type.ITEM:
+					##process item
+					##Inventory.use_item()
+					pass
+
 
 			## ideally should remove this after enemy AI is implemented
 			if chosen_intent.target:
@@ -115,6 +143,13 @@ func _process(delta):
 	if(battle_over):
 		pass
 
+func _on_unit_death(unit: BattleUnit):
+	#if player/enemy
+
+	#for status effect in status effects
+		#match
+			#check for explode/others
+	pass
 	
 
 func set_finalized_target(target: Intent.Target):

@@ -9,7 +9,7 @@ enum ResTargetSide {
 static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action, unit_stations:Node) -> Array[Intent.Target]:
 	var res: Array[Intent.Target] = []
 	var taunt_res: Array[Intent.Target] = []
-	var invisible_targets: Array[NodePath] = []
+	var non_invisible_res: Array[Intent.Target] = []
 
 	## Assignment of meta target info
 	var meta = ActiveSkill.Target.new()	
@@ -72,30 +72,32 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 	for effect in unit.stats.status_effects_store:
 		var effect_data:= StatusEffects.get_effect(unit.stats.status_effects_store[effect].id)
 		if effect_data.optional_properties.has("taunt"):
-			print(unit.stats.status_effects_store[effect].optional_node_store)
 			var taunt_target_node: BattleUnit = unit.stats.status_effects_store[effect].optional_node_store[0]
 			if taunt_target_node:
 				if taunt_target_node.stats.alive:
 					taunt_node_paths.append(taunt_target_node.get_path())
 
-
 	var add_all_targets:= func (stations: Array) -> void:
 		var res_targets:= get_all_nodes(stations)
 		if res_targets.size() > 0:
 			res.append(build_res_target(meta, res_targets, []))
+			if taunt_node_paths.size() > 0:
+				for node_path in res_targets:
+					if node_path in taunt_node_paths:
+						taunt_res.append(build_res_target(meta, res_targets, []))
 		
-	##invis and taunt for single target and adjacent
-
 	var add_single_targets:= func (stations: Array) -> void:
 		for station in stations:
 			if station:
-				for node in station.get_children():
+				for node:BattleUnit in station.get_children():
 					var node_path = node.get_path()
 					
 					res.append(build_res_target(meta, [node_path], []))
 					if taunt_node_paths.size() > 0:
 						if node_path in taunt_node_paths:
 							taunt_res.append(build_res_target(meta, [node_path], []))
+					if !invisible_check(node):
+						non_invisible_res.append(build_res_target(meta, [node_path], []))
 	
 	var add_adjacent_targets:= func (stations: Array) -> void:
 		for station in stations:
@@ -111,11 +113,13 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 					if i < main_targets.size()-1:
 						additional_targets.append(main_targets[i+1].get_path())
 
-					var node_path = main_targets[i].get_path()
+					var node_path:= main_targets[i].get_path()
 					res.append(build_res_target(meta, [node_path], additional_targets))
 					if taunt_node_paths.size() > 0:
 						if node_path in taunt_node_paths:
 							taunt_res.append(build_res_target(meta, [node_path], additional_targets))
+					if !invisible_check(main_targets[i]):
+						non_invisible_res.append(build_res_target(meta, [node_path], additional_targets))
 
 	## Res -> Intent.Target
 	match res_target_type:
@@ -186,6 +190,8 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 
 	if taunt_res.size() > 0:
 		return taunt_res
+	elif non_invisible_res.size() > 0:
+		return non_invisible_res
 	else:
 		return res
 
@@ -267,3 +273,13 @@ static func get_all_nodes(stations: Array) -> Array[NodePath]:
 				res_targets.append(node.get_path())
 
 	return res_targets
+
+static func invisible_check(node: BattleUnit) -> bool:
+	var res = false
+
+	for status_effect in node.stats.status_effects_store:
+		var effect_data:= StatusEffects.get_effect(node.stats.status_effects_store[status_effect].id)
+		if effect_data.optional_properties.has("invisible"):
+			res = true
+
+	return res

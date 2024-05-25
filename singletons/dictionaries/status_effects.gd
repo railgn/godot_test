@@ -45,6 +45,9 @@ func _ready():
 	add_effect("SE_Taunt", "taunt test")
 	DICTIONARY.SE_Taunt.optional_properties= {"taunt": true}
 	
+	add_effect("SE_Invis", "Invis test")
+	DICTIONARY.SE_Invis.optional_properties= {"invisible": true}
+	
 	# add_effect("SE_3", "poison number 1", Poison.new())
 	# DICTIONARY.SE_3.on_damage_taken = func()
 		

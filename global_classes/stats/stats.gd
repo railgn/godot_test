@@ -11,7 +11,15 @@ class MappingStats:
 
 class BaseStats:
 	class StatResource:
-		var current := 1.0
+		var current := 1.0:
+			set(new_current):
+				if new_current > maximum:
+					new_current = maximum
+
+				if new_current < 0:
+					new_current = 0
+
+				current = new_current
 		var maximum := 1.0
 
 	class DamageType:

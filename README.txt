@@ -1,12 +1,6 @@
 Now:
 	test out skill can be used func
-
-	add taunt logic to "all" target func?????
-	invisible logic	(for adjacent and single target)
-		if non invisible targets.size > 0,
-			return non invisible targets
-		else
-			return all targets
+		-prerequisites
 
 	back to battle system script
 

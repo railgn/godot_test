@@ -31,6 +31,7 @@ var optional_properties:= {
     ##guaranteed_crit: True,
     ##taunt: true
     ##effect_on_turn_start: use action? store similar data to scripted enemy AI
+    ##invisible: true
 }
 
 func _init(init_id: String, init_name: String):
