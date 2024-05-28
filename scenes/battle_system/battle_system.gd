@@ -70,7 +70,8 @@ func turn():
 	#Non-player Intents
 	for unit in units_in_turn_order:
 		if !unit.stats.player:
-			unit.intent = Intent.new() ## replace with AI
+			pass			
+			##create enemy ai
 			## enemy AI and non player ally sprites -> display intents over all non player sprites sprites
 				## for node in enemy stations:
 					## switch node.intent.action.type
@@ -89,7 +90,7 @@ func turn():
 
 
 		var chosen_intent: Intent
-
+		
 		##TAUNT TEST
 		# var taunt_store:= Stats.StatusEffectStore.new("SE_Taunt", 0)
 		# taunt_store.optional_node_store = [$UnitStations/Real/Enemy.get_child(0)]
@@ -168,18 +169,18 @@ func _on_unit_death(unit: BattleUnit):
 	
 
 func set_finalized_target(target: Intent.Target):
-	for node_path: NodePath in target.node_paths:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.main_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = true
-	for node_path: NodePath in target.additional_targets:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.additional_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = true
 
 func unset_finalized_target(target: Intent.Target):
-	for node_path: NodePath in target.node_paths:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.main_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = false
-	for node_path: NodePath in target.additional_targets:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.additional_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = false
 		

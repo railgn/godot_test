@@ -1,4 +1,38 @@
 Now:
+	cost and combat preview:
+		Attack, defend, and skill menu button cost previews
+			on focus entered
+				set cost preview on user
+				turn preview on
+			
+		Actions Menu button and Back button
+			focus entered
+				turn preview off
+
+		1) Create combat preview func
+
+		find_potential_targets
+			build_res_target
+				create combat preview and add to intent
+
+		battle unit
+			setter for "preview on" bools?
+			add type to costpreview
+
+		UI
+			build preview nodes on change
+			signals for on/off instead of ready func
+
+	change turnorder loop to be range id
+		or some other recursive func
+		need to be able to add/remove/change turn order in middle of turn/loop
+
+
+
+
+
+
+
 	test out skill can be used func
 		-prerequisites
 

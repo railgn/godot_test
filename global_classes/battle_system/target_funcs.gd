@@ -196,11 +196,26 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 		return res
 
 static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePath], additional_targets: Array[NodePath]) -> Intent.Target:
-	var res = Intent.Target.new()
+	var res:= Intent.Target.new()
+
+	var res_main_targets: Array[Intent.Target.TargetStore] = []
+
+	for node_path in node_paths:
+		var target_store = Intent.Target.TargetStore.new()
+		target_store.node_path = node_path
+		# target_store.combat_preview
+		res_main_targets.append(target_store)
+
+	var res_additional_targets: Array[Intent.Target.TargetStore] = []
+	for node_path in additional_targets:
+		var target_store = Intent.Target.TargetStore.new()
+		target_store.node_path = node_path
+		# target_store.combat_preview
+		res_additional_targets.append(target_store)
 
 	res.meta = meta
-	res.node_paths = node_paths
-	res.additional_targets = additional_targets
+	res.main_targets = res_main_targets
+	res.additional_targets = res_additional_targets
 
 	return res
 

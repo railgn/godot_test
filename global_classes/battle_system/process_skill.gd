@@ -1,3 +1,10 @@
+##1 func to create combat preview
+	## Intent -> Intent with combat previews
+	## 
+	##target controller init or run in actions menu then send to target controller
+##1 func to process skill
+	##battle system after intent locked in
+
 class_name ProcessSkill
 
 class ProcessMagnitude:
@@ -9,76 +16,70 @@ class ProcessCost:
 	var resource:= ActiveSkill.SkillCostResource.MP
 	var amount: int = 0
 
+class ProcessDamage:
+	var damage: int = 0
+	var crit: bool = false
+	var evade: bool = false
+
+class ProcessTargetStore:
+	var node: BattleUnit
+	var combat_preview: CombatPreview
+
+	func _init(init_node: BattleUnit, init_combat_preview: CombatPreview):
+		node = init_node
+		combat_preview = init_combat_preview
+
 static func process_skill(user: BattleUnit, intent: Intent, unit_stations: Node):
 	var skill_info: ActiveSkill = Skills.get_skill(intent.action.id)
 
 	var skill_cost:= calc_skill_cost(skill_info, user, intent)
 
-	var main_target_nodes: Array[Node] = []
-	for node_path in intent.target.node_paths:
-		main_target_nodes.append(unit_stations.get_node(node_path))	
+	var targets: Array[ProcessTargetStore] = []
+	for target_store in intent.target.main_targets:
+		targets.append(ProcessTargetStore.new(unit_stations.get_node(target_store.node_path), target_store.combat_preview))
 
-	var additional_target_nodes: Array[Node] = []
-	for node_path in intent.target.node_paths:
-		additional_target_nodes.append(unit_stations.get_node(node_path))	
+	for target_store in intent.target.additional_targets:
+		targets.append(ProcessTargetStore.new(unit_stations.get_node(target_store.node_path), target_store.combat_preview))
 	
-	## consume resource
-	apply_resource_cost(true, skill_cost, user)
-
-	var skill_magnitude:= calc_skill_magnitude(skill_info, user, intent)
-
+	user.affect_resource(true, skill_cost.resource, skill_cost.amount)
 
 	##awaits in here for skill effects
-	match skill_info.type:
-		ActiveSkill.SkillType.DAMAGE:
-			if skill_info.active_optional_properties.has("guarantee_crit"):
-				pass
-			if skill_info.active_optional_properties.has("bonus_on_bleed"):
-				pass
+	##user plays animation for using skill
+		## targets play affects for take damage
+
+	# for target in targets
+
+		##use all props from 
 
 
 
-			# for target in targets
-				# if target.check_for_death
-					#if skill_info.active_optional_properties.has("on_kill"):
+		#calc damage
+		#apply damage
+		#apply status effects
 
-			pass
-		ActiveSkill.SkillType.RECOVERY:
+		# if target.check_for_death()
+			#if skill_info.active_optional_properties.has("on_kill"):
 
+		# if skill_info.active_optional_properties.has("revive"):
+		# 	#revive hp%
+		# 	pass
 
-			if skill_info.active_optional_properties.has("revive"):
-				#revive hp%
-				pass
-			pass
-		ActiveSkill.SkillType.STATUS:
-			pass
-		ActiveSkill.SkillType.SPAWN:
-			pass
+		
 
-	##play animation
+	##play animation on targets (miss, crit, heal, take damage, etc.)
+		##these animations should just be setters on the apply resource function in battleunit
+			## if resource goes down/up, play corresponding animation
 	
-	## some checks will be "if" checks within the above match
+	## only checks for things that dont affect target (affect user, other units)
 	for prop in skill_info.active_optional_properties:
 		match prop:
 			"status_effect_on_user":
 				pass
-			"status_effect_on_target":
-				pass
 			"cost_refund_on_bleed":
-				var refund:= false
-				for target in main_target_nodes:
-					if UnitConditionals.is_bleeding(target):
-						refund = true
+				for target in targets:
+					if UnitConditionals.is_bleeding(target.node):
+						user.affect_resource(false, skill_cost.resource, skill_cost.amount)
 						break
-				
-				if !refund:
-					for target in additional_target_nodes:
-						if UnitConditionals.is_bleeding(target):
-							refund = true
-							break
-
-				if refund:
-					apply_resource_cost(false, skill_cost, user)
 			_:
 				pass
 
@@ -90,34 +91,19 @@ static func calc_skill_cost(skill_info: ActiveSkill, user: BattleUnit, intent: I
 
 	return res
 
-static func calc_skill_magnitude(skill_info: ActiveSkill, user: BattleUnit, intent: Intent) -> ProcessMagnitude:
-	var res:= ProcessMagnitude.new()
-	## call off skill info
+static func calc_damage(user: BattleUnit, target: BattleUnit, skill_magnitude: ProcessMagnitude, skill_info: ActiveSkill) -> ProcessDamage:
+	var res:= ProcessDamage.new()
+
+	##crit roll
+
+	##evade roll
+	var hit_chance:= 1 + user.stats.combat_stats.hit_rate - target.stats.combat_stats.avoid
+	
+	var evade_roll = (randf() + randf())/2 - 0.01
+
+	if evade_roll > hit_chance:
+		res.evade = true
+
+
 
 	return res
-
-static func apply_resource_cost(consume: bool, skill_cost: ProcessCost, user: BattleUnit):
-	var applied_amount = skill_cost.amount
-	
-	if !consume:
-		applied_amount = -applied_amount
-
-	match skill_cost.resource:
-		ActiveSkill.SkillCostResource.MP:
-			user.stats.combat_stats.mp.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.HP:
-			user.stats.combat_stats.hp.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.ENERGY:
-			user.stats.combat_stats.energy.current -= skill_cost.amount
-		ActiveSkill.SkillCostResource.YOYO:
-			##reduce status effect level
-			##or just add it as a proper resource to Base_Stats class
-			pass
-		ActiveSkill.SkillCostResource.POWER_CHARGE:
-			##reduce status effect level
-			##or just add it as a proper resource to Base_Stats class
-			pass
-
-	
-		
-

@@ -100,8 +100,8 @@ func build_target_menus():
 	var target_controller_home = Node2D.new()
 	target_controller_home.add_to_group("target_controller_home")
 
-	for targets in potential_targets:
-		var target_controller = TargetController.new(targets)
+	for target in potential_targets:
+		var target_controller = TargetController.new(target)
 		target_controller.target_chosen.connect(_on_target_chosen)
 		target_controller.target_back.connect(_on_target_back)
 		target_controller.last_control_focus.connect(_on_last_control_focus)
@@ -135,7 +135,7 @@ func _on_target_chosen(target: Intent.Target, target_controller: TargetControlle
 				intent_chosen.emit(chosen_intent)
 
 	else:
-		chosen_intent.target.additional_targets = target.node_paths
+		chosen_intent.target.additional_targets = target.main_targets
 		destroy_group("target_controller")
 		destroy_group("target_controller_home")
 		print("emit intent")
@@ -194,9 +194,7 @@ func setup_focus(buttons: Array[Node], group: String):
 		else:
 			buttons[0].grab_focus()	
 	else:
-		buttons[0].grab_focus()	
-
-		
+		buttons[0].grab_focus()		
 
 func destroy_group(group_name: String):
 	for n in get_tree().get_nodes_in_group(group_name):
@@ -204,19 +202,19 @@ func destroy_group(group_name: String):
 		n.queue_free()
 
 func set_finalized_target(target: Intent.Target):
-	for node_path: NodePath in target.node_paths:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.main_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = true
-	for node_path: NodePath in target.additional_targets:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.additional_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = true
 
 func unset_finalized_target(target: Intent.Target):
-	for node_path: NodePath in target.node_paths:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.main_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = false
-	for node_path: NodePath in target.additional_targets:
-		var node: BattleUnit = get_node(node_path)
+	for target_store in target.additional_targets:
+		var node: BattleUnit = get_node(target_store.node_path)
 		node.finalized_as_target = false
 
 func _on_last_control_focus(group: String, control: Control):

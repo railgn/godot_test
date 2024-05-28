@@ -5,6 +5,7 @@ var skill: ActiveSkill
 var level: int
 var unit: BattlePlayerUnit
 var dialogue: String
+## var cost preiew (array)
 
 func _init(init_skill_id: String, init_level: int, init_unit: BattlePlayerUnit):
 	skill = Skills.get_skill(init_skill_id)
@@ -13,7 +14,9 @@ func _init(init_skill_id: String, init_level: int, init_unit: BattlePlayerUnit):
 	
 	text = skill.name + " Lvl " + str(level)
 
-	disabled = !check_if_skill_usable(unit, skill)	
+	disabled = !check_if_skill_usable(unit, skill)
+
+	## save cost preview	
 
 	var cost_resource_string: String = ""
 
@@ -83,10 +86,12 @@ func _ready():
 	focus_entered.connect(_on_focus_entered)
 	
 func _on_pressed():
-	var action:= Intent.Action.new(Intent.Action.Type.SKILL, skill.id, level)
+	var action:= Intent.Action.new(Intent.Action.Type.SKILL, skill.id, level, Intent.Action.CostPreview.new())
 
 	action_chosen.emit(action)
 
 func _on_focus_entered():
 	dialogue_change.emit(dialogue)
 	last_control_focus.emit("Skill", self)
+
+	##set cost preview on unit

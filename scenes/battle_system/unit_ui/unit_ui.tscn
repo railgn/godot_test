@@ -11,3 +11,9 @@ visible = false
 scale = Vector2(0.05, 0.05)
 offset = Vector2(600, 800)
 script = ExtResource("2_vg4xi")
+
+[node name="CostPreview" type="Node2D" parent="."]
+visible = false
+
+[node name="CombatPreview" type="Node2D" parent="."]
+visible = false

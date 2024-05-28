@@ -36,9 +36,11 @@ class Target:
     var number:= TargetNumber.ONE
 
 class Magnitude:
-    var damage: Callable = func(_skill_level: int, _user: Stats, _target: Stats, _damage_type: DamangeType) -> int: return 0
-    var splash_damage: Callable = func(_skill_level: int, _user: Stats, _target: Stats, _damage_type: DamangeType) -> int: return 0
-    var healing: Callable = func(_skill_level: int, _user: Stats, _target: Stats) -> int: return 0
+    ##only user side
+    ##if any properties are dependent on target, use "active optional properties"
+    var damage: Callable = func(_skill_level: int, _user: Stats) -> int: return 0
+    var splash_damage: Callable = func(_skill_level: int, _user: Stats) -> int: return 0
+    var healing: Callable = func(_skill_level: int, _user: Stats) -> int: return 0
 
 class Cost:
     var resource:= SkillCostResource.MP
