@@ -97,8 +97,10 @@ var prerequisites:= {
     ## Battle System would loop through all keys and apply a switch statement
 }
 
-
-
+class ActiveSkillStatusEffectStore:
+    var id: String
+    var duration: int
+    var base_infliction_func: Callable = func(_skill_level: int) -> float: return 1.0
 
 var active_optional_properties:= {
     ## - Guaranteed Crit
@@ -109,13 +111,9 @@ var active_optional_properties:= {
     ##     - these stats would be applied out of battle to 
     ##	   - Need to evaluate if this is even needed vs. just keeping permanent status effects how they are currently implemented
     ## - Status Effect on User
-    ##     - % chance
-    ##     - Status Effect ID
-    ##     - Turn Duration
+    ##     - use store class
     ## - Stat Effect on target
-    ##     - % chance
-    ##     - Status Effect ID
-    ##     - Turn Duration
+    ##     - use store class
     ## - Special animation/particle effect ID
     ## - Cannot Miss
     ## - On_Kill_ID

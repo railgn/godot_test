@@ -1,35 +1,29 @@
 Now:
 	cost and combat preview:
-		Attack, defend, and skill menu button cost previews
+		2) Attack, defend, and skill menu button cost previews
 			on focus entered
 				set cost preview on user
 				turn preview on
 			
-		Actions Menu button and Back button
+		3) Actions Menu button and Back button
 			focus entered
 				turn preview off
 
-		1) Create combat preview func
-			status preview
-			healing preview
-
-		find_potential_targets
+		1) find_potential_targets
 			build_res_target
 				create combat preview and add to intent
 
-		battle unit
+		5) battle unit
 			setter for "preview on" bools?
 			add type to costpreview
 
-		UI
-			build preview nodes on change
+		4) UI
+			build cost and combat preview nodes on change
 			signals for on/off instead of ready func
 
 	change turnorder loop to be range id
 		or some other recursive func
 		need to be able to add/remove/change turn order in middle of turn/loop
-
-
 
 	what about skill previews for secondary effects (on user, not target)
 		- life steal
@@ -159,17 +153,20 @@ Battle System notes:
 		
 
 Later:
-	## beef up class init functions	
-		should have parameters for each property on class
-		utilize defaults
-		when calling, find a way to specificy which parameter we are trying to set:
-			add_effect("SE_4", "poison", effect_on_count_down = func())
+	## beef up class constructors and builtin functions	
+		examples 
+			ActiveSkill.add_optional_prop(prop: Enum, value)
+			more parameters in init
+			utilize defaults
 
-		Other option is to utilize inheretance when creating skills in the Dictionary function:
-		i.e.
-			var effect = Poison.new()
-			effect.on_damage_taken = func()
-			add_effect(SE_4, effect)
+			Utilize inheretance when possible in the Dictionary function:
+			i.e.
+				var effect = Poison.new()
+				effect.on_damage_taken = func()
+				add_effect(SE_4, effect)
+
+		Dictionary "add" function should be add("id", class instance)
+
 		
 	Conditional stat changing status effects? i.e. gain 50% attack when hp is below 50%?
 		Can probably implement scaling effects with current framework

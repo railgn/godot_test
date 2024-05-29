@@ -29,7 +29,6 @@ static func create_skill_preview(user: BattleUnit, target: BattleUnit, action: I
 			res.damage = CreateDamagePreview.create_damage_preview(user, target, skill_info, action, is_main_target)
 		ActiveSkill.SkillType.RECOVERY:
 			res.healing = CreateHealingPreview.create_healing_preview(user, target, skill_info, action, is_main_target)
-			pass
 		ActiveSkill.SkillType.STATUS:
 			pass
 		ActiveSkill.SkillType.SPAWN:
@@ -37,6 +36,4 @@ static func create_skill_preview(user: BattleUnit, target: BattleUnit, action: I
 
 	res.status = CreateStatusPreview.create_status_preview(user, target, skill_info, action)
 
-
 	return res
-

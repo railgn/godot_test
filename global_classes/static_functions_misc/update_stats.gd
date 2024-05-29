@@ -21,6 +21,7 @@ static func multiply_base_stats(base: Stats.BaseStats, multiplier: Stats.BaseSta
 	res.critical_chance *= multiplier.critical_chance
 	res.critical_avoid *= multiplier.critical_avoid
 	res.ailment_infliction_chance *= multiplier.ailment_infliction_chance
+	res.ailment_avoid *= multiplier.ailment_avoid
 
 	return res
 
@@ -44,6 +45,7 @@ static func add_base_stats(base: Stats.BaseStats, adder: Stats.BaseStats) -> Sta
 	res.critical_chance += (adder.critical_chance -1)
 	res.critical_avoid += (adder.critical_avoid -1)
 	res.ailment_infliction_chance += (adder.ailment_infliction_chance -1)
+	res.ailment_avoid += (adder.ailment_avoid -1)
 
 	return res
 
@@ -114,6 +116,7 @@ static func recalc_base_stats(mapping_stats: Stats.MappingStats, equipment_bases
 	##luck
 	res_base_stats.critical_avoid = 1 + mapping_stats.luck*.01 + equipment_bases.critical_avoid - 1
 	res_base_stats.ailment_infliction_chance = 1 + mapping_stats.luck*.02 + equipment_bases.ailment_infliction_chance - 1
+	res_base_stats.ailment_avoid = 1 + mapping_stats.luck*.02 + equipment_bases.ailment_avoid - 1
 	##agi + luck
 	res_base_stats.avoid = 1 + mapping_stats.agility*.02 + mapping_stats.luck*.01 + equipment_bases.avoid - 1
 	##dex + luck

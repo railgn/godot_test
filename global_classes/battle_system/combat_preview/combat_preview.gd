@@ -10,6 +10,7 @@ class DamagePreview:
 class StatusEffectPreview:
 	var status_id: String
 	var infliction_chance: float
+	var duration: int
 
 var type: ActiveSkill.SkillType
 var damage: Array[DamagePreview]

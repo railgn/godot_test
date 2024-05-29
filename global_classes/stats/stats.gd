@@ -38,6 +38,7 @@ class BaseStats:
 	var critical_chance := 1.0
 	var critical_avoid := 1.0
 	var ailment_infliction_chance := 1.0
+	var ailment_avoid:= 1.0
 
 class StatusEffectStore:
 	var id: String
