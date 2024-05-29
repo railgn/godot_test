@@ -10,6 +10,8 @@ Now:
 				turn preview off
 
 		1) Create combat preview func
+			status preview
+			healing preview
 
 		find_potential_targets
 			build_res_target
@@ -29,8 +31,9 @@ Now:
 
 
 
-
-
+	what about skill previews for secondary effects (on user, not target)
+		- life steal
+		- attack + buff user?
 
 
 	test out skill can be used func

@@ -56,6 +56,7 @@ static func process_skill(user: BattleUnit, intent: Intent, unit_stations: Node)
 		#calc damage
 		#apply damage
 		#apply status effects
+		
 
 		# if target.check_for_death()
 			#if skill_info.active_optional_properties.has("on_kill"):
@@ -64,6 +65,7 @@ static func process_skill(user: BattleUnit, intent: Intent, unit_stations: Node)
 		# 	#revive hp%
 		# 	pass
 
+	## if attacking move, and it misses, dont apply status effects
 		
 
 	##play animation on targets (miss, crit, heal, take damage, etc.)

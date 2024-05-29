@@ -55,10 +55,11 @@ enum SkillType {
     SPAWN,
 }
 
-enum DamangeType {
+enum DamageType {
     NONE,
     PHYSICAL,
     MAGICAL,
+    MP
 }
 
 enum SkillCostResource {
@@ -78,7 +79,7 @@ var mirror_cast:= false
 var type:= SkillType.NONE
 var target:= Target.new()
 
-var damage_type:= DamangeType.NONE
+var damage_type:= DamageType.NONE
 var magnitude:= Magnitude.new()
 var cost:= Cost.new()
 
@@ -123,4 +124,5 @@ var active_optional_properties:= {
     ## - Repeats
     ##     - Repeats would occur on the same target
     ## - Spawn ID
+    ## - Mana_reave
 }

@@ -2,9 +2,10 @@ class_name CombatPreview
 
 class DamagePreview:
 	var resource: ActiveSkill.SkillCostResource
-	var damage_range: Array[int]
-	var hit_chance: float
-	var crit_chance: float
+	var damage_range: Array[int] = [0]
+	var hit_chance: float = 0
+	var crit_chance: float = 0
+	var repeats: int = 0
 
 class StatusEffectPreview:
 	var status_id: String

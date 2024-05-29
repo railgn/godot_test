@@ -22,15 +22,15 @@ class BaseStats:
 				current = new_current
 		var maximum := 1.0
 
-	class DamageType:
+	class StatDamageType:
 		var attack := 1.0
 		var defense := 1.0
 
 	var hp := StatResource.new()
 	var mp := StatResource.new()
 	var energy := StatResource.new()
-	var physical = DamageType.new()
-	var magical = DamageType.new()
+	var physical = StatDamageType.new()
+	var magical = StatDamageType.new()
 	var turn_speed := 1.0
 	var healing_power := 1.0
 	var hit_rate := 1.0
