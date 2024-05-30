@@ -5,7 +5,7 @@ signal units_turn_change(turn_order_index: int, new_units_turn: bool)
 signal unit_focussed_change(turn_order_index: int, new_focussed: bool)
 signal finalized_as_target_change(new_finalized_as_target: bool)
 signal unit_died(unit: BattleUnit)
-signal cost_preview_change(cost_preview)
+signal cost_previews_change(cost_previews: Array[CostPreview])
 signal combat_preview_change(combat_preview: CombatPreview)
 
 var turn_order_index: int
@@ -15,11 +15,11 @@ var level: int
 var stats: Stats
 var intent: Intent
 
-var cost_preview:
+var cost_previews: Array[CostPreview]:
 	set(new_cost_preview):
-		cost_preview_change.emit(new_cost_preview)
-		cost_preview = new_cost_preview
-var cost_preview_on:= false
+		cost_previews_change.emit(new_cost_preview)
+		cost_previews = new_cost_preview
+var cost_previews_on:= false
 var combat_preview: CombatPreview:
 	set(new_combat_preview):
 		combat_preview_change.emit(new_combat_preview)
@@ -65,6 +65,9 @@ func affect_resource(reduce: bool, resource_type: ActiveSkill.SkillCostResource,
 	
 	if !reduce:
 		applied_amount = -applied_amount
+
+	
+
 
 	match resource_type:
 		ActiveSkill.SkillCostResource.MP:

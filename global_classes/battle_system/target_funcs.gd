@@ -80,11 +80,11 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 	var add_all_targets:= func (stations: Array) -> void:
 		var res_targets:= get_all_nodes(stations)
 		if res_targets.size() > 0:
-			res.append(build_res_target(meta, res_targets, []))
+			res.append(build_res_target(meta, res_targets, [], unit, action, unit_stations))
 			if taunt_node_paths.size() > 0:
 				for node_path in res_targets:
 					if node_path in taunt_node_paths:
-						taunt_res.append(build_res_target(meta, res_targets, []))
+						taunt_res.append(build_res_target(meta, res_targets, [], unit, action, unit_stations))
 		
 	var add_single_targets:= func (stations: Array) -> void:
 		for station in stations:
@@ -92,12 +92,12 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 				for node:BattleUnit in station.get_children():
 					var node_path = node.get_path()
 					
-					res.append(build_res_target(meta, [node_path], []))
+					res.append(build_res_target(meta, [node_path], [], unit, action, unit_stations))
 					if taunt_node_paths.size() > 0:
 						if node_path in taunt_node_paths:
-							taunt_res.append(build_res_target(meta, [node_path], []))
+							taunt_res.append(build_res_target(meta, [node_path], [], unit, action, unit_stations))
 					if !invisible_check(node):
-						non_invisible_res.append(build_res_target(meta, [node_path], []))
+						non_invisible_res.append(build_res_target(meta, [node_path], [], unit, action, unit_stations))
 	
 	var add_adjacent_targets:= func (stations: Array) -> void:
 		for station in stations:
@@ -114,12 +114,12 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 						additional_targets.append(main_targets[i+1].get_path())
 
 					var node_path:= main_targets[i].get_path()
-					res.append(build_res_target(meta, [node_path], additional_targets))
+					res.append(build_res_target(meta, [node_path], additional_targets, unit, action, unit_stations))
 					if taunt_node_paths.size() > 0:
 						if node_path in taunt_node_paths:
-							taunt_res.append(build_res_target(meta, [node_path], additional_targets))
+							taunt_res.append(build_res_target(meta, [node_path], additional_targets, unit, action, unit_stations))
 					if !invisible_check(main_targets[i]):
-						non_invisible_res.append(build_res_target(meta, [node_path], additional_targets))
+						non_invisible_res.append(build_res_target(meta, [node_path], additional_targets, unit, action, unit_stations))
 
 	## Res -> Intent.Target
 	match res_target_type:
@@ -186,7 +186,7 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 				
 			add_all_targets.call([real_ally_station, real_enemy_station, mirror_ally_station,mirror_enemy_station])
 		ActiveSkill.Target.TargetType.SELF:
-			res.append(build_res_target(meta, [unit.get_path()], []))
+			res.append(build_res_target(meta, [unit.get_path()], [], unit, action, unit_stations))
 
 	if taunt_res.size() > 0:
 		return taunt_res
@@ -195,7 +195,7 @@ static func find_potential_targets(unit: BattlePlayerUnit, action: Intent.Action
 	else:
 		return res
 
-static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePath], additional_targets: Array[NodePath]) -> Intent.Target:
+static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePath], additional_targets: Array[NodePath], unit: BattleUnit, action: Intent.Action, unit_stations: Node) -> Intent.Target:
 	var res:= Intent.Target.new()
 
 	var res_main_targets: Array[Intent.Target.TargetStore] = []
@@ -203,14 +203,14 @@ static func build_res_target(meta: ActiveSkill.Target, node_paths: Array[NodePat
 	for node_path in node_paths:
 		var target_store = Intent.Target.TargetStore.new()
 		target_store.node_path = node_path
-		# target_store.combat_preview
+		target_store.combat_preview = CreateCombatPreview.create_combat_preview(unit, unit_stations.get_node(node_path), action, true)
 		res_main_targets.append(target_store)
 
 	var res_additional_targets: Array[Intent.Target.TargetStore] = []
 	for node_path in additional_targets:
 		var target_store = Intent.Target.TargetStore.new()
 		target_store.node_path = node_path
-		# target_store.combat_preview
+		target_store.combat_preview = CreateCombatPreview.create_combat_preview(unit, unit_stations.get_node(node_path), action, false)
 		res_additional_targets.append(target_store)
 
 	res.meta = meta

@@ -13,7 +13,7 @@ static func create_damage_preview(user: BattleUnit, target: BattleUnit, skill_in
 	res.crit_chance = crit_rate_calc(user, target, skill_info)
 	res.hit_chance = hit_rate_calc(user, target, skill_info)
 
-	var final_res:= [res]
+	var final_res:Array[CombatPreview.DamagePreview]= [res]
 	
 	if skill_info.active_optional_properties.has("repeats"):
 		for i in range(skill_info.active_optional_properties.repeats):

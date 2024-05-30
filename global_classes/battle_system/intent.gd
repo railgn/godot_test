@@ -5,9 +5,6 @@ var target: Target
 # var user: BattleUnit 
 
 class Action:
-	class CostPreview:
-		var type
-		pass
 	
 	enum Type {
 		BASIC_ATTACK,
@@ -20,9 +17,9 @@ class Action:
 	var type: Type
 	var id: String
 	var level: int
-	var cost_preview: CostPreview
+	var cost_preview: Array[CostPreview]
 
-	func _init(init_type: Type, init_id: String, init_level: int, init_cost_preview: CostPreview):
+	func _init(init_type: Type, init_id: String, init_level: int, init_cost_preview: Array[CostPreview]):
 		type = init_type
 		id = init_id
 		level = init_level

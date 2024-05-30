@@ -34,6 +34,8 @@ func _ready():
 func build_action_menus():
 	hide()
 
+	unit.cost_previews_on = false
+
 	destroy_group("actions_menu_button")
 
 	for type in Intent.Action.Type:
@@ -84,7 +86,7 @@ func build_skill_menus():
 		button.last_control_focus.connect(_on_last_control_focus)
 		add_child(button)
 
-	var back_button = BackMenuButton.new()
+	var back_button = BackMenuButton.new(unit)
 	back_button.pressed.connect(build_action_menus)
 	back_button.dialogue_change.connect(dialogue_box._on_dialogue_change)
 	add_child(back_button)

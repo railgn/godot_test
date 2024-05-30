@@ -97,3 +97,12 @@ func _ready():
 
 	## Any unit. Both side
 
+	add_skill("SK_CostPreviewTest1", "Cost Preview Test 1", true)
+	DICTIONARY.SK_CostPreviewTest1.type = ActiveSkill.SkillType.DAMAGE
+	DICTIONARY.SK_CostPreviewTest1.damage_type = ActiveSkill.DamageType.PHYSICAL
+	var magnitude:= ActiveSkill.Magnitude.new()
+	magnitude.damage = func(skill_level, stats:Stats): return skill_level * stats.combat_stats.physical.attack
+	DICTIONARY.SK_CostPreviewTest1.magnitude = magnitude
+	var cost:= ActiveSkill.Cost.new()
+	cost.amount = func(skill_level, _resource, _user) -> int: return skill_level * 5
+	DICTIONARY.SK_CostPreviewTest1.cost = cost

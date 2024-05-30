@@ -1,26 +1,16 @@
 Now:
 	cost and combat preview:
-		2) Attack, defend, and skill menu button cost previews
-			on focus entered
-				set cost preview on user
-				turn preview on
-			
-		3) Actions Menu button and Back button
-			focus entered
-				turn preview off
-
-		1) find_potential_targets
-			build_res_target
-				create combat preview and add to intent
-
-		5) battle unit
+		3) battle unit
 			setter for "preview on" bools?
-			add type to costpreview
 
-		4) UI
+		2) UI
 			build cost and combat preview nodes on change
 			signals for on/off instead of ready func
 
+	1) process_skill
+		add status effect to skill test
+
+		
 	change turnorder loop to be range id
 		or some other recursive func
 		need to be able to add/remove/change turn order in middle of turn/loop
@@ -28,6 +18,8 @@ Now:
 	what about skill previews for secondary effects (on user, not target)
 		- life steal
 		- attack + buff user?
+
+		
 
 
 	test out skill can be used func
