@@ -35,9 +35,9 @@ var focussed := false:
 		unit_focussed_change.emit(turn_order_index, new_focussed)
 
 		if new_focussed == true:
-			modulate = Color.RED
+			$Sprite.modulate = Color.RED
 		else:
-			modulate = Color.WHITE
+			$Sprite.modulate = Color.WHITE
 		
 		focussed = new_focussed
 var finalized_as_target:= false:

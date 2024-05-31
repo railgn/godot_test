@@ -40,6 +40,3 @@ static func new_enemy_unit(enemy_data: Encounter.EnemyData, mirror: bool, init_t
 	## UI should have it's own nodes that pull from here
 
 	return unit
-
-func _ready():
-	pass

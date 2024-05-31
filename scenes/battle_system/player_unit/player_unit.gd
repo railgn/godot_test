@@ -27,3 +27,4 @@ static func new_player_unit(unit_save_data: PartyMember, init_turn_initialized:=
 	unit.turn_initialized = init_turn_initialized
 
 	return unit
+

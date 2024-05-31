@@ -21,3 +21,5 @@ func get_enemy(id: String) -> Enemy:
 
 func _ready():
 	add_enemy("E_0", "default")
+	DICTIONARY["E_0"].stats.real.hp.maximum = 5
+	DICTIONARY["E_0"].stats.mirror.hp.maximum = 5
