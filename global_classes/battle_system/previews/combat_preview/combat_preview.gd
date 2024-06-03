@@ -12,7 +12,11 @@ class StatusEffectPreview:
 	var infliction_chance: float
 	var duration: int
 
+class HealingPreview:
+	var resource: ActiveSkill.SkillCostResource
+	var amount: int
+
 var type: ActiveSkill.SkillType
 var damage: Array[DamagePreview]
 var status: Array[StatusEffectPreview]
-var healing: int
+var healing: HealingPreview
