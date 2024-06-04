@@ -55,5 +55,5 @@ func _on_focus_entered():
 	dialogue_change.emit(dialogue)
 	last_control_focus.emit("Skill", self)
 
-	unit.cost_previews = cost_previews
 	unit.cost_previews_on = true
+	unit.cost_previews = cost_previews

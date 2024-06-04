@@ -1,4 +1,15 @@
 Now:
+	0) preview label bbcode for resource damage/cost colors
+		hp (green) and mp (blue)
+		increase (light) vs decrease (dark)
+		4 colors total
+
+	add some self healing skills with hp skill costs to test preview interaction of healing + cost
+		and self damage skills with hp cost just for fun
+
+	1) process_skill
+		add status effect to skill test
+
 	cost and combat preview:
 		3) battle unit
 			setter for "preview on" bools?
@@ -6,10 +17,6 @@ Now:
 		2) UI
 			build cost and combat preview nodes on change
 			signals for on/off instead of ready func
-
-	1) process_skill
-		add status effect to skill test
-
 		
 	change turnorder loop to be range id
 		or some other recursive func
@@ -18,8 +25,6 @@ Now:
 	what about skill previews for secondary effects (on user, not target)
 		- life steal
 		- attack + buff user?
-
-		
 
 
 	test out skill can be used func

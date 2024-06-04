@@ -10,11 +10,11 @@ var show_combat_preview: bool = false
 var show_cost_preview: bool = false
 var cost_preview_bar: ProgressBar
 
+var current_cost: int = 0
+
 ##SIMPLIFY THE COMBAT BAR INTO A TEXTURE PROGRESS BAR WHERE VALUE = MIN and MAX_VALUE = MAX
 ## Need to flip the bar
 ## texture over (min portion) and texture under (max portion above min)	
-
-## if a cost and damage preview are present at the same time, damage preview needs to be shown using (value + cost preview) as the current value
 
 func _init():
 	show_percentage = false
@@ -50,28 +50,44 @@ func update_damage_preview(damage_preview: CombatPreview.DamagePreview):
 	if damage_preview.damage_range.size() > 1:
 		max_damage = damage_preview.damage_range[1] * (1 + damage_preview.repeats)
 
+	if show_cost_preview:
+		if min_damage + current_cost > value:
+			min_damage = int(value) - current_cost
+		if max_damage + current_cost > value:
+			max_damage = int(value) - current_cost
+
 	if min_damage > value:
 		min_damage = int(value)
 	if max_damage > value:
 		max_damage = int(value)
-
+		
 	## size x
 	combat_preview_bar_min.size.x = min_damage / max_value * size.x
 	combat_preview_bar_max.size.x = max_damage / max_value * size.x
 	## position x
-	combat_preview_bar_min.position.x = (value - min_damage)/max_value * size.x
-	combat_preview_bar_max.position.x = (value - max_damage)/max_value * size.x
+	if show_cost_preview:
+		combat_preview_bar_min.position.x = (value - min_damage - current_cost)/max_value * size.x
+		combat_preview_bar_max.position.x = (value - max_damage - current_cost)/max_value * size.x
+	else:
+		combat_preview_bar_min.position.x = (value - min_damage)/max_value * size.x
+		combat_preview_bar_max.position.x = (value - max_damage)/max_value * size.x
 
 func update_healing_preview(healing_amount: int):
 	combat_preview_bar_min.modulate = Color.LIGHT_GREEN
 
 	var healing: int = healing_amount
 
-	if (healing + value) > max_value:
+	if show_cost_preview:
+		if (healing + value - current_cost) > max_value:
+			healing = int(max_value) - int(value) + current_cost
+	elif (healing + value) > max_value:
 		healing = int(max_value) - int(value)
 
-	combat_preview_bar_min.position.x = (value + healing)/max_value * size.x
 	combat_preview_bar_min.size.x = healing / max_value * size.x
+	if show_cost_preview:
+		combat_preview_bar_min.position.x = (value + healing - current_cost)/max_value * size.x
+	else:
+		combat_preview_bar_min.position.x = (value + healing)/max_value * size.x
 
 	combat_preview_bar_max.size.x = 0
 
@@ -120,9 +136,3 @@ func _process(_delta):
 			cost_preview_bar.show()
 		else:
 			cost_preview_bar.hide()
-
-			
-
-
-
-
