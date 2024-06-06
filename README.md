@@ -1,14 +1,13 @@
 Now:
-	0) preview label bbcode for resource damage/cost colors
-		hp (green) and mp (blue)
-		increase (light) vs decrease (dark)
-		4 colors total
+	finish process skill
+		healing and status effect
 
-	add some self healing skills with hp skill costs to test preview interaction of healing + cost
-		and self damage skills with hp cost just for fun
 
 	1) process_skill
-		add status effect to skill test
+		add healing skill
+		add some self healing skills with hp skill costs to test 		
+			preview interaction of healing + cost
+			and self damage skills with hp cost just for fun
 
 	cost and combat preview:
 		3) battle unit
@@ -17,6 +16,8 @@ Now:
 		2) UI
 			build cost and combat preview nodes on change
 			signals for on/off instead of ready func
+
+
 		
 	change turnorder loop to be range id
 		or some other recursive func
@@ -44,6 +45,9 @@ Now:
 				- on new game, use save as default node
 			- save node dictionary as json
 				- ready function loads json as dictionary
+
+
+	Currently, status effects dont have mapping stat adders/multipliers, but equipment does. Which is fine
 
 	Save data:
 		Relics

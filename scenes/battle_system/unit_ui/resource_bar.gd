@@ -12,9 +12,11 @@ var cost_preview_bar: ProgressBar
 
 var current_cost: int = 0
 
+var PreviewLabel: RichTextLabel
+
 ##SIMPLIFY THE COMBAT BAR INTO A TEXTURE PROGRESS BAR WHERE VALUE = MIN and MAX_VALUE = MAX
 ## Need to flip the bar
-## texture over (min portion) and texture under (max portion above min)	
+## texture over (min portion) and texture under (max portion above min)
 
 func _init():
 	show_percentage = false
@@ -40,7 +42,11 @@ func _ready():
 	cost_preview_bar.z_index = 1
 	add_child(cost_preview_bar)
 
+	PreviewLabel = $PreviewLabel
+
 func update_damage_preview(damage_preview: CombatPreview.DamagePreview):
+	PreviewLabel.update_combat_preview(damage_preview)
+
 	combat_preview_bar_min.modulate = Color.RED
 	combat_preview_bar_max.modulate = Color.DARK_RED
 
@@ -72,10 +78,13 @@ func update_damage_preview(damage_preview: CombatPreview.DamagePreview):
 		combat_preview_bar_min.position.x = (value - min_damage)/max_value * size.x
 		combat_preview_bar_max.position.x = (value - max_damage)/max_value * size.x
 
-func update_healing_preview(healing_amount: int):
+
+func update_healing_preview(healing_preview: CombatPreview.HealingPreview):
+	PreviewLabel.update_healing_preview(healing_preview)
+
 	combat_preview_bar_min.modulate = Color.LIGHT_GREEN
 
-	var healing: int = healing_amount
+	var healing: int = healing_preview.amount
 
 	if show_cost_preview:
 		if (healing + value - current_cost) > max_value:
@@ -92,6 +101,8 @@ func update_healing_preview(healing_amount: int):
 	combat_preview_bar_max.size.x = 0
 
 func update_cost_preview(cost_preview: CostPreview):
+	PreviewLabel.update_cost_previews(cost_preview)
+
 	var cost: int = cost_preview.amount
 
 	if cost > value:
@@ -110,6 +121,12 @@ func hide_combat_previews():
 	combat_preview_bar_min.hide()
 	combat_preview_bar_max.hide()
 
+func show_cost_previews():
+	cost_preview_bar.show()
+
+func hide_cost_previews():
+	cost_preview_bar.hide()
+
 func _process(_delta):
 	if unit:
 		if !unit.stats.player and !resource == ActiveSkill.SkillCostResource.HP:
@@ -127,12 +144,18 @@ func _process(_delta):
 
 		$Label.text = str(value) + "/" + str(max_value)
 
+		var preview_text: String = ""
+
 		if show_combat_preview and unit.combat_preview_on:
 			show_combat_previews()
+			preview_text += PreviewLabel.combat_text
 		else:
 			hide_combat_previews()
 
 		if show_cost_preview and unit.cost_previews_on:
-			cost_preview_bar.show()
+			show_cost_previews()
+			preview_text += PreviewLabel.cost_text
 		else:
-			cost_preview_bar.hide()
+			hide_cost_previews()
+
+		PreviewLabel.text = preview_text

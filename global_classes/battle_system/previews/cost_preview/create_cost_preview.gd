@@ -14,7 +14,6 @@ static func create_cost_preview(unit: BattlePlayerUnit, skill_info:ActiveSkill, 
 		##passives that cause half of mp costs to be an hp cost instead
 			##blood magic
 
-
 	return res
 
 

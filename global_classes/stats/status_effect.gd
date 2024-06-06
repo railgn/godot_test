@@ -15,11 +15,11 @@ var base_stat_adder_function: Callable = func(base_stats: Stats.BaseStats, _leve
 var base_stat_multiplier_function: Callable = func(base_stats: Stats.BaseStats, _level) -> Stats.BaseStats: return base_stats
 
 var count_down_on_turn:= true
-var effect_on_count_down: Callable = func(stats: Stats, _level) -> Stats: return stats
-var effect_on_damage_taken: Callable = func(stats: Stats, _level) -> Stats: return stats
-var effect_on_side_switch: Callable = func(stats: Stats, _level) -> Stats: return stats
+var effect_on_count_down: Callable = func(_unit: BattleUnit) -> void: pass
+var effect_on_damage_taken: Callable = func(_unit: BattleUnit) -> void: pass
+var effect_on_side_switch: Callable = func(_unit: BattleUnit) -> void: pass
 ## useful for passive skills that trigger an in battle status effect
-var effect_on_battle_start: Callable = func(stats: Stats, _level) -> Stats: return stats
+var effect_on_battle_start: Callable = func(_unit: BattleUnit) -> void: pass
 
 var action_on_cure:= {
     "act": false,

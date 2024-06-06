@@ -47,6 +47,18 @@ func _ready():
 	
 	add_effect("SE_Invis", "Invis test")
 	DICTIONARY.SE_Invis.optional_properties= {"invisible": true}
+
+	add_effect("SE_Bleed", "Bleed test")
+	DICTIONARY.SE_Bleed.optional_properties= {"bleed": true}
+	DICTIONARY.SE_Bleed.effect_on_count_down = func(unit: BattleUnit) -> void:
+		unit.affect_resource(true, ActiveSkill.SkillCostResource.HP , 1)
+
+	
+
+
+
+
+
 	
 	# add_effect("SE_3", "poison number 1", Poison.new())
 	# DICTIONARY.SE_3.on_damage_taken = func()

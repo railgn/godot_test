@@ -83,12 +83,6 @@ func turn():
 		##beginning of turn status effect logic
 
 
-
-
-
-
-
-
 		var chosen_intent: Intent
 		
 		##TAUNT TEST
@@ -136,7 +130,7 @@ func turn():
 					pass
 
 
-			## ideally should remove this after enemy AI is implemented
+			## ideally should remove this if statement after enemy AI is implemented
 			if chosen_intent.target:
 				unset_finalized_target(chosen_intent.target)
 

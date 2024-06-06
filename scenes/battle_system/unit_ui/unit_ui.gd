@@ -15,7 +15,7 @@ func _ready():
 	$MPBar.resource = ActiveSkill.SkillCostResource.MP
 	$MPBar.unit = parent_unit
 
-	$PreviewLabel.unit = parent_unit
+	$StatusPreviewLabel.unit = parent_unit
 
 func _on_finalized_as_target_change(finalized_as_target: bool):
 	if finalized_as_target:
@@ -35,28 +35,31 @@ func _on_cost_previews_change(cost_previews: Array[CostPreview]):
 				$MPBar.update_cost_preview(cost_preview)
 				$MPBar.show_cost_preview = true
 
-	$PreviewLabel.update_cost_previews(cost_previews)
-
 func _on_combat_preview_change(combat_preview: CombatPreview):
 	$HealthBar.show_combat_preview = false
 	$MPBar.show_combat_preview = false
 	if combat_preview:
 		for damage in combat_preview.damage:
+			
+			var resource_bar_node: ResourceBar
 			match damage.resource:
 				ActiveSkill.SkillCostResource.HP:
-					$HealthBar.update_damage_preview(damage)
-					$HealthBar.show_combat_preview = true
+					resource_bar_node = $HealthBar
 				ActiveSkill.SkillCostResource.MP:
-					$MPBar.update_damage_preview(damage)
-					$MPBar.show_combat_preview = true
-		
-		if combat_preview.healing:
-			match combat_preview.healing.resource:
-				ActiveSkill.SkillCostResource.HP:
-					$HealthBar.update_healing_preview(combat_preview.healing.amount)
-					$HealthBar.show_combat_preview = true
-				ActiveSkill.SkillCostResource.MP:
-					$MPBar.update_healing_preview(combat_preview.healing.amount)
-					$MPBar.show_combat_preview = true
+					resource_bar_node = $MPBar
 
-		$PreviewLabel.update_combat_preview(combat_preview)
+			resource_bar_node.update_damage_preview(damage)
+			resource_bar_node.show_combat_preview = true
+		
+		for healing in combat_preview.healing:
+			var resource_bar_node: ResourceBar
+			match healing.resource:
+				ActiveSkill.SkillCostResource.HP:
+					resource_bar_node = $HealthBar
+				ActiveSkill.SkillCostResource.MP:
+					resource_bar_node = $MPBar
+
+			resource_bar_node.update_healing_preview(healing)
+			resource_bar_node.show_combat_preview = true
+
+		$StatusPreviewLabel.update_combat_preview(combat_preview)

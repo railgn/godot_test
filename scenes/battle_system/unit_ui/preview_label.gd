@@ -1,10 +1,11 @@
 extends RichTextLabel
 
-var unit: BattleUnit
-var combat_preview: CombatPreview
-var cost_previews: Array[CostPreview]
-var cost_text: String = ""
+var damage_preview: CombatPreview.DamagePreview
+var healing_preview: CombatPreview.HealingPreview
+var cost_preview: CostPreview
+
 var combat_text: String = ""
+var cost_text: String = ""
 
 ## custom effects https://www.youtube.com/watch?v=3CZVHxCkpvM
 	## bbcode_text = 
@@ -12,79 +13,61 @@ var combat_text: String = ""
 		## color change high/low damage/crit/hit rates
 		## color change increase/decrease (healing vs cost/damage)
 		## different color text for each resource (hp vs mp)
-##images for status_effects
 
-## would be nice to align damage for each resource bar, would need to make that text a child of the resource bar. could do that from here?
-	## add child and then adjust position based on resource bar position
-
-func _init():
-	fit_content = true
+func _ready():
 	bbcode_enabled = true
+	fit_content = true
+	scroll_active = false
+	add_theme_font_size_override("normal_font_size", 15)
 
-
-func update_combat_preview(new_combat_preview: CombatPreview):
-	combat_preview = new_combat_preview
+func update_combat_preview(new_damage_preview: CombatPreview.DamagePreview):
+	damage_preview = new_damage_preview
 	update_preview_label()
 
-func update_cost_previews(new_cost_previews: Array[CostPreview]):
-	cost_previews = new_cost_previews
+func update_cost_previews(new_cost_preview: CostPreview):
+	cost_preview = new_cost_preview
+	update_preview_label()
+
+func update_healing_previews(new_healing_preview: CombatPreview.HealingPreview):
+	healing_preview = new_healing_preview
 	update_preview_label()
 
 func update_preview_label():
-	text = ""
 	cost_text = ""
 	combat_text = ""
 
-	var cost_label_strings = []
-	for cost_preview in cost_previews:
+	if cost_preview:
+		var bbcode_open:= "[right]"
+		var bbcode_close:= "[/color][/right]"
 		match cost_preview.resource:
 			ActiveSkill.SkillCostResource.HP:
-				pass
+				bbcode_open += "[color=RED]"
 			ActiveSkill.SkillCostResource.MP:
-				pass
-		cost_label_strings.append(str([cost_preview.amount]))	
-			
-	var combat_label_strings = []
-	if combat_preview:
-		for damage in combat_preview.damage:
+				bbcode_open += "[color=BLUE]"
+		cost_text = bbcode_open + str(cost_preview.amount) + bbcode_close
 
-			match damage.resource:
-				ActiveSkill.SkillCostResource.HP:
-					##bbcode here
-					pass
-				ActiveSkill.SkillCostResource.MP:
-					pass
-			combat_label_strings.append(str(damage.damage_range) + "" if damage.repeats == 0 else " x" + str(damage.repeats + 1))
-			combat_label_strings.append("hit: " + str(StringFormat.float_to_percent(damage.hit_chance)))
-			combat_label_strings.append("crit: " + str(StringFormat.float_to_percent(damage.crit_chance)))
+	var combat_text_strings: Array[String] = []
+	if damage_preview:
+		var bbcode_open:= "[right]"
+		var bbcode_close:= "[/color][/right]"
+		match damage_preview.resource:
+			ActiveSkill.SkillCostResource.HP:
+				bbcode_open += "[color=RED]"
+			ActiveSkill.SkillCostResource.MP:
+				bbcode_open += "[color=BLUE]"
+		combat_text_strings.append(bbcode_open + str(damage_preview.damage_range) + ("" if damage_preview.repeats == 0 else " x" + str(damage_preview.repeats + 1)) + bbcode_close) 
+		combat_text_strings.append("[right]" + "hit: " + str(StringFormat.float_to_percent(damage_preview.hit_chance)))
+		combat_text_strings.append("crit: " + str(StringFormat.float_to_percent(damage_preview.crit_chance)) + "[/right]")
 		
-		if combat_preview.healing:
-			var resource_string: String
-			match combat_preview.healing.resource:
-				ActiveSkill.SkillCostResource.HP:
-					resource_string = "HP"				
-				ActiveSkill.SkillCostResource.MP:
-					resource_string = "MP"				
-			combat_label_strings.append(resource_string + " Healing: " + str(combat_preview.healing.amount))
+	if healing_preview:
+		var bbcode_open:= "[right]"
+		var bbcode_close:= "[/color][/right]"
+		match healing_preview.resource:
+			ActiveSkill.SkillCostResource.HP:
+				bbcode_open += "[color=LIGHT_GREEN]"
+			ActiveSkill.SkillCostResource.MP:
+				bbcode_open += "[color=LIGHT_BLUE]"
+		combat_text_strings.append(bbcode_open + str(healing_preview.amount) + bbcode_close)
 
-		for status in combat_preview.status:
-			var status_info:= StatusEffects.get_effect(status.status_id)
-			##add image instead of name
-			combat_label_strings.append(status_info.name + ": " +str(StringFormat.float_to_percent(status.infliction_chance)) + " Turn(s): " + str(status.duration))
-
-	for cost_label_string in cost_label_strings:
-		cost_text += cost_label_string + "\n"
-	for combat_label_string in combat_label_strings:
-		combat_text += combat_label_string + "\n"
-
-	text = "[right]" + cost_text + combat_text + "[/right]"
-
-
-func _process(_add_global_constantdelta):
-	if unit:
-		if unit.combat_preview_on or unit.cost_previews_on:
-			show()
-		else:
-			hide()	
-
-		
+	for preview_text_string in combat_text_strings:
+		combat_text += preview_text_string + "\n"

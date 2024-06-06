@@ -50,6 +50,7 @@ func check_for_death() -> bool:
 	
 	if stats.combat_stats.hp.current <= 0:
 		unit_died.emit(self)
+		stats.alive = false
 		res = true
 	
 	##battle system will handle queue free
@@ -66,14 +67,13 @@ func affect_resource(reduce: bool, resource_type: ActiveSkill.SkillCostResource,
 	if !reduce:
 		applied_amount = -applied_amount
 
-	
-
-
 	match resource_type:
 		ActiveSkill.SkillCostResource.MP:
 			stats.combat_stats.mp.current -= amount
 		ActiveSkill.SkillCostResource.HP:
 			stats.combat_stats.hp.current -= amount
+			##check_for_death()
+			##??????
 		ActiveSkill.SkillCostResource.ENERGY:
 			stats.combat_stats.energy.current -= amount
 		ActiveSkill.SkillCostResource.YOYO:

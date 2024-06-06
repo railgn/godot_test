@@ -15,8 +15,8 @@ class StatusEffectPreview:
 class HealingPreview:
 	var resource: ActiveSkill.SkillCostResource
 	var amount: int
-
+	
 var type: ActiveSkill.SkillType
 var damage: Array[DamagePreview]
 var status: Array[StatusEffectPreview]
-var healing: HealingPreview
+var healing: Array[HealingPreview]

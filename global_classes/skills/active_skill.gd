@@ -110,9 +110,9 @@ var active_optional_properties:= {
     ##     - e.g. "HP up" stat
     ##     - these stats would be applied out of battle to 
     ##	   - Need to evaluate if this is even needed vs. just keeping permanent status effects how they are currently implemented
-    ## - Status Effect on User
+    ## - status_on_user
     ##     - use store class
-    ## - Stat Effect on target
+    ## - status_on_target
     ##     - use store class
     ## - Special animation/particle effect ID
     ## - Cannot Miss
