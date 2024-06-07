@@ -97,7 +97,7 @@ func _ready():
 
 	## Any unit. Both side
 
-	add_skill("SK_CostPreviewTest1", "Cost Preview Test 1", true)
+	add_skill("SK_CostPreviewTest1", "Cost Preview Test 1 - Damage + bleed", true)
 	DICTIONARY.SK_CostPreviewTest1.type = ActiveSkill.SkillType.DAMAGE
 	DICTIONARY.SK_CostPreviewTest1.damage_type = ActiveSkill.DamageType.PHYSICAL
 	
@@ -113,3 +113,16 @@ func _ready():
 	se_store.id = "SE_Bleed"
 	se_store.duration = 3
 	DICTIONARY.SK_CostPreviewTest1.active_optional_properties.status_on_target ={["SE_Bleed"]: se_store}
+	
+	add_skill("SK_CostPreviewTest2", "Cost Preview Test 2 - Healing", true)
+	DICTIONARY.SK_CostPreviewTest2.type = ActiveSkill.SkillType.RECOVERY
+	
+	var magnitude1:= ActiveSkill.Magnitude.new()
+	magnitude1.damage = func(skill_level, stats:Stats): return skill_level * stats.combat_stats.healing_power
+	DICTIONARY.SK_CostPreviewTest2.magnitude = magnitude1
+	
+	var cost1:= ActiveSkill.Cost.new()
+	cost1.amount = func(skill_level, _resource, _user) -> int: return skill_level * 1
+
+	DICTIONARY.SK_CostPreviewTest2.cost = cost1
+

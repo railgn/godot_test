@@ -48,7 +48,8 @@ static func damage_calc(user: BattleUnit, target: BattleUnit, skill_info: Active
 		net_damage = 0
 
 	var range_percent: float = 0.1
-	
+
+	##int or roundi????
 	res = [int(net_damage * (1 - range_percent)), int(net_damage * (1 + range_percent))]
 
 	return res

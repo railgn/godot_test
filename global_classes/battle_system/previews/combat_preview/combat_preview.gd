@@ -10,6 +10,7 @@ class DamagePreview:
 class StatusEffectPreview:
 	var status_id: String
 	var infliction_chance: float
+	var level: int
 	var duration: int
 
 class HealingPreview:

@@ -38,6 +38,7 @@ func _ready():
 	# DICTIONARY.BC_0.innate_skills.active_skills.SK_TargetTest16 = PartyMember.SkillsStore.SkillStore.new("SK_TargetTest16", 1)
 	# DICTIONARY.BC_0.innate_skills.active_skills.SK_TargetTest17 = PartyMember.SkillsStore.SkillStore.new("SK_TargetTest17", 1)
 	DICTIONARY.BC_0.innate_skills.active_skills.SK_CostPreviewTest1 = PartyMember.SkillsStore.SkillStore.new("SK_CostPreviewTest1", 1)
+	DICTIONARY.BC_0.innate_skills.active_skills.SK_CostPreviewTest2 = PartyMember.SkillsStore.SkillStore.new("SK_CostPreviewTest2", 1)
 
 	add_character_class("BC_1", "party test", false)
 	##probably safer to give an "add innate skills" func to CharacterClass

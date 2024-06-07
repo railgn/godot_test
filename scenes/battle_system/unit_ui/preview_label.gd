@@ -21,6 +21,7 @@ func _ready():
 	add_theme_font_size_override("normal_font_size", 15)
 
 func update_combat_preview(new_damage_preview: CombatPreview.DamagePreview):
+	healing_preview = null
 	damage_preview = new_damage_preview
 	update_preview_label()
 
@@ -28,7 +29,8 @@ func update_cost_previews(new_cost_preview: CostPreview):
 	cost_preview = new_cost_preview
 	update_preview_label()
 
-func update_healing_previews(new_healing_preview: CombatPreview.HealingPreview):
+func update_healing_preview(new_healing_preview: CombatPreview.HealingPreview):
+	damage_preview = null
 	healing_preview = new_healing_preview
 	update_preview_label()
 

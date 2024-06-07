@@ -1,6 +1,6 @@
 Now:
-	finish process skill
-		healing and status effect
+
+	Healing skill doing damage?????
 
 
 	1) process_skill

@@ -67,6 +67,8 @@ func affect_resource(reduce: bool, resource_type: ActiveSkill.SkillCostResource,
 	if !reduce:
 		applied_amount = -applied_amount
 
+	print("amount to reduce ", amount)
+
 	match resource_type:
 		ActiveSkill.SkillCostResource.MP:
 			stats.combat_stats.mp.current -= amount

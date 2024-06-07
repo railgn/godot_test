@@ -58,14 +58,14 @@ func update_damage_preview(damage_preview: CombatPreview.DamagePreview):
 
 	if show_cost_preview:
 		if min_damage + current_cost > value:
-			min_damage = int(value) - current_cost
+			min_damage = roundi(value) - current_cost
 		if max_damage + current_cost > value:
-			max_damage = int(value) - current_cost
+			max_damage = roundi(value) - current_cost
 
 	if min_damage > value:
-		min_damage = int(value)
+		min_damage = roundi(value)
 	if max_damage > value:
-		max_damage = int(value)
+		max_damage = roundi(value)
 		
 	## size x
 	combat_preview_bar_min.size.x = min_damage / max_value * size.x
@@ -88,9 +88,9 @@ func update_healing_preview(healing_preview: CombatPreview.HealingPreview):
 
 	if show_cost_preview:
 		if (healing + value - current_cost) > max_value:
-			healing = int(max_value) - int(value) + current_cost
+			healing = roundi(max_value) - roundi(value) + current_cost
 	elif (healing + value) > max_value:
-		healing = int(max_value) - int(value)
+		healing = roundi(max_value) - roundi(value)
 
 	combat_preview_bar_min.size.x = healing / max_value * size.x
 	if show_cost_preview:
@@ -106,7 +106,7 @@ func update_cost_preview(cost_preview: CostPreview):
 	var cost: int = cost_preview.amount
 
 	if cost > value:
-		cost = int(value)
+		cost = roundi(value)
 
 	## size x
 	cost_preview_bar.size.x = cost / max_value * size.x

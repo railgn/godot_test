@@ -10,7 +10,7 @@ static func create_status_preview(user: BattleUnit, target: BattleUnit, skill_in
 
 			se_preview.status_id = se.id
 			se_preview.duration = se.duration
-
+			se_preview.level = action.level
 			se_preview.infliction_chance = infliction_rate_calc(user.stats.combat_stats, target.stats.combat_stats, se.base_infliction_func, skill_info, action.level)
 
 			res.append(se_preview)

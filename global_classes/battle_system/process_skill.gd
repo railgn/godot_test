@@ -65,10 +65,21 @@ static func process_combat(user: BattleUnit, target: BattleUnit, combat_preview:
 			evaded = true
 	
 	##healing
+	for healing_preview in combat_preview.healing:
+		target.affect_resource(false, healing_preview.resource, healing_preview.amount)
 
 	##status effects	
 	if !evaded:
-		pass
+		for status_preview in combat_preview.status:
+			var infliction_roll = randf() -0.01
+			print("infliction_roll: ", infliction_roll, " infliction_chance: ", status_preview.infliction_chance, "inflict? ", infliction_roll < status_preview.infliction_chance)
+			if infliction_roll < status_preview.infliction_chance:
+				var se_info:= StatusEffects.get_effect(status_preview.status_id)
+				var se_store:= Stats.StatusEffectStore.new(status_preview.status_id, status_preview.duration,status_preview.level, !se_info.count_down_on_turn, !se_info.cure_on_battle_end)
+				if skill_info.optional_properties.has("taunt"):
+					se_store.optional_node_store = [user]
+
+				target.stats.add_status_effect(se_store)
 
 
 static func calc_damage(_user: BattleUnit, _target: BattleUnit, damage_preview: CombatPreview.DamagePreview, _skill_info: ActiveSkill) -> ProcessDamage:
@@ -81,6 +92,9 @@ static func calc_damage(_user: BattleUnit, _target: BattleUnit, damage_preview: 
 	if evade_roll > hit_chance:
 		res.evade = true
 
+	print("evade_roll: ", evade_roll, " hit_chance: ", hit_chance, "evade? ", res.evade)
+
+
 	##crit roll
 	if res.evade:
 		res.crit = false
@@ -90,6 +104,8 @@ static func calc_damage(_user: BattleUnit, _target: BattleUnit, damage_preview: 
 
 		if crit_roll < crit_chance:
 			res.crit = true
+
+		print("crit_roll: ", crit_roll, " crit_chance: ", crit_chance, "crit? ", res.crit)
 
 	if res.evade:
 		res.damage = 0
@@ -104,12 +120,18 @@ static func calc_damage(_user: BattleUnit, _target: BattleUnit, damage_preview: 
 		var average_damage:= 0.0
 		var size = damage_preview.damage_range.size()
 		for damage_amt in damage_preview.damage_range:
-			average_damage = damage_amt / float(size)
+			average_damage += damage_amt
+			print(damage_amt)
+		
+		average_damage /= float(size)
+
+		print("average_damage: ", average_damage)
 
 		var damage_roll = randf()
 		var damage_variance = (average_damage - damage_preview.damage_range[0]) * size
 		var pre_crit_damage = damage_preview.damage_range[0] + (damage_roll * damage_variance)
 
-		res.damage = int(pre_crit_damage * crit_multiplier)
+		res.damage = roundi(pre_crit_damage * crit_multiplier)
+		print("damage_roll: ", damage_roll, " pre_crit_damage: ", pre_crit_damage, " damage: ", res.damage)
 
 	return res
