@@ -17,6 +17,8 @@ func _ready():
 
 	$StatusPreviewLabel.unit = parent_unit
 
+	$StatusEffectLabel.unit = parent_unit
+
 func _on_finalized_as_target_change(finalized_as_target: bool):
 	if finalized_as_target:
 		$TargetPointer.show()

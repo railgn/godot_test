@@ -31,7 +31,7 @@ func update_preview_label():
 
 func _process(_add_global_constantdelta):
 	if unit:
-		if unit.combat_preview_on or unit.cost_previews_on:
+		if unit.combat_preview_on:
 			show()
 		else:
 			hide()	

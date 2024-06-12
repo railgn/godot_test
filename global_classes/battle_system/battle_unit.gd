@@ -8,7 +8,7 @@ signal unit_died(unit: BattleUnit)
 signal cost_previews_change(cost_previews: Array[CostPreview])
 signal combat_preview_change(combat_preview: CombatPreview)
 
-var turn_order_index: int
+var turn_order_index
 var turn_initialized: int
 
 var level: int
@@ -61,23 +61,21 @@ func check_for_death() -> bool:
 
 	return res
 
-func affect_resource(reduce: bool, resource_type: ActiveSkill.SkillCostResource, amount: int):
+func affect_resource(reduce: bool, resource_type: ActiveSkill.SkillCostResource, amount: int):	
 	var applied_amount = amount
 	
 	if !reduce:
 		applied_amount = -applied_amount
 
-	print("amount to reduce ", amount)
-
 	match resource_type:
 		ActiveSkill.SkillCostResource.MP:
-			stats.combat_stats.mp.current -= amount
+			stats.combat_stats.mp.current -= applied_amount
 		ActiveSkill.SkillCostResource.HP:
-			stats.combat_stats.hp.current -= amount
+			stats.combat_stats.hp.current -= applied_amount
 			##check_for_death()
-			##??????
+			##would emit death signal, dont want to do that here
 		ActiveSkill.SkillCostResource.ENERGY:
-			stats.combat_stats.energy.current -= amount
+			stats.combat_stats.energy.current -= applied_amount
 		ActiveSkill.SkillCostResource.YOYO:
 			##reduce status effect level
 			##or just add it as a proper resource to Base_Stats class

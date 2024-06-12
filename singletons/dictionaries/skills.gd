@@ -112,7 +112,7 @@ func _ready():
 	var se_store = ActiveSkill.ActiveSkillStatusEffectStore.new()
 	se_store.id = "SE_Bleed"
 	se_store.duration = 3
-	DICTIONARY.SK_CostPreviewTest1.active_optional_properties.status_on_target ={["SE_Bleed"]: se_store}
+	DICTIONARY.SK_CostPreviewTest1.active_optional_properties.status_on_target ={"SE_Bleed": se_store}
 	
 	add_skill("SK_CostPreviewTest2", "Cost Preview Test 2 - Healing", true)
 	DICTIONARY.SK_CostPreviewTest2.type = ActiveSkill.SkillType.RECOVERY
@@ -125,4 +125,17 @@ func _ready():
 	cost1.amount = func(skill_level, _resource, _user) -> int: return skill_level * 1
 
 	DICTIONARY.SK_CostPreviewTest2.cost = cost1
+	
+	add_skill("SK_PrerequisiteTest1", "Prerequisite Test 1", true)
+	var prereq = {ActiveSkill.PrerequisitesEnum.STATUS_EFFECT: ["SE_PrereqTest"]}
+	DICTIONARY.SK_PrerequisiteTest1.prerequisites = prereq
+
+	add_skill("SK_Add_Prerequisite1", "Add Prerequisite 1", true)
+	DICTIONARY.SK_Add_Prerequisite1.type = ActiveSkill.SkillType.STATUS
+	DICTIONARY.SK_Add_Prerequisite1.target.type = ActiveSkill.Target.TargetType.ALLY
+
+	var prereq_se = ActiveSkill.ActiveSkillStatusEffectStore.new()
+	prereq_se.id = "SE_PrereqTest" 
+	prereq_se.duration = 3
+	DICTIONARY.SK_Add_Prerequisite1.active_optional_properties.status_on_target = {"SE_PrereqTest": prereq_se}
 

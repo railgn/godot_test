@@ -1,12 +1,14 @@
 class_name CreateTurnOrder
 
-static func initial(current_turn, all_units: Array[BattleUnit]) -> Array[BattleUnit]:
+static func initial(current_turn: int, all_units: Array[BattleUnit]) -> Array[BattleUnit]:
 	var res: Array[BattleUnit]= []
 
 	var turn_order_obj = {}
 	var turn_order_arr = []
 
 	for unit in all_units:
+		unit.turn_order_index = null
+
 		if !unit.stats.ally and unit.stats.mirror and unit.turn_initialized == current_turn:
 			continue
 
@@ -21,5 +23,17 @@ static func initial(current_turn, all_units: Array[BattleUnit]) -> Array[BattleU
 		turn_order_obj[speed].turn_order_index = index 
 		res.append(turn_order_obj[speed])
 		index +=1
+
+	return res
+
+static func remove_index(index: int, current_turn_order: Array[BattleUnit]) -> Array[BattleUnit]:
+	var res: Array[BattleUnit]= []
+
+	for unit in current_turn_order:
+		if unit.turn_order_index == index:
+			continue
+		if unit.turn_order_index > index:
+			unit.turn_order_index -= 1
+		res.append(unit)
 
 	return res

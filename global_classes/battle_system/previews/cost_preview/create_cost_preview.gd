@@ -45,12 +45,14 @@ static func check_if_skill_usable(unit: BattlePlayerUnit, skill_info:ActiveSkill
 		for prerequisite in skill_info.prerequisites:
 			match prerequisite:
 				ActiveSkill.PrerequisitesEnum.STATUS_EFFECT:
-					if !unit.stats.status_effects_store.has(skill_info.prerequisites[prerequisite]):
-						usable = false
+					for status_id in skill_info.prerequisites[prerequisite]:
+						if !unit.stats.status_effects_store.has(status_id):
+							usable = false
 				ActiveSkill.PrerequisitesEnum.SKILL:
-					if (!unit.skills_store_player.active_skills.has(skill_info.prerequisites[prerequisite]) 
-						and !unit.skills_store_player.passive_skills_skills.has(skill_info.prerequisites[prerequisite])):
-						usable = false
+					for skill_id in skill_info.prerequisites[prerequisite]:
+						if (!unit.skills_store_player.active_skills.has(skill_id) 
+							and !unit.skills_store_player.passive_skills_skills.has(skill_id)):
+							usable = false
 				ActiveSkill.PrerequisitesEnum.YOYO:
 					pass
 				ActiveSkill.PrerequisitesEnum.POWER_CHARGE:

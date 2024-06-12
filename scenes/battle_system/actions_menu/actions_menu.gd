@@ -134,6 +134,7 @@ func _on_target_chosen(target: Intent.Target, target_controller: TargetControlle
 			_:
 				destroy_group("target_controller")
 				destroy_group("target_controller_home")
+				unit.cost_previews_on = false
 				intent_chosen.emit(chosen_intent)
 
 	else:
@@ -141,6 +142,7 @@ func _on_target_chosen(target: Intent.Target, target_controller: TargetControlle
 		destroy_group("target_controller")
 		destroy_group("target_controller_home")
 		print("emit intent")
+		unit.cost_previews_on = false
 		intent_chosen.emit(chosen_intent)
 
 func _on_target_back(target_controller: TargetController):

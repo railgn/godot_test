@@ -1,42 +1,58 @@
 Now:
+	status effect logic:
+		-spawn
+		-turn start
+		-turn end
+		-death
+		-end of battle (player only)
 
-	Healing skill doing damage?????
+	end of turn
+		sending units into mirror
+
+	mirror break
+		moving everyone back
+		dont update "mirror" bool on units until end of turn
+
+	enemy AI	
+	
+	
 
 
-	1) process_skill
-		add healing skill
-		add some self healing skills with hp skill costs to test 		
-			preview interaction of healing + cost
-			and self damage skills with hp cost just for fun
-
-	cost and combat preview:
-		3) battle unit
-			setter for "preview on" bools?
-
-		2) UI
-			build cost and combat preview nodes on change
-			signals for on/off instead of ready func
 
 
-		
-	change turnorder loop to be range id
-		or some other recursive func
-		need to be able to add/remove/change turn order in middle of turn/loop
 
 	what about skill previews for secondary effects (on user, not target)
 		- life steal
 		- attack + buff user?
 
+	Main Menu
+		Options
+			Resolution
+			Volume
+		Load Game
+		New Game
+			Choice of 3 Locations
+				Shop
+					Purchase -> Select Party Member
+						Menu option to proceed to next location choice
+				Battle
+					Reward
+				Elite
+					Elite Reward
+			Repeats x3
 
-	test out skill can be used func
-		-prerequisites
+			Boss Location
+			
+			End
+		
 
-	back to battle system script
 
-	Generating locations randomly
-	adding focus mode to locations
 	rewards
+	Generating locations randomly
 	health bar UI
+	Use groups instead of "GetUnits" functions.
+		cant specify type of get_units_in_group function
+		unless you pass gettree() as a parameter into the "GetUnits" function
 
 	Rewards and Options should be singletons
 		- Options.playback_speed for animation nodes
@@ -46,10 +62,10 @@ Now:
 			- save node dictionary as json
 				- ready function loads json as dictionary
 
-
-	Currently, status effects dont have mapping stat adders/multipliers, but equipment does. Which is fine
-
 	Save data:
+
+		Look into a save data builder
+
 		Relics
 		Items (gold)
 		location
@@ -79,6 +95,12 @@ Now:
 		seed generated on save data creation
 
 
+	1) process_skill
+		add some self healing skills with hp skill costs to test 		
+			preview interaction of healing + cost
+			and self damage skills with hp cost just for fun
+
+
 	Battle Script time?
 
 		Make the cycle be a function of player count
@@ -89,69 +111,9 @@ Now:
 		- any time you try to access something, if you loop it'll happen way too many times
 		2. it's okay to have a million match statements, (if/else), this is fast
 
-Battle System notes:
-
-	BattleSystem: Class vs. function?
-
-	Unit nodes just house data
-		arent taking actions themselves
-		unit nodes would have visual logic on them:
-			1) static checks based on properties 
-				e.g. flip horizontal when mirror bool is true
-			2) animations corresponding to actions
-				e.g. animation of using a move
-					- "unit.yield(action(), "completed")
-					- use yield instead of timer timeouts
-
-	Turn order
-		would like this to be an Array
-		stores node references
-		clears as units take action
-		once empty, runs end of turn logic
-
-	Encounters
-		- Inputs
-			- Player Constructor
-				- Input: SaveData
-				- Output: list of player nodes
-			- Encounter Data
-				- List of Enemies Constructors
-					- Creates Enemy nodes
-			- BattleSystem ID to load
-			- Environmental/Visual Templates to load from
-				- default based on SaveData's location
-			- Battle End Conditions or Parameters?
-				- Maybe these could be handled by different versions of Battle System
-				- Battle Start can be handled by Scripted AI overrides on turn 0
-			- Flag triggers on battle completion?
-			- runs battle system with these parameters
-
-	Scene tree:
-		BattleSystem (root)
-			Players
-				Real
-					P1
-					P2
-					P3
-					P4
-				Mirror
-			Enemy
-				Real
-					
-					E2
-				Mirror
-					E1_M
-					E2_M
 
 	end of battle:
-		save result info back to save_data (i.e. the party auto load)
-
-	Cons:
-		- Two sources of truth
-			1) save data
-			2) battle system child nodes
-			Okay? since they arent being used at the same time. clear hand off at start and end of battle between the two
-		
+		save result info back to save_data (i.e. the party auto load)		
 
 Later:
 	## beef up class constructors and builtin functions	
@@ -217,4 +179,5 @@ Later:
 
 Performance considerations -
 	Deep copy bad - reevaluate if it becomes a problem
+	Use of process() functions in UI instead of setter signals to only run when the parameter changes
 	

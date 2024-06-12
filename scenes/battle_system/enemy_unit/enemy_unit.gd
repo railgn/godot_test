@@ -8,6 +8,7 @@ var description: String
 var skills_store_enemy: Array[Enemy.EnemySkillsStore.EnemySkillStore]
 var drop_table: Array[Enemy.ItemDrop]
 var scripted_ai
+var counterpart_unit: BattleEnemyUnit
 
 static func new_enemy_unit(enemy_data: Encounter.EnemyData, mirror: bool, init_turn_initialized:= 1) -> BattleEnemyUnit:
 	var enemy_unit_scene: PackedScene = load("res://scenes/battle_system/enemy_unit/enemy_unit.tscn")

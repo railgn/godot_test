@@ -7,7 +7,6 @@ var main: Node
 var party: Dictionary
 var encounter: Encounter
 
-var battle_over:= false
 var drops #Dict = key (Item ID): value (quantity)
 var turn_count := 0
 
@@ -36,11 +35,7 @@ func _on_battle_ready():
 
 	turn()
 
-# every time an action is taken, run check_for_battle_over()
-
-
 func initial_unit_spawn():
-
 	##add battle start status effect logic
 
 	for party_member in party:
@@ -48,6 +43,7 @@ func initial_unit_spawn():
 		unit_instance.unit_died.connect(_on_unit_death)
 		unit_instance.add_to_group("ally")
 		unit_instance.add_to_group("player")
+		unit_instance.add_to_group("all_units")
 		$UnitStations/Real/Player.add_child(unit_instance)
 
 	for enemy in encounter.enemies:
@@ -55,12 +51,18 @@ func initial_unit_spawn():
 		real_unit_instance.unit_died.connect(_on_unit_death)
 		real_unit_instance.add_to_group("enemy")
 		real_unit_instance.add_to_group("real_enemy")
-		$UnitStations/Real/Enemy.add_child(real_unit_instance)	
+		real_unit_instance.add_to_group("all_units")
 		
 		var mirror_unit_instance = BattleEnemyUnit.new_enemy_unit(enemy, true)
 		mirror_unit_instance.unit_died.connect(_on_unit_death)
 		mirror_unit_instance.add_to_group("enemy")
 		mirror_unit_instance.add_to_group("mirror_enemy")
+		mirror_unit_instance.add_to_group("all_units")
+				
+		real_unit_instance.counterpart_unit = mirror_unit_instance
+		mirror_unit_instance.counterpart_unit = real_unit_instance
+		
+		$UnitStations/Real/Enemy.add_child(real_unit_instance)
 		$UnitStations/Mirror/Enemy.add_child(mirror_unit_instance)	
 
 func turn():
@@ -68,7 +70,8 @@ func turn():
 	units_in_turn_order = CreateTurnOrder.initial(turn_count, GetUnits.all_units($UnitStations))
 
 	#Non-player Intents
-	for unit in units_in_turn_order:
+	for i in range(units_in_turn_order.size()):
+		var unit = units_in_turn_order[i]
 		if !unit.stats.player:
 			pass			
 			##create enemy ai
@@ -77,11 +80,18 @@ func turn():
 					## switch node.intent.action.type
 
 	##Action
-	for unit in units_in_turn_order:
+	for i in range(units_in_turn_order.size()):
+		if i >= units_in_turn_order.size():
+			break
+
+		##TURN ORDER CHANGE TEST
+		# if i == 1:
+		# 	units_in_turn_order = CreateTurnOrder.remove_index(0, units_in_turn_order)
+
+		var unit = units_in_turn_order[i]
 		unit.units_turn = true
 
 		##beginning of turn status effect logic
-
 
 		var chosen_intent: Intent
 		
@@ -129,8 +139,6 @@ func turn():
 					##Inventory.use_item()
 					pass
 
-
-			## ideally should remove this if statement after enemy AI is implemented
 			if chosen_intent.target:
 				unset_finalized_target(chosen_intent.target)
 
@@ -146,21 +154,48 @@ func turn():
 		unit.intent = null ##clear intent
 		unit.units_turn = false
 
+func _on_unit_death(unit: BattleUnit):
+	print("unit died")
 
-func _process(delta):
-	if(battle_over):
+	for se in unit.stats.status_effects_store:
+		var effect = StatusEffects.get_effect(unit.stats.status_effects_store[se].id)
+		if effect.optional_properties.has("on_death"):
+			pass
+
+	if unit.stats.ally:
+		##add to deaths door
+		pass
+	else:
+		##add to drops
 		pass
 
-func _on_unit_death(unit: BattleUnit):
-	#if player/enemy
+	if unit.turn_order_index:
+		units_in_turn_order = CreateTurnOrder.remove_index(unit.turn_order_index, units_in_turn_order)
 
-	#for status effect in status effects
-		#match
-			#check for explode/others
+	if !unit.stats.player:
+		if !unit.stats.mirror and unit.counterpart_unit:
+			unit.counterpart_unit.queue_free()
+		unit.queue_free()
 
-	##update turn order to remove unit
-	pass
-	
+	if check_for_battle_over(GetUnits.all_units($UnitStations)):
+		##trigger battle end
+		pass
+
+	if get_tree().get_nodes_in_group("mirror_enemy").size() == 0:
+		##trigger mirror break
+		pass
+
+func check_for_battle_over(all_units: Array[BattleUnit]) -> bool:
+	var all_players_dead = true
+	var all_real_enemies_dead = true
+
+	for unit in all_units:
+		if unit.stats.player and unit.stats.alive:
+			all_players_dead = false
+		elif !unit.stats.player and !unit.stats.mirror and unit.stats.alive:
+			all_real_enemies_dead = false
+
+	return (all_players_dead or all_real_enemies_dead)
 
 func set_finalized_target(target: Intent.Target):
 	for target_store in target.main_targets:

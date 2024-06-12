@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dt12o5o1x5e3b"]
+[gd_scene load_steps=7 format=3 uid="uid://dt12o5o1x5e3b"]
 
 [ext_resource type="Script" path="res://scenes/battle_system/unit_ui/unit_ui.gd" id="1_8vmst"]
 [ext_resource type="Script" path="res://scenes/battle_system/unit_ui/TargetPointer.gd" id="2_vg4xi"]
 [ext_resource type="Script" path="res://scenes/battle_system/unit_ui/resource_bar.gd" id="3_5myd7"]
 [ext_resource type="Script" path="res://scenes/battle_system/unit_ui/preview_label.gd" id="4_wponf"]
 [ext_resource type="Script" path="res://scenes/battle_system/unit_ui/status_preview_label.gd" id="5_w47a0"]
+[ext_resource type="Script" path="res://scenes/battle_system/unit_ui/StatusEffectLabel.gd" id="6_u8uvb"]
 
 [node name="UnitUI" type="Node2D"]
 script = ExtResource("1_8vmst")
@@ -94,3 +95,10 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 script = ExtResource("5_w47a0")
+
+[node name="StatusEffectLabel" type="RichTextLabel" parent="."]
+offset_left = -106.0
+offset_top = 36.0
+offset_right = -20.0
+offset_bottom = 110.0
+script = ExtResource("6_u8uvb")

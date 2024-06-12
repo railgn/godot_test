@@ -94,11 +94,13 @@ func update_healing_preview(healing_preview: CombatPreview.HealingPreview):
 
 	combat_preview_bar_min.size.x = healing / max_value * size.x
 	if show_cost_preview:
-		combat_preview_bar_min.position.x = (value + healing - current_cost)/max_value * size.x
+		combat_preview_bar_min.position.x = (value - current_cost)/max_value * size.x
 	else:
-		combat_preview_bar_min.position.x = (value + healing)/max_value * size.x
+		combat_preview_bar_min.position.x = (value)/max_value * size.x
 
-	combat_preview_bar_max.size.x = 0
+	combat_preview_bar_max.position.x = combat_preview_bar_min.position.x
+	combat_preview_bar_max.size.x = combat_preview_bar_min.size.x
+
 
 func update_cost_preview(cost_preview: CostPreview):
 	PreviewLabel.update_cost_previews(cost_preview)

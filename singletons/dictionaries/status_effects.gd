@@ -53,7 +53,8 @@ func _ready():
 	DICTIONARY.SE_Bleed.effect_on_count_down = func(unit: BattleUnit) -> void:
 		unit.affect_resource(true, ActiveSkill.SkillCostResource.HP , 1)
 
-	
+	add_effect("SE_PrereqTest", "Prereq Test")
+
 
 
 

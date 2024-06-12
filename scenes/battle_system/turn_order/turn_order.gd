@@ -13,6 +13,12 @@ func _ready():
 
 func _on_turn_order_change(units_in_turn_order: Array[BattleUnit]):
 
+	for child in get_children():
+		remove_child(child)
+		child.queue_free()
+
+	x_offset = 0
+
 	for unit in units_in_turn_order:
 		unit.unit_focussed_change.connect(_on_unit_focussed_change)
 		unit.units_turn_change.connect(_on_units_turn_change)
